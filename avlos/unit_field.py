@@ -1,7 +1,14 @@
 
 from marshmallow import fields, ValidationError
 import pint 
-ureg = pint.UnitRegistry()
+_registry = None
+
+def get_registry():
+    global _registry
+    if not _registry:
+        _registry = pint.UnitRegistry()
+        _registry.define('tick = turn / 8192')
+    return _registry
 
 
 class UnitField(fields.Field):
@@ -16,6 +23,6 @@ class UnitField(fields.Field):
 
     def _deserialize(self, value, attr, data, **kwargs):
         try:
-            return ureg(value)
+            return get_registry()(value)
         except ValueError as error:
             raise ValidationError("Invalid Pint unit.") from error

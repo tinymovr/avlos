@@ -1,0 +1,10 @@
+
+generators:
+  generator_c:
+    enabled: true
+    output_path: .
+  generator_rst:
+    enabled: true
+    output_path: .
+
+

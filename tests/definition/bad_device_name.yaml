@@ -1,0 +1,8 @@
+# missing endpoint name
+
+name: Tinymovr
+children:
+  - dtype: uint32
+    c_getter: system_get_sn
+    description: Retrieve the unique device serial number.
+

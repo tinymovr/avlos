@@ -18,11 +18,13 @@ setup(name='Avlos',
     packages=find_packages(include=['avlos', 'avlos.*']),
     python_requires='>=3.6',
     install_requires=[
-        "marshmallow"
+        "marshmallow",
+        "pyyaml",
+        "pint"
     ],
     extras_require={
         'generator_c': ["csnake"],
         'generator_rst': ["rstcloth"],
-        'generator_python': ["pint"]
+        #'generator_python': ["pint"]
     },
      )

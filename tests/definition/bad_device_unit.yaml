@@ -1,0 +1,13 @@
+# bad endpoint unit
+
+name: Tinymovr
+children:
+  - name: sn
+    dtype: uint32
+    c_getter: system_get_sn
+    description: Retrieve the unique device serial number.
+  - name: Vbus
+    dtype: float
+    unit: yadda
+    c_getter: system_get_vbus
+    description: Retrieve the bus voltage.
