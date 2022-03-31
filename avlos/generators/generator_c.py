@@ -45,7 +45,7 @@ def process(instance, config):
     traverse_impl(instance, state, cw_impl)
 
     # TODO: Make below declaration safer
-    cw_impl.add_line("uint8_t avlos_get_hash(uint8_t * buffer, uint8_t * buffer_len, bool rtr) {{ return {}; }}".format(instance.hash_string))
+    cw_impl.add_line("uint8_t avlos_get_hash(uint8_t * buffer, uint8_t * buffer_len, bool rtr) {{ const uint32_t v = {}; memcpy(buffer, &v, sizeof(v)); return CANRP_Read; }}".format(instance.hash_string))
 
     with open(config["paths"]["output_impl"], "w") as output_file:
         print(cw_impl, file=output_file)
