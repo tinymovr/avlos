@@ -1,5 +1,5 @@
 
-name: Tinymovr
+name: tm
 children:
   - name: sn
     dtype: uint32

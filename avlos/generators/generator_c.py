@@ -15,25 +15,61 @@ c_type_map = {
 
 
 def process(instance, config):
-    cw = CodeWriter()
-    cw.add_autogen_comment()
-    cw.add_line("")
+
+    # Header
+    cw_head = CodeWriter()
+    cw_head.add_autogen_comment()
+    cw_head.add_line("")
     try:
         for header in config["c_includes"]:
-            cw.include(header)
-        cw.add_line("")
+            cw_head.include(header)
+        cw_head.add_line("")
     except AttributeError:
         pass
     state = {"ep_counter": 1}
-    traverse(instance, state, cw)
-    with open(config["output_file"], "w") as output_file:
-        print(cw, file=output_file)
-    
+    traverse_header(instance, state, cw_head)
+    with open(config["output_header"], "w") as output_file:
+        print(cw_head, file=output_file)
 
-def traverse(obj, state, cw):
+    # Implementation
+    cw_impl = CodeWriter()
+    cw_impl.add_autogen_comment()
+    cw_impl.add_line("")
+    cw_impl.include(output_file.name)
+    cw_impl.add_line("")
+    state = {"ep_counter": 1}
+    traverse_impl(instance, state, cw_impl)
+    with open(config["output_impl"], "w") as output_file:
+        print(cw_impl, file=output_file)
+
+
+def traverse_header(obj, state, cw):
     try:
         for child in obj.children.values():
-            traverse(child, state, cw)
+            traverse_header(child, state, cw)
+    except AttributeError:
+        f_name = "avlos_{}".format(obj.c_getter)
+        cw.start_comment()
+        cw.add_line(f_name)
+        cw.add_line("")
+        cw.add_line(obj.description)
+        cw.add_line("")
+        cw.add_line("@param buffer")
+        cw.add_line("@param buffer_len")
+        cw.add_line("@param rtr")
+        cw.end_comment()
+        arg1 = Variable("buffer", "uint8_t *")
+        arg2 = Variable("buffer_len", "uint8_t *")
+        arg3 = Variable("rtr", "bool")
+        fun = Function( f_name, "uint8_t", arguments=(arg1, arg2, arg3))
+        cw.add_function_prototype(fun)
+        cw.add_line("") 
+
+
+def traverse_impl(obj, state, cw):
+    try:
+        for child in obj.children.values():
+            traverse_impl(child, state, cw)
     except AttributeError:
         arg1 = Variable("buffer", "uint8_t *")
         arg2 = Variable("buffer_len", "uint8_t *")
