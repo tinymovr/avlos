@@ -1,4 +1,5 @@
-
+import os
+import avlos
 from csnake import CodeWriter, Function, Variable, FormattedLiteral
 
 
@@ -15,7 +16,6 @@ c_type_map = {
 
 
 def process(instance, config):
-
     # Header
     cw_head = CodeWriter()
     cw_head.add_autogen_comment()
@@ -24,11 +24,11 @@ def process(instance, config):
         for header in config["c_includes"]:
             cw_head.include(header)
         cw_head.add_line("")
-    except AttributeError:
+    except KeyError:
         pass
     state = {"ep_counter": 1}
     traverse_header(instance, state, cw_head)
-    with open(config["output_header"], "w") as output_file:
+    with open(config["paths"]["output_header"], "w") as output_file:
         print(cw_head, file=output_file)
 
     # Implementation
@@ -39,7 +39,7 @@ def process(instance, config):
     cw_impl.add_line("")
     state = {"ep_counter": 1}
     traverse_impl(instance, state, cw_impl)
-    with open(config["output_impl"], "w") as output_file:
+    with open(config["paths"]["output_impl"], "w") as output_file:
         print(cw_impl, file=output_file)
 
 
@@ -111,28 +111,3 @@ def traverse_impl(obj, state, cw):
             fun.add_code("return CANRP_Write;")
             cw.add_function_definition(fun)
             cw.add_line("")
-        
-
-    # cw.add_variable_initialization(var)
-
-
-
-# uint8_t CAN_SetCANConfig(uint8_t buffer[], uint8_t *buffer_len, bool rtr)
-# {
-#     uint8_t id;
-#     uint16_t baudrate;
-#     memcpy(&id, &buffer[0], sizeof(uint8_t));
-#     memcpy(&baudrate, &buffer[1], sizeof(uint16_t));
-#     CAN_ResponseType response = CANRP_NoAction;
-#     if (id >= 1u)
-#     {
-#         CAN_set_ID(id);
-#         response = CANRP_Write;
-#     }
-#     if ((baudrate >= 50u) && (baudrate <= 1000u))
-#     {
-#         CAN_set_kbit_rate(baudrate);
-#         response = CANRP_Write;
-#     }
-#     return response;
-# }

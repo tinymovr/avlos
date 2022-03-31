@@ -11,16 +11,7 @@ def process(instance, config):
         }
     
     traverse(instance, state, d)
-    d.write(config["output_file"])
-    # d.title('Example Use')
-    # d.newline()
-    # d.h2('Contents')
-    # d.directive(name="contents", fields=[('local', ''), ('backlinks', 'None')])
-    # d.newline()
-    # d.h2('Code -- shebang')
-    # d.codeblock('#!/usr/bin/env')
-
-    # d.print_content()
+    d.write(config["paths"]["output_file"])
 
 
 def traverse(obj, state, d):

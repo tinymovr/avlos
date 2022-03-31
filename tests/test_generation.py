@@ -2,6 +2,7 @@
 import yaml
 import importlib.resources
 from avlos.deserializer import deserialize
+from avlos.processor import process, process_file
 import avlos.generators.generator_c as generator_c
 import avlos.generators.generator_rst as generator_rst
 import marshmallow
@@ -16,11 +17,13 @@ class TestGeneration(unittest.TestCase):
         def_path_str = str(importlib.resources.files('tests').joinpath('definition/good_device.yaml'))
         header_path_str = str(importlib.resources.files('tests').joinpath('outputs/impl.h'))
         impl_path_str = str(importlib.resources.files('tests').joinpath('outputs/impl.c'))
-        with open(def_path_str) as system_description:
-            obj = deserialize(yaml.safe_load(system_description))
+        with open(def_path_str) as system_desc_stream:
+            obj = deserialize(yaml.safe_load(system_desc_stream))
             config = {
-                "output_header": header_path_str,
-                "output_impl": impl_path_str,
+                "paths": {
+                    "output_header": header_path_str,
+                    "output_impl": impl_path_str
+                },
                 "c_includes": {
                     "src/common.h"
                 }
@@ -30,9 +33,18 @@ class TestGeneration(unittest.TestCase):
     def test_rst_output_manual(self):
         def_path_str = str(importlib.resources.files('tests').joinpath('definition/good_device.yaml'))
         out_path_str = str(importlib.resources.files('tests').joinpath('outputs/impl.rst'))
-        with open(def_path_str) as system_description:
-            obj = deserialize(yaml.safe_load(system_description))
+        with open(def_path_str) as system_desc_stream:
+            obj = deserialize(yaml.safe_load(system_desc_stream))
             config = {
-                "output_file": out_path_str
+                "paths": {
+                    "output_file": out_path_str
+                }
             }
             generator_rst.process(obj, config)
+
+    def test_output_config(self):
+        def_path_str = str(importlib.resources.files('tests').joinpath('definition/good_device.yaml'))
+        config_file_path_str = str(importlib.resources.files('tests').joinpath('definition/output_config.yaml'))
+        with open(def_path_str) as system_desc_stream:
+            obj = deserialize(yaml.safe_load(system_desc_stream))
+            process_file(obj, config_file_path_str)

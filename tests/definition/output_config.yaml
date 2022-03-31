@@ -1,10 +1,17 @@
 
+# All paths relative to this config file
+
 generators:
   generator_c:
     enabled: true
-    output_path: .
+    paths:
+      output_header: ../outputs/test.h
+      output_impl: ../outputs/test.c
+    c_includes:
+    - src/common.h
   generator_rst:
     enabled: true
-    output_path: .
+    paths:
+      output_file: ../outputs/test.rst
 
 
