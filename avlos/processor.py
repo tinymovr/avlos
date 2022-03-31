@@ -3,6 +3,7 @@ import yaml
 from importlib import import_module
 from avlos.deserializer import deserialize
 
+
 def process_file(system_instance, output_config_path):
     with open(output_config_path) as output_config_stream:
         output_config = yaml.safe_load(output_config_stream)
@@ -11,6 +12,7 @@ def process_file(system_instance, output_config_path):
             for path_name, path in module_config["paths"].items():
                 module_config["paths"][path_name] = realpath(join(dirname(realpath(output_config_path)), path))
     process(system_instance, output_config)
+
 
 def process(system_instance, output_config):
     for module_name, module_config in output_config["generators"].items():

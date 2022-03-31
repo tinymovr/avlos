@@ -28,6 +28,10 @@ def process(instance, config):
         pass
     state = {"ep_counter": 1}
     traverse_header(instance, state, cw_head)
+
+    # TODO: Make below declaration safer
+    cw_head.add_line("uint8_t avlos_get_hash(uint8_t * buffer, uint8_t * buffer_len, bool rtr);")
+
     with open(config["paths"]["output_header"], "w") as output_file:
         print(cw_head, file=output_file)
 
@@ -39,6 +43,10 @@ def process(instance, config):
     cw_impl.add_line("")
     state = {"ep_counter": 1}
     traverse_impl(instance, state, cw_impl)
+
+    # TODO: Make below declaration safer
+    cw_impl.add_line("uint8_t avlos_get_hash(uint8_t * buffer, uint8_t * buffer_len, bool rtr) {{ return {}; }}".format(instance.hash_string))
+
     with open(config["paths"]["output_impl"], "w") as output_file:
         print(cw_impl, file=output_file)
 

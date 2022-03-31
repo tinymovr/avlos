@@ -15,11 +15,12 @@ class TestGeneration(unittest.TestCase):
 
     def test_c_output_manual(self):
         def_path_str = str(importlib.resources.files('tests').joinpath('definition/good_device.yaml'))
-        header_path_str = str(importlib.resources.files('tests').joinpath('outputs/impl.h'))
-        impl_path_str = str(importlib.resources.files('tests').joinpath('outputs/impl.c'))
+        header_path_str = str(importlib.resources.files('tests').joinpath('outputs/test.h'))
+        impl_path_str = str(importlib.resources.files('tests').joinpath('outputs/test.c'))
         with open(def_path_str) as system_desc_stream:
             obj = deserialize(yaml.safe_load(system_desc_stream))
             config = {
+                "hash_string": "0x9e8dc7ac",
                 "paths": {
                     "output_header": header_path_str,
                     "output_impl": impl_path_str
@@ -32,10 +33,11 @@ class TestGeneration(unittest.TestCase):
 
     def test_rst_output_manual(self):
         def_path_str = str(importlib.resources.files('tests').joinpath('definition/good_device.yaml'))
-        out_path_str = str(importlib.resources.files('tests').joinpath('outputs/impl.rst'))
+        out_path_str = str(importlib.resources.files('tests').joinpath('outputs/test.rst'))
         with open(def_path_str) as system_desc_stream:
             obj = deserialize(yaml.safe_load(system_desc_stream))
             config = {
+                "hash_string": "0x9e8dc7ac",
                 "paths": {
                     "output_file": out_path_str
                 }

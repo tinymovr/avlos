@@ -14,4 +14,3 @@ generators:
     paths:
       output_file: ../outputs/test.rst
 
-
