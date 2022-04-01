@@ -1,7 +1,7 @@
 # bad endpoint unit
 
 name: Tinymovr
-children:
+remote_attributes:
   - name: sn
     dtype: uint32
     c_getter: system_get_sn

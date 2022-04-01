@@ -34,20 +34,20 @@ def process_header(instance, config):
         pass
 
     # Function prototypes
-    state = {"ep_counter": 1}  # Reset state
-    traverse_header(instance, state, cw_head)
     # TODO: Make below declaration safer
     cw_head.add_line(
         "uint8_t avlos_get_hash(uint8_t * buffer, uint8_t * buffer_len, bool rtr);"
     )
     cw_head.add_line("")
+    state = {"ep_counter": 1}  # Reset state
+    traverse_header(instance, state, cw_head)
 
     # Function list
     state = {"f_list": []}  # Reset state
-    traverse_function_list(instance, state, cw_head)
     state["f_list"].append(
         AddressOf(Variable("avlos_get_hash", FuncPtr("uint8_t", arguments=get_args())))
     )
+    traverse_function_list(instance, state, cw_head)
     output_function_array(state["f_list"], cw_head)
 
     # Write out
@@ -65,14 +65,15 @@ def process_impl(instance, config):
     cw_impl.add_line("")
 
     # Implementations
-    state = {"ep_counter": 1}
-    traverse_impl(instance, state, cw_impl)
     # TODO: Make below declaration safer
     cw_impl.add_line(
         "uint8_t avlos_get_hash(uint8_t * buffer, uint8_t * buffer_len, bool rtr) {{ const uint32_t v = {}; memcpy(buffer, &v, sizeof(v)); return CANRP_Read; }}".format(
             instance.hash_string
         )
     )
+    cw_impl.add_line("")
+    state = {"ep_counter": 1}
+    traverse_impl(instance, state, cw_impl)
 
     # Write out
     with open(config["paths"]["output_impl"], "w") as output_file:
@@ -81,7 +82,7 @@ def process_impl(instance, config):
 
 def traverse_function_list(obj, state, cw):
     try:
-        for child in obj.children.values():
+        for child in obj.remote_attributes.values():
             traverse_function_list(child, state, cw)
     except AttributeError:
         f_name = get_f_name(obj.c_getter)
@@ -97,7 +98,7 @@ def output_function_array(f_list, cw):
 
 def traverse_header(obj, state, cw):
     try:
-        for child in obj.children.values():
+        for child in obj.remote_attributes.values():
             traverse_header(child, state, cw)
     except AttributeError:
         f_name = get_f_name(obj.c_getter)
@@ -117,7 +118,7 @@ def traverse_header(obj, state, cw):
 
 def traverse_impl(obj, state, cw):
     try:
-        for child in obj.children.values():
+        for child in obj.remote_attributes.values():
             traverse_impl(child, state, cw)
     except AttributeError:
         fun = Function("avlos_{}".format(obj.c_getter), "uint8_t", arguments=get_args())

@@ -7,19 +7,19 @@ unit_strings = ["bool", "int8", "uint8", "int16", "uint16", "int32", "uint32", "
 
 
 class RemoteNode:
-    def __init__(self, children, name, description=None):
+    def __init__(self, remote_attributes, name, description=None):
         self.name = name
         self.description = description
         od = OrderedDict()
-        for child in children:
-            od[child.name] = child
-        self.children = od
+        for attrib in remote_attributes:
+            od[attrib.name] = attrib
+        self.remote_attributes = od
 
     def str_dump(self, indent, depth):
         if depth <= 0:
             return "..."
         lines = []
-        for key, val in self.children.items():
+        for key, val in self.remote_attributes.items():
             if isinstance(val, RemoteNode):
                 val_str = (
                     indent
@@ -59,7 +59,7 @@ class RemoteNodeSchema(Schema):
         required=True, error_messages={"required": "Name is required."}
     )
     description = fields.String()
-    children = fields.List(fields.Nested(lambda: RemoteNodeSchema()))
+    remote_attributes = fields.List(fields.Nested(lambda: RemoteNodeSchema()))
     dtype = fields.String(validate=validate.OneOf(unit_strings))
     unit = UnitField()
     c_getter = fields.String()
@@ -67,6 +67,6 @@ class RemoteNodeSchema(Schema):
 
     @post_load
     def make_remote_node(self, data, **kwargs):
-        if "children" in data:
+        if "remote_attributes" in data:
             return RemoteNode(**data)
         return RemoteEndpoint(**data)

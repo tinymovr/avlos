@@ -13,7 +13,7 @@ def process(instance, config):
 def traverse(obj, state, d):
     try:
         current_prefix = state["prefix"]
-        for child in obj.children.values():
+        for child in obj.remote_attributes.values():
             state["prefix"] = "{}{}.".format(current_prefix, obj.name)
             traverse(child, state, d)
         state["prefix"] = current_prefix
@@ -23,7 +23,7 @@ def traverse(obj, state, d):
         d.newline()
         d.li("Endpoint ID: {}".format(state["ep_counter"]))
         d.li("Data Type: {}".format(obj.dtype))
-        d.li("Unit: {}".format(obj.unit if obj.unit else "Not defined"))
+        d.li("Unit: {}".format(obj.unit.units if obj.unit != None else "Not defined"))
         d.newline()
         d.content(obj.description)
 
