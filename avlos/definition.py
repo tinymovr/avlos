@@ -1,4 +1,5 @@
 
+from collections import OrderedDict
 from marshmallow import Schema, fields, post_load, validate
 from avlos.unit_field import UnitField
 from pprint import pformat
@@ -11,7 +12,10 @@ class RemoteNode:
     def __init__(self, children, name, description=None):
         self.name = name
         self.description = description
-        self.children = {c.name: c for c in children}
+        od = OrderedDict()
+        for child in children:
+            od[child.name] = child
+        self.children = od
 
     def str_dump(self, indent, depth):
         if depth <= 0:
