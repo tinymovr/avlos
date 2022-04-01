@@ -1,4 +1,3 @@
-
 import json
 import hashlib
 from avlos.definition import RemoteNodeSchema
@@ -12,4 +11,6 @@ def deserialize(system_description):
 
 
 def hash_string_from_string(input_string):
-    return hex(int.from_bytes(hashlib.sha256(input_string.encode()).digest()[:4], 'little'))
+    return hex(
+        int.from_bytes(hashlib.sha256(input_string.encode()).digest()[:4], "little")
+    )

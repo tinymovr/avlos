@@ -11,7 +11,7 @@ c_type_map = {
     "uint16": "uint16_t",
     "int32": "int32_t",
     "uint32": "uint32_t",
-    "float": "float"
+    "float": "float",
 }
 
 
@@ -24,7 +24,7 @@ def process_header(instance, config):
     cw_head = CodeWriter()
     cw_head.add_autogen_comment()
     cw_head.add_line("")
-    
+
     # Imports
     try:
         for header in config["c_includes"]:
@@ -32,18 +32,22 @@ def process_header(instance, config):
         cw_head.add_line("")
     except KeyError:
         pass
-    
+
     # Function prototypes
-    state = {"ep_counter": 1} # Reset state
+    state = {"ep_counter": 1}  # Reset state
     traverse_header(instance, state, cw_head)
     # TODO: Make below declaration safer
-    cw_head.add_line("uint8_t avlos_get_hash(uint8_t * buffer, uint8_t * buffer_len, bool rtr);")
+    cw_head.add_line(
+        "uint8_t avlos_get_hash(uint8_t * buffer, uint8_t * buffer_len, bool rtr);"
+    )
     cw_head.add_line("")
 
     # Function list
-    state = {"f_list": []} # Reset state
+    state = {"f_list": []}  # Reset state
     traverse_function_list(instance, state, cw_head)
-    state["f_list"].append(AddressOf(Variable("avlos_get_hash", FuncPtr("uint8_t", arguments=get_args()))))
+    state["f_list"].append(
+        AddressOf(Variable("avlos_get_hash", FuncPtr("uint8_t", arguments=get_args())))
+    )
     output_function_array(state["f_list"], cw_head)
 
     # Write out
@@ -64,7 +68,11 @@ def process_impl(instance, config):
     state = {"ep_counter": 1}
     traverse_impl(instance, state, cw_impl)
     # TODO: Make below declaration safer
-    cw_impl.add_line("uint8_t avlos_get_hash(uint8_t * buffer, uint8_t * buffer_len, bool rtr) {{ const uint32_t v = {}; memcpy(buffer, &v, sizeof(v)); return CANRP_Read; }}".format(instance.hash_string))
+    cw_impl.add_line(
+        "uint8_t avlos_get_hash(uint8_t * buffer, uint8_t * buffer_len, bool rtr) {{ const uint32_t v = {}; memcpy(buffer, &v, sizeof(v)); return CANRP_Read; }}".format(
+            instance.hash_string
+        )
+    )
 
     # Write out
     with open(config["paths"]["output_impl"], "w") as output_file:
@@ -77,7 +85,9 @@ def traverse_function_list(obj, state, cw):
             traverse_function_list(child, state, cw)
     except AttributeError:
         f_name = get_f_name(obj.c_getter)
-        state["f_list"].append(AddressOf(Variable(f_name, FuncPtr("uint8_t", arguments=get_args()))))
+        state["f_list"].append(
+            AddressOf(Variable(f_name, FuncPtr("uint8_t", arguments=get_args())))
+        )
 
 
 def output_function_array(f_list, cw):
@@ -102,7 +112,7 @@ def traverse_header(obj, state, cw):
         cw.end_comment()
         fun = Function(f_name, "uint8_t", arguments=get_args())
         cw.add_function_prototype(fun)
-        cw.add_line("") 
+        cw.add_line("")
 
 
 def traverse_impl(obj, state, cw):
@@ -110,11 +120,7 @@ def traverse_impl(obj, state, cw):
         for child in obj.children.values():
             traverse_impl(child, state, cw)
     except AttributeError:
-        fun = Function(
-            "avlos_{}".format(obj.c_getter),
-            "uint8_t",
-            arguments=get_args()
-        )
+        fun = Function("avlos_{}".format(obj.c_getter), "uint8_t", arguments=get_args())
         fun.codewriter = CodeWriter()
         v = Variable("v", c_type_map[obj.dtype])
         fun.codewriter.add_variable_declaration(v)
@@ -137,12 +143,14 @@ def traverse_impl(obj, state, cw):
             fun = Function(
                 "avlos_{}".format(c_setter),
                 "uint8_t",
-                arguments=(s_arg1, s_arg2,s_arg3)
+                arguments=(s_arg1, s_arg2, s_arg3),
             )
             fun.codewriter = CodeWriter()
             v = Variable("v", c_type_map[obj.dtype])
             fun.codewriter.add_variable_declaration(v)
-            fun.add_code("memcpy(&v, buffer, sizeof({}));".format(c_type_map[obj.dtype]))
+            fun.add_code(
+                "memcpy(&v, buffer, sizeof({}));".format(c_type_map[obj.dtype])
+            )
             fun.add_code("{}(v);".format(c_setter))
             fun.add_code("return CANRP_Write;")
             cw.add_function_definition(fun)

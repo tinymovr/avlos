@@ -1,15 +1,11 @@
-
 from rstcloth import RstCloth
 
 
-def process(instance, config):    
+def process(instance, config):
 
     d = RstCloth()
-    state = {
-        "ep_counter": 1,
-        "prefix": ""
-        }
-    
+    state = {"ep_counter": 1, "prefix": ""}
+
     traverse(instance, state, d)
     d.write(config["paths"]["output_file"])
 
