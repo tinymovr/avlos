@@ -35,18 +35,19 @@ def process_header(instance, config):
 
     # Function prototypes
     # TODO: Make below declaration safer
-    cw_head.add_line(
-        "uint8_t avlos_get_hash(uint8_t * buffer, uint8_t * buffer_len, bool rtr);"
-    )
+    cw_head.add_line("uint8_t avlos_get_hash(uint8_t * buffer, uint8_t * buffer_len);")
     cw_head.add_line("")
-    state = {"ep_counter": 1}  # Reset state
+    state = {"ep_counter": 1, "prefix": ""}
     traverse_header(instance, state, cw_head)
 
     # Function list
-    state = {"f_list": []}  # Reset state
-    state["f_list"].append(
-        AddressOf(Variable("avlos_get_hash", FuncPtr("uint8_t", arguments=get_args())))
-    )
+    state = {
+        "f_list": [
+            AddressOf(
+                Variable("avlos_get_hash", FuncPtr("uint8_t", arguments=get_args()))
+            )
+        ]
+    }
     traverse_function_list(instance, state, cw_head)
     output_function_array(state["f_list"], cw_head)
 
@@ -67,12 +68,12 @@ def process_impl(instance, config):
     # Implementations
     # TODO: Make below declaration safer
     cw_impl.add_line(
-        "uint8_t avlos_get_hash(uint8_t * buffer, uint8_t * buffer_len, bool rtr) {{ const uint32_t v = {}; memcpy(buffer, &v, sizeof(v)); return CANRP_Read; }}".format(
+        "uint8_t avlos_get_hash(uint8_t * buffer, uint8_t * buffer_len) {{ const uint32_t v = {}; memcpy(buffer, &v, sizeof(v)); return AVLOS_RET_READ; }}".format(
             instance.hash_string
         )
     )
     cw_impl.add_line("")
-    state = {"ep_counter": 1}
+    state = {"ep_counter": 1, "prefix": ""}
     traverse_impl(instance, state, cw_impl)
 
     # Write out
@@ -98,10 +99,13 @@ def output_function_array(f_list, cw):
 
 def traverse_header(obj, state, cw):
     try:
+        current_prefix = state["prefix"]
         for child in obj.remote_attributes.values():
+            state["prefix"] = "{}{}_".format(current_prefix, obj.name)
             traverse_header(child, state, cw)
+        state["prefix"] = current_prefix
     except AttributeError:
-        f_name = get_f_name(obj.c_getter)
+        f_name = get_f_name("{}{}".format(state["prefix"], obj.name))
         cw.start_comment()
         cw.add_line(f_name)
         cw.add_line("")
@@ -109,7 +113,6 @@ def traverse_header(obj, state, cw):
         cw.add_line("")
         cw.add_line("@param buffer")
         cw.add_line("@param buffer_len")
-        cw.add_line("@param rtr")
         cw.end_comment()
         fun = Function(f_name, "uint8_t", arguments=get_args())
         cw.add_function_prototype(fun)
@@ -118,44 +121,51 @@ def traverse_header(obj, state, cw):
 
 def traverse_impl(obj, state, cw):
     try:
+        current_prefix = state["prefix"]
         for child in obj.remote_attributes.values():
+            state["prefix"] = "{}{}_".format(current_prefix, obj.name)
             traverse_impl(child, state, cw)
+        state["prefix"] = current_prefix
     except AttributeError:
-        fun = Function("avlos_{}".format(obj.c_getter), "uint8_t", arguments=get_args())
+        f_name = get_f_name("{}{}".format(state["prefix"], obj.name))
+        fun = Function(f_name, "uint8_t", arguments=get_args())
         fun.codewriter = CodeWriter()
         v = Variable("v", c_type_map[obj.dtype])
         fun.codewriter.add_variable_declaration(v)
-        fun.add_code("v = {}();".format(obj.c_getter))
-        fun.add_code("*buffer_len = sizeof({});".format(c_type_map[obj.dtype]))
-        fun.add_code("memcpy(buffer, &v, sizeof({}));".format(c_type_map[obj.dtype]))
-        fun.add_code("return CANRP_Read;")
-        cw.add_function_definition(fun)
-        cw.add_line("")
-
-        c_setter = None
         try:
             c_setter = obj.c_setter
         except AttributeError:
-            pass
+            c_setter = None
+
+        # TODO: Make implementation using safe primitives
+        fun.codewriter.add_line("if (AVLOS_DIR_READ == buffer[0]) {")
+        fun.codewriter.add_line("    v = {}();".format(obj.c_getter))
+        fun.codewriter.add_line("    *buffer_len = sizeof(v);")
+        fun.codewriter.add_line("    memcpy(buffer+1, &v, sizeof(v));")
+        fun.codewriter.add_line("    return AVLOS_RET_READ;")
+        fun.codewriter.add_line("}")
         if c_setter:
-            s_arg1 = Variable("buffer", "uint8_t *")
-            s_arg2 = Variable("buffer_len", "uint8_t *")
-            s_arg3 = Variable("rtr", "bool")
-            fun = Function(
-                "avlos_{}".format(c_setter),
-                "uint8_t",
-                arguments=(s_arg1, s_arg2, s_arg3),
-            )
-            fun.codewriter = CodeWriter()
-            v = Variable("v", c_type_map[obj.dtype])
-            fun.codewriter.add_variable_declaration(v)
-            fun.add_code(
-                "memcpy(&v, buffer, sizeof({}));".format(c_type_map[obj.dtype])
-            )
-            fun.add_code("{}(v);".format(c_setter))
-            fun.add_code("return CANRP_Write;")
-            cw.add_function_definition(fun)
-            cw.add_line("")
+            fun.codewriter.add_line("else if (AVLOS_DIR_WRITE == buffer[0]) {")
+            fun.codewriter.add_line("    memcpy(&v, buffer+1, sizeof(v));")
+            fun.codewriter.add_line("    {}(v);".format(c_setter))
+            fun.codewriter.add_line("    return AVLOS_RET_WRITE;")
+            fun.codewriter.add_line("}")
+        fun.codewriter.add_line("return AVLOS_RET_NOACTION;")
+        # uint32_t v;
+        # if (AVLOS_DIR_READ == buffer[0]) {
+        #     *buffer_len = sizeof(v);
+        #     memcpy(buffer, &v, sizeof(v));
+        #     return AVLOS_RET_READ;
+        # }
+        # else if (AVLOS_DIR_WRITE == buffer[0]) {
+        #     memcpy(&v, buffer, sizeof(v));
+        #     motor_set_R(v);
+        #     return AVLOS_RET_WRITE;
+        # }
+        # return AVLOS_RET_NOACTION;
+
+        cw.add_function_definition(fun)
+        cw.add_line("")
 
 
 def get_f_name(accessor):
@@ -165,5 +175,4 @@ def get_f_name(accessor):
 def get_args():
     arg1 = Variable("buffer", "uint8_t *")
     arg2 = Variable("buffer_len", "uint8_t *")
-    arg3 = Variable("rtr", "bool")
-    return arg1, arg2, arg3
+    return arg1, arg2
