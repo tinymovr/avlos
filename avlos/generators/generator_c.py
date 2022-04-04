@@ -1,6 +1,14 @@
 import os
 import avlos
-from csnake import CodeWriter, Function, FuncPtr, Variable, AddressOf, FormattedLiteral
+from csnake import (
+    CodeWriter,
+    Enum,
+    Function,
+    FuncPtr,
+    Variable,
+    AddressOf,
+    FormattedLiteral,
+)
 
 
 c_type_map = {
@@ -65,6 +73,20 @@ def process_impl(instance, config):
 
     # Includes
     cw_impl.include(config["paths"]["output_header"])
+    cw_impl.add_line("")
+
+    # Enums
+    enum_dir = Enum("Avlos_Directive", prefix="AVLOS_DIR_", typedef=True)
+    enum_dir.add_value("READ", 0)
+    enum_dir.add_value("WRITE", 1)
+    cw_impl.add_enum(enum_dir)
+    cw_impl.add_line("")
+
+    enum_ret = Enum("Avlos_Return", prefix="AVLOS_RET_", typedef=True)
+    enum_ret.add_value("NOACTION", 0)
+    enum_ret.add_value("READ", 1)
+    enum_ret.add_value("WRITE", 2)
+    cw_impl.add_enum(enum_ret)
     cw_impl.add_line("")
 
     # Implementations
