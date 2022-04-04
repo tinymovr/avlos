@@ -4,7 +4,7 @@ Given a tree that represents a remote embedded device, Avlos will generate code 
 
 ## Example
 
-Given the description expressed in a YAML file as follows:
+Given a device description expressed in a YAML file as follows:
 
     name: toaster
     attributes:
@@ -17,18 +17,21 @@ Given the description expressed in a YAML file as follows:
       - name: temperature
           dtype: float
           unit: celsius
-          c_getter: toaster_get_temp
+          c_getter: toaster_get_heater_temp
           description: The toaster heater temperature.
+    - name: relay
+      attributes:
       - name: relay_state
           dtype: bool
           c_getter: toaster_get_relay_state
           c_setter: toaster_set_relay_state
           description: The toaster heating relay element state.
 
-, Avlos will generate the following C header(note: there are actually a few more stuff not included here for brevity):
+
+, by default Avlos will generate the following C header(note: there are actually a few more stuff not included here for brevity):
 
     /*
-    * avlos_toaster_get_sn
+    * avlos_toaster_sn
     *
     * The unique device serial number.
     *
@@ -36,10 +39,10 @@ Given the description expressed in a YAML file as follows:
     * @param buffer_len
     * @param rtr
     */
-    uint8_t avlos_toaster_get_sn(uint8_t * buffer, uint8_t * buffer_len, bool rtr);
+    uint8_t avlos_toaster_sn(uint8_t * buffer, uint8_t * buffer_len, bool rtr);
 
     /*
-    * avlos_toaster_get_temp
+    * avlos_toaster_heater_temp
     *
     * The toaster heater temperature.
     *
@@ -47,10 +50,10 @@ Given the description expressed in a YAML file as follows:
     * @param buffer_len
     * @param rtr
     */
-    uint8_t avlos_toaster_get_temp(uint8_t * buffer, uint8_t * buffer_len, bool rtr);
+    uint8_t avlos_toaster_heater_temp(uint8_t * buffer, uint8_t * buffer_len, bool rtr);
 
     /*
-    * avlos_toaster_get_relay_state
+    * avlos_toaster_relay_state
     *
     * The toaster heating relay element state.
     *
@@ -58,44 +61,52 @@ Given the description expressed in a YAML file as follows:
     * @param buffer_len
     * @param rtr
     */
-    uint8_t avlos_toaster_get_relay_state(uint8_t * buffer, uint8_t * buffer_len, bool rtr);
+    uint8_t avlos_toaster_relay_state(uint8_t * buffer, uint8_t * buffer_len, bool rtr);
+
 
 , implementation:
 
-    uint8_t avlos_toaster_get_sn(uint8_t * buffer, uint8_t * buffer_len, bool rtr)
+    uint8_t avlos_toaster_sn(uint8_t * buffer, uint8_t * buffer_len, bool rtr)
     {
         uint32_t v;
-        v = toaster_get_sn();
-        *buffer_len = sizeof(uint32_t);
-        memcpy(buffer, &v, sizeof(uint32_t));
-        return CANRP_Read;
+        if (AVLOS_DIR_READ == buffer[0]) {
+            v = toaster_get_sn();
+            *buffer_len = sizeof(v);
+            memcpy(buffer+1, &v, sizeof(v));
+            return AVLOS_RET_READ;
+        }
+    return AVLOS_RET_NOACTION;
     }
 
-    uint8_t avlos_toaster_get_temp(uint8_t * buffer, uint8_t * buffer_len, bool rtr)
+    uint8_t avlos_toaster_heater_temp(uint8_t * buffer, uint8_t * buffer_len, bool rtr)
+    {
+        uint32_t v;
+        if (AVLOS_DIR_READ == buffer[0]) {
+            v = toaster_get_heater_temp();
+            *buffer_len = sizeof(v);
+            memcpy(buffer+1, &v, sizeof(v));
+            return AVLOS_RET_READ;
+        }
+    return AVLOS_RET_NOACTION;
+    }
+
+    uint8_t avlos_toaster_relay_state(uint8_t * buffer, uint8_t * buffer_len, bool rtr)
     {
         float v;
-        v = toaster_get_temp();
-        *buffer_len = sizeof(float);
-        memcpy(buffer, &v, sizeof(float));
-        return CANRP_Read;
+        if (AVLOS_DIR_READ == buffer[0]) {
+            v = toaster_get_relay_state();
+            *buffer_len = sizeof(v);
+            memcpy(buffer+1, &v, sizeof(v));
+            return AVLOS_RET_READ;
+        }
+        else if (AVLOS_DIR_WRITE == buffer[0]) {
+            memcpy(&v, buffer+1, sizeof(v));
+            toaster_set_relay_state(v);
+            return AVLOS_RET_WRITE;
+        }
+        return AVLOS_RET_NOACTION;
     }
 
-    uint8_t avlos_toaster_get_relay_state(uint8_t * buffer, uint8_t * buffer_len, bool rtr)
-    {
-        bool v;
-        v = toaster_get_relay_state();
-        *buffer_len = sizeof(bool);
-        memcpy(buffer, &v, sizeof(bool));
-        return CANRP_Read;
-    }
-
-    uint8_t avlos_toaster_set_relay_state(uint8_t * buffer, uint8_t * buffer_len, bool rtr)
-    {
-        bool v;
-        memcpy(&v, buffer, sizeof(bool));
-        toaster_set_relay_state(v);
-        return CANRP_Write;
-    }
 
 , and the following RestructuredText documentation:
 
@@ -117,14 +128,16 @@ Given the description expressed in a YAML file as follows:
 
     The toaster heater temperature.
 
-    toaster.heater.relay_state
+    toaster.relay.state
     --------------------------
 
     - Endpoint ID: 3
     - Data Type: bool
     - Unit: Not defined
 
-    The toaster heating relay element state.
+    The toaster heating element relay state.
 
+
+It will also compute a checksum for the spec and add it as a getter function so that it can be retrieved by the client for comparing client and device specs. 
 
 The output location, as well as many other attributes of the files are configurable.
