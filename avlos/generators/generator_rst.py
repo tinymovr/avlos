@@ -26,5 +26,6 @@ def traverse(obj, state, d):
         d.li("Unit: {}".format(obj.unit.units if obj.unit != None else "Not defined"))
         d.newline()
         d.content(obj.description)
+        d.newline()
 
         state["ep_counter"] += 1
