@@ -7,8 +7,10 @@ generators:
     paths:
       output_header: ../outputs/test.h
       output_impl: ../outputs/test.c
-    c_includes:
+    c_header_includes:
     - src/common.h
+    c_impl_includes:
+    - src/dust.h
   generator_rst:
     enabled: true
     paths:

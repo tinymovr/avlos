@@ -7,7 +7,6 @@ from csnake import (
     FuncPtr,
     Variable,
     AddressOf,
-    FormattedLiteral,
 )
 
 
@@ -37,11 +36,19 @@ def process_header(instance, config):
 
     # Imports
     try:
-        for header in config["c_includes"]:
+        for header in config["c_header_includes"]:
             cw_head.include(header)
         cw_head.add_line("")
     except KeyError:
         pass
+
+    # Enums
+    enum_ret = Enum("Avlos_Return", prefix="AVLOS_RET_", typedef=True)
+    enum_ret.add_value("NOACTION", 0)
+    enum_ret.add_value("READ", 1)
+    enum_ret.add_value("WRITE", 2)
+    cw_head.add_enum(enum_ret)
+    cw_head.add_line("")
 
     # Function prototypes
     # TODO: Make below declaration safer
@@ -72,6 +79,11 @@ def process_impl(instance, config):
     cw_impl.add_line("")
 
     # Includes
+    try:
+        for header in config["c_impl_includes"]:
+            cw_impl.include(header)
+    except KeyError:
+        pass
     cw_impl.include(config["paths"]["output_header"])
     cw_impl.add_line("")
 
@@ -80,13 +92,6 @@ def process_impl(instance, config):
     enum_dir.add_value("READ", 0)
     enum_dir.add_value("WRITE", 1)
     cw_impl.add_enum(enum_dir)
-    cw_impl.add_line("")
-
-    enum_ret = Enum("Avlos_Return", prefix="AVLOS_RET_", typedef=True)
-    enum_ret.add_value("NOACTION", 0)
-    enum_ret.add_value("READ", 1)
-    enum_ret.add_value("WRITE", 2)
-    cw_impl.add_enum(enum_ret)
     cw_impl.add_line("")
 
     # Implementations
@@ -117,7 +122,9 @@ def traverse_function_list(obj, state, cw):
 
 
 def output_function_array(f_list, cw):
-    v = Variable("avlos_funcs", FuncPtr("uint8_t", arguments=get_args()), value=f_list)
+    v = Variable(
+        "avlos_endpoints", FuncPtr("uint8_t", arguments=get_args()), value=f_list
+    )
     cw.add_variable_initialization(v)
 
 
