@@ -24,6 +24,8 @@ def process_header(instance, config):
     cw_head = CodeWriter()
     cw_head.add_autogen_comment()
     cw_head.add_line("")
+    cw_head.add_line("#pragma once")
+    cw_head.add_line("")
 
     # Imports
     try:

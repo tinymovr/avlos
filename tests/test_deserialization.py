@@ -12,8 +12,8 @@ class TestDeserialization(unittest.TestCase):
         def_path_str = str(
             importlib.resources.files("tests").joinpath("definition/good_device.yaml")
         )
-        with open(def_path_str) as system_description:
-            obj = deserialize(yaml.safe_load(system_description))
+        with open(def_path_str) as device_description:
+            obj = deserialize(yaml.safe_load(device_description))
             print(obj)
 
     def test_undefined_unit(self):
@@ -22,9 +22,9 @@ class TestDeserialization(unittest.TestCase):
                 "definition/bad_device_unit.yaml"
             )
         )
-        with open(def_path_str) as system_description:
+        with open(def_path_str) as device_description:
             with self.assertRaises(pint.errors.UndefinedUnitError):
-                deserialize(yaml.safe_load(system_description))
+                deserialize(yaml.safe_load(device_description))
 
     def test_validation_fail(self):
         def_path_str = str(
@@ -32,6 +32,6 @@ class TestDeserialization(unittest.TestCase):
                 "definition/bad_device_name.yaml"
             )
         )
-        with open(def_path_str) as system_description:
+        with open(def_path_str) as device_description:
             with self.assertRaises(marshmallow.exceptions.ValidationError):
-                deserialize(yaml.safe_load(system_description))
+                deserialize(yaml.safe_load(device_description))

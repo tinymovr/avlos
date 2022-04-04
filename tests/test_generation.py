@@ -21,8 +21,8 @@ class TestGeneration(unittest.TestCase):
         impl_path_str = str(
             importlib.resources.files("tests").joinpath("outputs/test.c")
         )
-        with open(def_path_str) as system_desc_stream:
-            obj = deserialize(yaml.safe_load(system_desc_stream))
+        with open(def_path_str) as device_desc_stream:
+            obj = deserialize(yaml.safe_load(device_desc_stream))
             config = {
                 "hash_string": "0x9e8dc7ac",
                 "paths": {
@@ -40,8 +40,8 @@ class TestGeneration(unittest.TestCase):
         out_path_str = str(
             importlib.resources.files("tests").joinpath("outputs/test.rst")
         )
-        with open(def_path_str) as system_desc_stream:
-            obj = deserialize(yaml.safe_load(system_desc_stream))
+        with open(def_path_str) as device_desc_stream:
+            obj = deserialize(yaml.safe_load(device_desc_stream))
             config = {
                 "hash_string": "0x9e8dc7ac",
                 "paths": {"output_file": out_path_str},
@@ -55,6 +55,6 @@ class TestGeneration(unittest.TestCase):
         config_file_path_str = str(
             importlib.resources.files("tests").joinpath("definition/output_config.yaml")
         )
-        with open(def_path_str) as system_desc_stream:
-            obj = deserialize(yaml.safe_load(system_desc_stream))
+        with open(def_path_str) as device_desc_stream:
+            obj = deserialize(yaml.safe_load(device_desc_stream))
             process_file(obj, config_file_path_str)

@@ -28,8 +28,8 @@ def run_cli():
 
     spec_path: str = arguments["<spec_path>"]
     config_path: str = arguments["--config"]
-    with open(spec_path) as system_desc_stream:
-        obj = deserialize(yaml.safe_load(system_desc_stream))
+    with open(spec_path) as device_desc_stream:
+        obj = deserialize(yaml.safe_load(device_desc_stream))
         process_file(obj, config_path)
 
 
