@@ -70,7 +70,8 @@ def process_header(instance, config):
             AddressOf(
                 Variable("avlos_get_hash", FuncPtr("uint8_t", arguments=get_args()))
             )
-        ]
+        ],
+        "prefix": "",
     }
     traverse_function_list(instance, state, cw_head)
     output_function_array(state["f_list"], cw_head)
@@ -116,10 +117,13 @@ def process_impl(instance, config):
 
 def traverse_function_list(obj, state, cw):
     try:
+        current_prefix = state["prefix"]
         for child in obj.remote_attributes.values():
+            state["prefix"] = "{}{}_".format(current_prefix, obj.name)
             traverse_function_list(child, state, cw)
+        state["prefix"] = current_prefix
     except AttributeError:
-        f_name = get_f_name(obj.c_getter)
+        f_name = get_f_name("{}{}".format(state["prefix"], obj.name))
         state["f_list"].append(
             AddressOf(Variable(f_name, FuncPtr("uint8_t", arguments=get_args())))
         )
