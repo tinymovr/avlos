@@ -50,6 +50,12 @@ def process_header(instance, config):
     cw_head.add_enum(enum_ret)
     cw_head.add_line("")
 
+    enum_dir = Enum("Avlos_Command", prefix="AVLOS_CMD_", typedef=True)
+    enum_dir.add_value("WRITE", 0)
+    enum_dir.add_value("READ", 1)
+    cw_head.add_enum(enum_dir)
+    cw_head.add_line("")
+
     # Function prototypes
     # TODO: Make below declaration safer
     cw_head.add_line("uint8_t avlos_get_hash(uint8_t * buffer, uint8_t * buffer_len);")
@@ -85,13 +91,6 @@ def process_impl(instance, config):
     except KeyError:
         pass
     cw_impl.include(config["paths"]["output_header"])
-    cw_impl.add_line("")
-
-    # Enums
-    enum_dir = Enum("Avlos_Directive", prefix="AVLOS_DIR_", typedef=True)
-    enum_dir.add_value("READ", 0)
-    enum_dir.add_value("WRITE", 1)
-    cw_impl.add_enum(enum_dir)
     cw_impl.add_line("")
 
     # Implementations
@@ -169,31 +168,19 @@ def traverse_impl(obj, state, cw):
             c_setter = None
 
         # TODO: Make implementation using safe primitives
-        fun.codewriter.add_line("if (AVLOS_DIR_READ == buffer[0]) {")
+        fun.codewriter.add_line("if (AVLOS_CMD_READ == cmd) {")
         fun.codewriter.add_line("    v = {}();".format(obj.c_getter))
         fun.codewriter.add_line("    *buffer_len = sizeof(v);")
-        fun.codewriter.add_line("    memcpy(buffer+1, &v, sizeof(v));")
+        fun.codewriter.add_line("    memcpy(buffer, &v, sizeof(v));")
         fun.codewriter.add_line("    return AVLOS_RET_READ;")
         fun.codewriter.add_line("}")
         if c_setter:
-            fun.codewriter.add_line("else if (AVLOS_DIR_WRITE == buffer[0]) {")
-            fun.codewriter.add_line("    memcpy(&v, buffer+1, sizeof(v));")
+            fun.codewriter.add_line("else if (AVLOS_CMD_WRITE == cmd) {")
+            fun.codewriter.add_line("    memcpy(&v, buffer, sizeof(v));")
             fun.codewriter.add_line("    {}(v);".format(c_setter))
             fun.codewriter.add_line("    return AVLOS_RET_WRITE;")
             fun.codewriter.add_line("}")
         fun.codewriter.add_line("return AVLOS_RET_NOACTION;")
-        # uint32_t v;
-        # if (AVLOS_DIR_READ == buffer[0]) {
-        #     *buffer_len = sizeof(v);
-        #     memcpy(buffer, &v, sizeof(v));
-        #     return AVLOS_RET_READ;
-        # }
-        # else if (AVLOS_DIR_WRITE == buffer[0]) {
-        #     memcpy(&v, buffer, sizeof(v));
-        #     motor_set_R(v);
-        #     return AVLOS_RET_WRITE;
-        # }
-        # return AVLOS_RET_NOACTION;
 
         cw.add_function_definition(fun)
         cw.add_line("")
@@ -206,4 +193,5 @@ def get_f_name(accessor):
 def get_args():
     arg1 = Variable("buffer", "uint8_t *")
     arg2 = Variable("buffer_len", "uint8_t *")
-    return arg1, arg2
+    arg3 = Variable("cmd", "Avlos_Command")
+    return arg1, arg2, arg3

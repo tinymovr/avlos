@@ -141,3 +141,7 @@ Given a device description expressed in a YAML file as follows:
 It will also compute a checksum for the spec and add it as a getter function so that it can be retrieved by the client for comparing client and device specs. 
 
 The output location, as well as many other attributes of the files are configurable.
+
+### Topics
+
+- The Avlos_Command enum is structured so as to be compatible with CAN bus RTR field (i.e. 0 -> write, 1 -> read)

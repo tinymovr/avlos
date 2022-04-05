@@ -6,6 +6,10 @@ def process(instance, config):
     d = RstCloth()
     state = {"ep_counter": 1, "prefix": ""}
 
+    d.ref_target("api-reference")
+    d.newline()
+    d.h2("API Reference")
+
     traverse(instance, state, d)
     d.write(config["paths"]["output_file"])
 
@@ -29,3 +33,12 @@ def traverse(obj, state, d):
         d.newline()
 
         state["ep_counter"] += 1
+
+
+# .. _api-reference:
+
+# API Reference
+# #############
+
+# .. note::
+#     Where "float32" is mentioned, an IEEE 754, 32-bit floating point representation is assumed.
