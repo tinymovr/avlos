@@ -1,4 +1,5 @@
 import os
+from os.path import relpath, dirname
 import avlos
 from csnake import (
     CodeWriter,
@@ -90,7 +91,11 @@ def process_impl(instance, config):
             cw_impl.include(header)
     except KeyError:
         pass
-    cw_impl.include(config["paths"]["output_header"])
+    cw_impl.include(
+        relpath(
+            config["paths"]["output_header"], dirname(config["paths"]["output_impl"])
+        )
+    )
     cw_impl.add_line("")
 
     # Implementations
