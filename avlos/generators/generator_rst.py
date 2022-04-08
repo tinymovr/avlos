@@ -23,6 +23,9 @@ def traverse(obj, state, d):
         state["prefix"] = current_prefix
     except AttributeError:
         d.newline()
+        if None != obj.rst_target:
+            d.ref_target(obj.rst_target)
+            d.newline()
         d.h2("{}{}".format(state["prefix"], obj.name))
         d.newline()
         d.li("Endpoint ID: {}".format(state["ep_counter"]))

@@ -59,7 +59,9 @@ def process_header(instance, config):
 
     # Function prototypes
     # TODO: Make below declaration safer
-    cw_head.add_line("uint8_t avlos_get_hash(uint8_t * buffer, uint8_t * buffer_len);")
+    cw_head.add_line(
+        "uint8_t avlos_get_hash(uint8_t * buffer, uint8_t * buffer_len, uint8_t cmd);"
+    )
     cw_head.add_line("")
     state = {"ep_counter": 1, "prefix": ""}
     traverse_header(instance, state, cw_head)
@@ -102,7 +104,7 @@ def process_impl(instance, config):
     # Implementations
     # TODO: Make below declaration safer
     cw_impl.add_line(
-        "uint8_t avlos_get_hash(uint8_t * buffer, uint8_t * buffer_len) {{ const uint32_t v = {}; memcpy(buffer, &v, sizeof(v)); return AVLOS_RET_READ; }}".format(
+        "uint8_t avlos_get_hash(uint8_t * buffer, uint8_t * buffer_len, uint8_t cmd) {{ const uint32_t v = {}; memcpy(buffer, &v, sizeof(v)); return AVLOS_RET_READ; }}".format(
             instance.hash_string
         )
     )
@@ -131,7 +133,7 @@ def traverse_function_list(obj, state, cw):
 
 def output_function_array(f_list, cw):
     v = Variable(
-        "avlos_endpoints", FuncPtr("uint8_t", arguments=get_args()), value=f_list
+        "avlos_endpoints", FuncPtr("static uint8_t", arguments=get_args()), value=f_list
     )
     cw.add_variable_initialization(v)
 

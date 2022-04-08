@@ -40,13 +40,23 @@ class RemoteNode:
 
 
 class RemoteEndpoint:
-    def __init__(self, name, description, dtype, c_getter, unit=None, c_setter=None):
+    def __init__(
+        self,
+        name,
+        description,
+        dtype,
+        c_getter,
+        unit=None,
+        c_setter=None,
+        rst_target=None,
+    ):
         self.name = name
         self.description = description
         self.dtype = dtype
         self.unit = unit
         self.c_getter = c_getter
         self.c_setter = c_setter
+        self.rst_target = rst_target
 
     def str_dump(self):
         return "{} ({}): {}".format(
@@ -64,6 +74,7 @@ class RemoteNodeSchema(Schema):
     unit = UnitField()
     c_getter = fields.String()
     c_setter = fields.String()
+    rst_target = fields.String()
 
     @post_load
     def make_remote_node(self, data, **kwargs):
