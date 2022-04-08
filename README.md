@@ -2,6 +2,8 @@
 
 Given a tree that represents a remote embedded device, Avlos will generate code (embedded, client) for the remote client to talk to the device. 
 
+![main lint and test](https://github.com/tinymovr/avlos/actions/workflows/ci.yml/badge.svg)
+
 ## Example
 
 Given a device description expressed in a YAML file as follows:
