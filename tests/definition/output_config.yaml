@@ -15,4 +15,13 @@ generators:
     enabled: true
     paths:
       output_file: ../outputs/test.rst
+  generator_cpp:
+    enabled: true
+    paths:
+      output_header: ../outputs/test.hpp
+      output_impl: ../outputs/test.cpp
+    c_header_includes:
+    - src/common.h
+    cpp_impl_includes:
+    - src/dust.hpp
 

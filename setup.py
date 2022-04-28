@@ -23,6 +23,7 @@ setup(
     extras_require={
         "generator_c": ["csnake"],
         "generator_rst": ["rstcloth"],
+        "generator_cpp": ["jinja2"],
         #'generator_python': ["pint"]
     },
 )

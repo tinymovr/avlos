@@ -1,6 +1,7 @@
 import os
 from os.path import relpath, dirname
 import avlos
+from avlos.generators.type_map import c_type_map
 from csnake import (
     CodeWriter,
     Enum,
@@ -9,18 +10,6 @@ from csnake import (
     Variable,
     AddressOf,
 )
-
-
-c_type_map = {
-    "bool": "bool",
-    "int8": "int8_t",
-    "uint8": "uint8_t",
-    "int16": "int16_t",
-    "uint16": "uint16_t",
-    "int32": "int32_t",
-    "uint32": "uint32_t",
-    "float": "float",
-}
 
 
 def process(instance, config):
