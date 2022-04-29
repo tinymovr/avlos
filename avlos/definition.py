@@ -61,8 +61,8 @@ class RemoteEndpoint:
         self.ep_id = ep_id
 
     def str_dump(self):
-        return "{} ({}): {}".format(
-            self.name, self.dtype, 10 * self.unit if self.unit else 10
+        return "{}. {} ({}): {}".format(
+            self.ep_id, self.name, self.dtype, 10 * self.unit if self.unit else 10
         )
 
 
@@ -71,7 +71,9 @@ class RemoteNodeSchema(Schema):
         required=True, error_messages={"required": "Name is required."}
     )
     description = fields.String()
-    remote_attributes = fields.List(fields.Nested(lambda: RemoteNodeSchema()))
+    remote_attributes = fields.List(
+        fields.Nested(lambda: RemoteNodeSchema(self.counter))
+    )
     dtype = fields.String(validate=validate.OneOf(unit_strings))
     unit = UnitField()
     c_getter = fields.String()
@@ -79,14 +81,13 @@ class RemoteNodeSchema(Schema):
     rst_target = fields.String()
     ep_id = fields.Integer(default=-1)
 
-    def __init__(self, *args, **kwargs):
-        self.idx = 0
+    def __init__(self, counter, *args, **kwargs):
+        self.counter = counter
         super().__init__(*args, **kwargs)
 
     @post_load
     def make_remote_node(self, data, **kwargs):
         if "remote_attributes" in data:
             return RemoteNode(**data)
-        data["ep_id"] = self.idx
-        self.idx += 1
+        data["ep_id"] = self.counter.next
         return RemoteEndpoint(**data)
