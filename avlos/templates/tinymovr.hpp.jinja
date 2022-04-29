@@ -2,6 +2,7 @@
 #pragma once
 
 #include <cstdint>
+
 {%- if instance.remote_attributes %}
     {%- for attr in instance.remote_attributes.values() %}
         {%- if attr.remote_attributes %}
@@ -9,6 +10,9 @@
         {%- endif %}
     {%- endfor %}
 {%- endif %}
+
+#define EP_BITS (6)
+#define RECV_DELAY_US (160.0f)
 
 typedef void (*send_callback)(uint32_t arbitration_id, uint8_t *data, uint8_t dlc, bool rtr);
 typedef bool (*recv_callback)(uint32_t arbitration_id, uint8_t *data, uint8_t *dlc);

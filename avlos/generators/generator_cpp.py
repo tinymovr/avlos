@@ -49,6 +49,9 @@ def process_impl(instance, config):
     )
     with open(file, "w") as output_file:
         print(template.render(instance=instance, type_map=type_map), file=output_file)
+    for attr in instance.remote_attributes.values():
+        if hasattr(attr, "remote_attributes"):
+            recurse_impl(attr, config)
 
 
 def recurse_impl(remote_object, config):
@@ -61,3 +64,6 @@ def recurse_impl(remote_object, config):
         print(
             template.render(instance=remote_object, type_map=type_map), file=output_file
         )
+    for attr in remote_object.remote_attributes.values():
+        if hasattr(attr, "remote_attributes"):
+            recurse_impl(attr, config)

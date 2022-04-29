@@ -12,14 +12,13 @@
         this->send({{attr.ep_id}}, this->_data, 0, true);
         if (this->recv({{attr.ep_id}}, this->_data, &(this->_dlc), RECV_DELAY_US)) 
         {
-            read_le(&value, this->_data + 1);
+            read_le(&value, this->_data);
         }
         return value;
     }
     void Tinymovr::set_{{attr.name}}({{type_map[attr.dtype]}} value)
     {
-        const uint8_t arb_id = this->get_arbitration_id(cmd_id);
-        this->send_cb(arb_id, data, data_size, rtr);
+        this->send_cb({{attr.ep_id}}, this->_data, sizeof({{type_map[attr.dtype]}}), true);
     }
         {%- endif %}
     {%- endfor %}
@@ -46,6 +45,6 @@ bool Tinymovr::recv(uint8_t cmd_id, uint8_t *data, uint8_t *data_size, uint16_t 
 
 uint8_t Tinymovr::get_arbitration_id(uint8_t cmd_id)
 {
-    return this->can_node_id << ep_bits | cmd_id;
+    return this->can_node_id << EP_BITS | cmd_id;
 }
 

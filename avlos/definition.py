@@ -49,6 +49,7 @@ class RemoteEndpoint:
         unit=None,
         c_setter=None,
         rst_target=None,
+        ep_id=-1,
     ):
         self.name = name
         self.description = description
@@ -57,6 +58,7 @@ class RemoteEndpoint:
         self.c_getter = c_getter
         self.c_setter = c_setter
         self.rst_target = rst_target
+        self.ep_id = ep_id
 
     def str_dump(self):
         return "{} ({}): {}".format(
@@ -75,9 +77,16 @@ class RemoteNodeSchema(Schema):
     c_getter = fields.String()
     c_setter = fields.String()
     rst_target = fields.String()
+    ep_id = fields.Integer(default=-1)
+
+    def __init__(self, *args, **kwargs):
+        self.idx = 0
+        super().__init__(*args, **kwargs)
 
     @post_load
     def make_remote_node(self, data, **kwargs):
         if "remote_attributes" in data:
             return RemoteNode(**data)
+        data["ep_id"] = self.idx
+        self.idx += 1
         return RemoteEndpoint(**data)

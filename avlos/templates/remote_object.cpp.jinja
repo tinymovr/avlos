@@ -1,0 +1,49 @@
+
+#include <{{ instance.name }}.hpp>
+
+{%- if instance.remote_attributes %}
+    {%- for attr in instance.remote_attributes.values() %}
+        {%- if attr.remote_attributes %}
+        {%- else %}
+{{type_map[attr.dtype]}} {{ instance.name }}::get_{{attr.name}}(void)
+{
+    {{type_map[attr.dtype]}} value;
+    this->send({{attr.ep_id}}, this->_data, 0, true);
+    if (this->recv({{attr.ep_id}}, this->_data, &(this->_dlc), RECV_DELAY_US)) 
+    {
+        read_le(&value, this->_data);
+    }
+    return value;
+}
+void {{ instance.name }}::set_{{attr.name}}({{type_map[attr.dtype]}} value)
+{
+    this->send_cb({{attr.ep_id}}, this->_data, sizeof({{type_map[attr.dtype]}}), true);
+}
+        {%- endif %}
+    {%- endfor %}
+{%- endif %}
+
+void {{ instance.name }}::send(uint8_t cmd_id, uint8_t *data, uint8_t data_size, bool rtr)
+{
+    const uint8_t arb_id = this->get_arbitration_id(cmd_id);
+    this->send_cb(arb_id, data, data_size, rtr);
+}
+
+bool {{ instance.name }}::recv(uint8_t cmd_id, uint8_t *data, uint8_t *data_size, uint16_t delay_us)
+{
+    // A delay of a few 100s of us needs to be inserted
+    // to ensure the response has been transmitted.
+    // TODO: Better handle this using an interrupt.
+    if (delay_us > 0)
+    {
+        delayMicroseconds(delay_us);
+    }
+    const uint8_t arb_id = this->get_arbitration_id(cmd_id);
+    return this->recv_cb(arb_id, data, data_size);
+}
+
+uint8_t {{ instance.name }}::get_arbitration_id(uint8_t cmd_id)
+{
+    return this->can_node_id << EP_BITS | cmd_id;
+}
+
