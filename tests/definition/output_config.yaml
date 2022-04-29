@@ -18,8 +18,7 @@ generators:
   generator_cpp:
     enabled: true
     paths:
-      output_header: ../outputs/test.hpp
-      output_impl: ../outputs/test.cpp
+      output_dir: ../outputs/test.hpp
     c_header_includes:
     - src/common.h
     cpp_impl_includes:

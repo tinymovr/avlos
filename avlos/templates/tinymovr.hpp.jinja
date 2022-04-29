@@ -2,9 +2,9 @@
 #pragma once
 
 #include <cstdint>
-{%- if 'remote_attributes' in instance %}
-    {%- for attr in instance.remote_attributes %}
-        {%- if 'remote_attributes' in object %}
+{%- if instance.remote_attributes %}
+    {%- for attr in instance.remote_attributes.values() %}
+        {%- if attr.remote_attributes %}
 #include <{{attr.name}}.hpp>
         {%- endif %}
     {%- endfor %}
@@ -18,16 +18,17 @@ class Tinymovr
     public:
 
         Tinymovr(uint8_t _can_node_id, send_callback _send_cb, recv_callback _recv_cb):
-        can_node_id(_can_node_id), send_cb(_send_cb), recv_cb(_recv_cb) {};
+            can_node_id(_can_node_id), send_cb(_send_cb), recv_cb(_recv_cb) {};
 
-    {%- if 'remote_attributes' in instance %}
-        {%- for object in instance.remote_attributes %}
-            {%- if 'remote_attributes' in object %}
-        {{object.name}} {{object.name}};
+    {%- if instance.remote_attributes %}
+        {%- for attr in instance.remote_attributes.values() %}
+            {%- if attr.remote_attributes %}
+        {{attr.name}} {{attr.name}};
+
             {%- else %}
-            
-        {{object.type}} get_{{object.name}}(void);
-        void set_{{object.name}}({{object.type}} value);
+        {{type_map[attr.dtype]}} get_{{attr.name}}(void);
+        void set_{{attr.name}}({{type_map[attr.dtype]}} value);
+
             {%- endif %}
         {%- endfor %}
     {%- endif %}
