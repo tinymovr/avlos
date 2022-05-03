@@ -2,19 +2,50 @@ from collections import OrderedDict
 from marshmallow import Schema, fields, post_load, validate
 from avlos.unit_field import UnitField
 from avlos.counter import get_counter
-from pprint import pformat
 
 unit_strings = ["bool", "int8", "uint8", "int16", "uint16", "int32", "uint32", "float"]
 
 
 class RemoteNode:
     def __init__(self, remote_attributes, name, description=None):
-        self.name = name
-        self.description = description
         od = OrderedDict()
         for attrib in remote_attributes:
             od[attrib.name] = attrib
-        self.remote_attributes = od
+        super().__setattr__("remote_attributes", od)
+        self.name = name
+        self.description = description
+
+    def __getattr__(self, __name):
+        try:
+            attr = self.remote_attributes[__name]
+            if isinstance(attr, RemoteNode):
+                return attr
+            elif isinstance(attr, RemoteEndpoint):
+                return attr.get_value()
+        except KeyError:
+            return super().__getattr__(__name)
+
+    def __setattr__(self, __name, __value):
+        try:
+            attr = self.remote_attributes[__name]
+            if isinstance(attr, RemoteEndpoint):
+                return attr.set_value(__value)
+        except KeyError:
+            super().__setattr__(__name, __value)
+
+    def set_getter_cb(self, cb):
+        for attr in self.remote_attributes.values():
+            if isinstance(attr, RemoteNode):
+                attr.set_getter_cb(cb)
+            elif isinstance(attr, RemoteEndpoint):
+                attr.getter_cb = cb
+
+    def set_setter_cb(self, cb):
+        for attr in self.remote_attributes.values():
+            if isinstance(attr, RemoteNode):
+                attr.set_setter_cb(cb)
+            elif isinstance(attr, RemoteEndpoint):
+                attr.setter_cb = cb
 
     def str_dump(self, indent, depth):
         if depth <= 0:
@@ -61,9 +92,21 @@ class RemoteEndpoint:
         self.rst_target = rst_target
         self.ep_id = ep_id
 
+        self.getter_cb = None
+        self.setter_cb = None
+
+    def get_value(self):
+        return self.getter_cb()
+
+    def set_value(self, __value):
+        self.setter_cb(__value)
+
     def str_dump(self):
         return "{}. {} ({}): {}".format(
-            self.ep_id, self.name, self.dtype, 10 * self.unit if self.unit else 10
+            self.ep_id,
+            self.name,
+            self.dtype,
+            self.get_value() * self.unit if self.unit else self.get_value(),
         )
 
 

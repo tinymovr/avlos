@@ -14,6 +14,8 @@ class TestDeserialization(unittest.TestCase):
         )
         with open(def_path_str) as device_description:
             obj = deserialize(yaml.safe_load(device_description))
+            obj.set_getter_cb(lambda: 0)
+            obj.set_setter_cb(lambda: 0)
             print(obj)
 
     def test_undefined_unit(self):
