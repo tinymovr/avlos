@@ -1,6 +1,7 @@
 
 #include <{{ instance.name }}.hpp>
 
+
 {%- if instance.remote_attributes %}
     {%- for attr in instance.remote_attributes.values() %}
         {%- if attr.remote_attributes %}

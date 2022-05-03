@@ -1,6 +1,7 @@
 from collections import OrderedDict
 from marshmallow import Schema, fields, post_load, validate
 from avlos.unit_field import UnitField
+from avlos.counter import get_counter
 from pprint import pformat
 
 unit_strings = ["bool", "int8", "uint8", "int16", "uint16", "int32", "uint32", "float"]
@@ -71,9 +72,7 @@ class RemoteNodeSchema(Schema):
         required=True, error_messages={"required": "Name is required."}
     )
     description = fields.String()
-    remote_attributes = fields.List(
-        fields.Nested(lambda: RemoteNodeSchema(self.counter))
-    )
+    remote_attributes = fields.List(fields.Nested(lambda: RemoteNodeSchema()))
     dtype = fields.String(validate=validate.OneOf(unit_strings))
     unit = UnitField()
     c_getter = fields.String()
@@ -81,13 +80,13 @@ class RemoteNodeSchema(Schema):
     rst_target = fields.String()
     ep_id = fields.Integer(default=-1)
 
-    def __init__(self, counter, *args, **kwargs):
-        self.counter = counter
+    def __init__(self, *args, **kwargs):
+        self.counter = get_counter()
         super().__init__(*args, **kwargs)
 
     @post_load
     def make_remote_node(self, data, **kwargs):
         if "remote_attributes" in data:
             return RemoteNode(**data)
-        data["ep_id"] = self.counter.next
+        data["ep_id"] = self.counter.next()
         return RemoteEndpoint(**data)

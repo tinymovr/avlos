@@ -19,8 +19,7 @@ generators:
     enabled: true
     paths:
       output_dir: ../outputs/test.hpp
-    c_header_includes:
-    - src/common.h
-    cpp_impl_includes:
-    - src/dust.hpp
+    cpp_header_includes:
+    - codecs.hpp
+
 

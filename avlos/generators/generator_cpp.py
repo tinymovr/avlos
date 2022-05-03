@@ -19,8 +19,15 @@ def process_header(instance, config):
         os.path.dirname(config["paths"]["output_dir"]),
         "tinymovr.hpp",
     )
+    try:
+        includes = config["cpp_header_includes"]
+    except KeyError:
+        includes = []
     with open(file, "w") as output_file:
-        print(template.render(instance=instance, type_map=type_map), file=output_file)
+        print(
+            template.render(instance=instance, type_map=type_map, includes=includes),
+            file=output_file,
+        )
     for attr in instance.remote_attributes.values():
         if hasattr(attr, "remote_attributes"):
             recurse_header(attr, config)
@@ -47,8 +54,15 @@ def process_impl(instance, config):
         os.path.dirname(config["paths"]["output_dir"]),
         "tinymovr.cpp",
     )
+    try:
+        includes = config["cpp_impl_includes"]
+    except KeyError:
+        includes = []
     with open(file, "w") as output_file:
-        print(template.render(instance=instance, type_map=type_map), file=output_file)
+        print(
+            template.render(instance=instance, type_map=type_map, includes=includes),
+            file=output_file,
+        )
     for attr in instance.remote_attributes.values():
         if hasattr(attr, "remote_attributes"):
             recurse_impl(attr, config)

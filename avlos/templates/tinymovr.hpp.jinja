@@ -2,6 +2,9 @@
 #pragma once
 
 #include <cstdint>
+{%- for include in includes %}
+#include <{{ include }}>
+{%- endfor %}
 
 {%- if instance.remote_attributes %}
     {%- for attr in instance.remote_attributes.values() %}
