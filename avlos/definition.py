@@ -96,10 +96,10 @@ class RemoteEndpoint:
         self.setter_cb = None
 
     def get_value(self):
-        return self.getter_cb()
+        return self.getter_cb(self.ep_id)
 
     def set_value(self, __value):
-        self.setter_cb(__value)
+        self.setter_cb(self.ep_id, __value)
 
     def str_dump(self):
         return "{}. {} ({}): {}".format(
