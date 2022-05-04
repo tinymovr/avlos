@@ -1,7 +1,7 @@
 import yaml
 import importlib.resources
 from avlos.deserializer import deserialize
-from avlos.processor import process, process_file
+from avlos.processor import process_file
 import avlos.generators.generator_c as generator_c
 import avlos.generators.generator_rst as generator_rst
 import marshmallow
