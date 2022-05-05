@@ -5,6 +5,9 @@ _registry = None
 
 
 def get_registry():
+    """
+    Get or create a Pint unit registry with custom units
+    """
     global _registry
     if not _registry:
         _registry = pint.UnitRegistry(autoconvert_offset_to_baseunit=True)
@@ -13,7 +16,8 @@ def get_registry():
 
 
 class UnitField(fields.Field):
-    """Field that serializes to a string and deserializes
+    """
+    Field that serializes to a string and deserializes
     to a Pint unit.
     """
 
