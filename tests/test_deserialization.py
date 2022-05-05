@@ -4,6 +4,7 @@ from avlos.deserializer import deserialize
 import marshmallow
 import pint
 import unittest
+from tests.dummy_channel import DummyChannel, DummyCodec
 from pprint import pprint
 
 
@@ -14,8 +15,7 @@ class TestDeserialization(unittest.TestCase):
         )
         with open(def_path_str) as device_description:
             obj = deserialize(yaml.safe_load(device_description))
-            obj.set_getter_cb(lambda x: 0)
-            obj.set_setter_cb(lambda x, y: 0)
+            obj._channel = DummyChannel()
             print(obj)
 
     def test_undefined_unit(self):
