@@ -3,15 +3,16 @@ from rstcloth import RstCloth
 
 def process(instance, config):
 
-    d = RstCloth()
-    state = {"ep_counter": 1, "prefix": ""}
+    
+    with open(config["paths"]["output_file"], "w") as output_file:
+        d = RstCloth(stream=output_file)
+        state = {"ep_counter": 1, "prefix": ""}
 
-    d.ref_target("api-reference")
-    d.newline()
-    d.h2("API Reference")
+        d.ref_target("api-reference")
+        d.newline()
+        d.h2("API Reference")
 
-    traverse(instance, state, d)
-    d.write(config["paths"]["output_file"])
+        traverse(instance, state, d)
 
 
 def traverse(obj, state, d):
