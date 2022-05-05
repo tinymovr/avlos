@@ -9,16 +9,21 @@ from marshmallow import (
 )
 from avlos.unit_field import UnitField
 from avlos.counter import get_counter
+from avlos.mixins.comm_node import CommNode
 
 dtype_names = ["bool", "int8", "uint8", "int16", "uint16", "int32", "uint32", "float"]
 
 
-class RemoteNode:
+class RemoteNode(CommNode):
+    """
+    Remote node with parent, children and a comms channel
+    """
     def __init__(self, remote_attributes, name, description=None):
         od = OrderedDict()
         for attrib in remote_attributes:
             od[attrib.name] = attrib
         super().__setattr__("remote_attributes", od)
+        super().__init__()
         self.name = name
         self.description = description
 
@@ -39,20 +44,6 @@ class RemoteNode:
                 return attr.set_value(__value)
         except KeyError:
             super().__setattr__(__name, __value)
-
-    def set_getter_cb(self, cb):
-        for attr in self.remote_attributes.values():
-            if isinstance(attr, RemoteNode):
-                attr.set_getter_cb(cb)
-            elif isinstance(attr, RemoteEndpoint):
-                attr.getter_cb = cb
-
-    def set_setter_cb(self, cb):
-        for attr in self.remote_attributes.values():
-            if isinstance(attr, RemoteNode):
-                attr.set_setter_cb(cb)
-            elif isinstance(attr, RemoteEndpoint):
-                attr.setter_cb = cb
 
     def str_dump(self, indent, depth):
         if depth <= 0:
@@ -78,7 +69,10 @@ class RemoteNode:
         return self.__str__()
 
 
-class RemoteEndpoint:
+class RemoteEndpoint(CommNode):
+    """
+    Remote Endpoint with a value, parent and a comms channel
+    """
     def __init__(
         self,
         name,
@@ -90,6 +84,7 @@ class RemoteEndpoint:
         rst_target=None,
         ep_id=-1,
     ):
+        super().__init__()
         self.name = name
         self.description = description
         self.dtype = dtype
@@ -99,25 +94,33 @@ class RemoteEndpoint:
         self.rst_target = rst_target
         self.ep_id = ep_id
 
-        self.getter_cb = None
-        self.setter_cb = None
-
     def get_value(self):
-        return self.getter_cb(self.ep_id)
+        self.channel.send([], self.ep_id)
+        data = self.channel.recv(self.ep_id)
+        value, *_ = self.channel.serializer.deserialize(data, self.dtype)
+        try:
+            return value * self.unit
+        except TypeError:
+            return value
 
     def set_value(self, __value):
-        self.setter_cb(self.ep_id, __value)
+        data = self.channel.serializer.serialize([__value], self.dtype)
+        self.channel.send(data, self.ep_id)
 
     def str_dump(self):
         return "{}. {} ({}): {}".format(
             self.ep_id,
             self.name,
             self.dtype,
-            self.get_value() * self.unit if self.unit else self.get_value(),
+            self.get_value(),
         )
 
 
 class RemoteNodeSchema(Schema):
+    """
+    Custom Marshmallow schema for generating RemoteNode
+    and RemoteEndpoint classes
+    """
     name = fields.String(
         required=True, error_messages={"required": "Name is required."}
     )
@@ -137,7 +140,10 @@ class RemoteNodeSchema(Schema):
     @post_load
     def make_remote_node(self, data, **kwargs):
         if "remote_attributes" in data:
-            return RemoteNode(**data)
+            node = RemoteNode(**data)
+            for child in node.remote_attributes.values():
+                child._parent = node
+            return node
         data["ep_id"] = self.counter.next()
         return RemoteEndpoint(**data)
 
