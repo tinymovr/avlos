@@ -7,6 +7,9 @@ class Counter:
         self.count += 1
         return cnt
 
+    def count(self):
+        return self.count
+
 
 counter = None
 

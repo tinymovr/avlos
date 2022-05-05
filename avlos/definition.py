@@ -10,7 +10,7 @@ from marshmallow import (
 from avlos.unit_field import UnitField
 from avlos.counter import get_counter
 
-unit_strings = ["bool", "int8", "uint8", "int16", "uint16", "int32", "uint32", "float"]
+dtype_names = ["bool", "int8", "uint8", "int16", "uint16", "int32", "uint32", "float"]
 
 
 class RemoteNode:
@@ -123,7 +123,7 @@ class RemoteNodeSchema(Schema):
     )
     description = fields.String()
     remote_attributes = fields.List(fields.Nested(lambda: RemoteNodeSchema()))
-    dtype = fields.String(validate=validate.OneOf(unit_strings))
+    dtype = fields.String(validate=validate.OneOf(dtype_names))
     unit = UnitField()
     c_getter = fields.String()
     c_setter = fields.String()
