@@ -1,5 +1,12 @@
 from collections import OrderedDict
-from marshmallow import Schema, fields, post_load, validate
+from marshmallow import (
+    Schema,
+    fields,
+    post_load,
+    validate,
+    validates_schema,
+    ValidationError,
+)
 from avlos.unit_field import UnitField
 from avlos.counter import get_counter
 
@@ -77,9 +84,9 @@ class RemoteEndpoint:
         name,
         description,
         dtype,
-        c_getter,
-        unit=None,
+        c_getter=None,
         c_setter=None,
+        unit=None,
         rst_target=None,
         ep_id=-1,
     ):
@@ -133,3 +140,14 @@ class RemoteNodeSchema(Schema):
             return RemoteNode(**data)
         data["ep_id"] = self.counter.next()
         return RemoteEndpoint(**data)
+
+    @validates_schema
+    def validate_getter_setter(self, data, **kwargs):
+        if (
+            "remote_attributes" not in data
+            and "c_getter" not in data
+            and "c_setter" not in data
+        ):
+            raise ValidationError(
+                "Either a getter, setter or remote attributes list is required"
+            )
