@@ -10,7 +10,7 @@ def deserialize(device_description):
     device_obj = device_schema.load(device_description)
     dev_desc = json.dumps(device_description)
     device_obj.hash_string = hash_string_from_string(dev_desc)
-    device_obj.hash_int32 = hash_int_from_string(dev_desc)
+    device_obj.hash_uint32 = hash_int_from_string(dev_desc)
     return device_obj
 
 
