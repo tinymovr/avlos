@@ -46,22 +46,18 @@ def process_header(instance, config):
     cw_head.add_enum(enum_dir)
     cw_head.add_line("")
 
-    # Function prototypes
-    # TODO: Make below declaration safer
-    cw_head.add_line(
-        "uint8_t avlos_get_hash(uint8_t * buffer, uint8_t * buffer_len, uint8_t cmd);"
-    )
+    # Hash value
+    v = Variable("avlos_proto_hash", "uint32_t", value=instance.hash_int32)
+    cw_head.add_variable_initialization(v)
     cw_head.add_line("")
-    state = {"ep_counter": 1, "prefix": ""}
+
+    # Function prototypes
+    state = {"prefix": ""}
     traverse_header(instance, state, cw_head)
 
     # Function list
     state = {
-        "f_list": [
-            AddressOf(
-                Variable("avlos_get_hash", FuncPtr("uint8_t", arguments=get_args()))
-            )
-        ],
+        "f_list": [],
         "prefix": "",
     }
     traverse_function_list(instance, state, cw_head)
@@ -90,15 +86,8 @@ def process_impl(instance, config):
     )
     cw_impl.add_line("")
 
-    # Implementations
-    # TODO: Make below declaration safer
-    cw_impl.add_line(
-        "uint8_t avlos_get_hash(uint8_t * buffer, uint8_t * buffer_len, uint8_t cmd) {{ const uint32_t v = {}; memcpy(buffer, &v, sizeof(v)); return AVLOS_RET_READ; }}".format(
-            instance.hash_string
-        )
-    )
-    cw_impl.add_line("")
-    state = {"ep_counter": 1, "prefix": ""}
+    # # Implementations
+    state = {"prefix": ""}
     traverse_impl(instance, state, cw_impl)
 
     # Write out

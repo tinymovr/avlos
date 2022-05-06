@@ -1,6 +1,6 @@
 class Counter:
-    def __init__(self):
-        self.count = 0
+    def __init__(self, starting=0):
+        self.count = starting
 
     def next(self):
         cnt = self.count
