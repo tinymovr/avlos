@@ -47,7 +47,7 @@ def process_header(instance, config):
     cw_head.add_line("")
 
     # Hash value
-    v = Variable("avlos_proto_hash", "uint32_t", value=instance.hash_int32)
+    v = Variable("avlos_proto_hash", "static uint32_t", value=instance.hash_int32)
     cw_head.add_variable_initialization(v)
     cw_head.add_line("")
 
@@ -151,20 +151,29 @@ def traverse_impl(obj, state, cw):
         fun.codewriter = CodeWriter()
         v = Variable("v", c_type_map[obj.dtype])
         fun.codewriter.add_variable_declaration(v)
+
+        try:
+            c_getter = obj.c_getter
+        except AttributeError:
+            c_getter = None
+
         try:
             c_setter = obj.c_setter
         except AttributeError:
             c_setter = None
 
         # TODO: Make implementation using safe primitives
-        fun.codewriter.add_line("if (AVLOS_CMD_READ == cmd) {")
-        fun.codewriter.add_line("    v = {}();".format(obj.c_getter))
-        fun.codewriter.add_line("    *buffer_len = sizeof(v);")
-        fun.codewriter.add_line("    memcpy(buffer, &v, sizeof(v));")
-        fun.codewriter.add_line("    return AVLOS_RET_READ;")
-        fun.codewriter.add_line("}")
+        token = "if"
+        if c_getter:
+            fun.codewriter.add_line("if (AVLOS_CMD_READ == cmd) {")
+            fun.codewriter.add_line("    v = {}();".format(obj.c_getter))
+            fun.codewriter.add_line("    *buffer_len = sizeof(v);")
+            fun.codewriter.add_line("    memcpy(buffer, &v, sizeof(v));")
+            fun.codewriter.add_line("    return AVLOS_RET_READ;")
+            fun.codewriter.add_line("}")
+            token = "else if"
         if c_setter:
-            fun.codewriter.add_line("else if (AVLOS_CMD_WRITE == cmd) {")
+            fun.codewriter.add_line(token + " (AVLOS_CMD_WRITE == cmd) {")
             fun.codewriter.add_line("    memcpy(&v, buffer, sizeof(v));")
             fun.codewriter.add_line("    {}(v);".format(c_setter))
             fun.codewriter.add_line("    return AVLOS_RET_WRITE;")
