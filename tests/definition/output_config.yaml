@@ -18,7 +18,8 @@ generators:
   generator_cpp:
     enabled: true
     paths:
-      output_dir: ../outputs/test.hpp
+      output_header: ../outputs/tinymovr.hpp
+      output_impl: ../outputs/tinymovr.cpp
     cpp_header_includes:
     - codecs.hpp
 
