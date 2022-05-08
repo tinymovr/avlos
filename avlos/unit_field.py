@@ -17,8 +17,8 @@ def get_registry():
 
 class UnitField(fields.Field):
     """
-    Field that serializes to a string and deserializes
-    to a Pint unit.
+    Marshmallow Field that serializes to a string
+    and deserializes to a Pint unit.
     """
 
     def _serialize(self, value, attr, obj, **kwargs):
