@@ -10,8 +10,7 @@ from marshmallow import (
 from avlos.unit_field import UnitField
 from avlos.counter import get_counter
 from avlos.mixins.comm_node import CommNode
-
-dtype_names = ["bool", "int8", "uint8", "int16", "uint16", "int32", "uint32", "float"]
+from avlos.datatypes import DataTypeField, datatype_names
 
 
 class RemoteNode(CommNode):
@@ -126,7 +125,7 @@ class RemoteNodeSchema(Schema):
     )
     description = fields.String()
     remote_attributes = fields.List(fields.Nested(lambda: RemoteNodeSchema()))
-    dtype = fields.String(validate=validate.OneOf(dtype_names))
+    dtype = DataTypeField()
     unit = UnitField()
     c_getter = fields.String()
     c_setter = fields.String()
