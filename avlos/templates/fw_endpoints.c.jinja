@@ -1,0 +1,34 @@
+
+{%- for include in includes %}
+#include {{ include | as_include }}
+{%- endfor %}
+
+{% set comma = joiner(", ") %}
+uint8_t (*avlos_endpoints[{{ instance | endpoints | length }}])(uint8_t * buffer, uint8_t * buffer_len, Avlos_Command cmd) = { {%- for attr in instance | endpoints %}{{ comma() }}&{{attr.name}}_{{attr.ep_id}}{%- endfor %} };
+uint32_t avlos_proto_hash = {{ instance.hash_uint32 }};
+
+{%- for attr in instance | endpoints %}
+
+uint8_t {{attr.name}}_{{attr.ep_id}}(uint8_t * buffer, uint8_t * buffer_len, Avlos_Command cmd)
+{
+    {{type_map[attr.dtype]}} v;
+
+    {%- if attr.c_getter %}
+    if (AVLOS_CMD_READ == cmd) {
+        v = {{ attr.c_getter }}();
+        *buffer_len = sizeof(v);
+        memcpy(buffer, &v, sizeof(v));
+        return AVLOS_RET_READ;
+    }
+    {%- endif %}
+    {%- if attr.c_setter %}
+    {% if attr.c_getter %}else {% endif %}if (AVLOS_CMD_WRITE == cmd) {
+        memcpy(&v, buffer, sizeof(v));
+        {{ attr.c_setter }}(v);
+        return AVLOS_RET_WRITE;
+    }
+    {%- endif %}
+    return AVLOS_RET_NOACTION;
+}
+
+{%- endfor %}

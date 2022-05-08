@@ -1,0 +1,36 @@
+
+#pragma once
+
+{%- for include in includes %}
+#include {{ include | as_include }}
+{%- endfor %}
+
+typedef enum
+{
+    AVLOS_RET_NOACTION,
+    AVLOS_RET_READ = 1,
+    AVLOS_RET_WRITE = 2
+} Avlos_Return;
+
+typedef enum
+{
+    AVLOS_CMD_WRITE,
+    AVLOS_CMD_READ = 1
+} Avlos_Command;
+
+extern uint32_t avlos_proto_hash;
+extern uint8_t (*avlos_endpoints[{{ instance | endpoints | length }}])(uint8_t * buffer, uint8_t * buffer_len, Avlos_Command cmd);
+
+{%- for attr in instance | endpoints %}
+
+/*
+* {{attr.name}}_{{attr.ep_id}}
+*
+* {{ attr.description }}
+*
+* @param buffer
+* @param buffer_len
+*/
+uint8_t {{attr.name}}_{{attr.ep_id}}(uint8_t * buffer, uint8_t * buffer_len, Avlos_Command cmd);
+
+{%- endfor %}
