@@ -9,6 +9,11 @@ HERE = pathlib.Path(__file__).parent
 # The text of the README file
 README = (HERE / "README.md").read_text()
 
+extras_generator_c = ["csnake"]
+extras_generator_rst = ["rstcloth"]
+extras_generator_cpp = ["jinja2"]
+extras_all = extras_generator_c + extras_generator_rst + extras_generator_cpp
+
 setup(
     name="Avlos",
     version="0.1",
@@ -21,9 +26,9 @@ setup(
     install_requires=["marshmallow", "pyyaml", "pint", "docopt"],
     entry_points={"console_scripts": ["avlos=avlos.cli:run_cli"]},
     extras_require={
-        "generator_c": ["csnake"],
-        "generator_rst": ["rstcloth"],
-        "generator_cpp": ["jinja2"],
-        #'generator_python': ["pint"]
+        "generator_c": extras_generator_c,
+        "generator_rst": extras_generator_rst,
+        "generator_cpp": extras_generator_cpp,
+        'all': extras_all
     },
 )
