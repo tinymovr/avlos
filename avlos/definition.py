@@ -34,7 +34,7 @@ class RemoteNode(CommNode):
             elif isinstance(attr, RemoteEndpoint):
                 return attr.get_value()
         except KeyError:
-            return super().__getattr__(__name)
+            raise AttributeError(__name)
 
     def __setattr__(self, __name, __value):
         try:
