@@ -1,6 +1,6 @@
 # bad endpoint unit
 
-name: Tinymovr
+name: Device
 remote_attributes:
   - name: sn
     dtype: uint32

@@ -1,6 +1,6 @@
 # missing endpoint name
 
-name: Tinymovr
+name: Device
 remote_attributes:
   - dtype: uint32
     c_getter: system_get_sn
