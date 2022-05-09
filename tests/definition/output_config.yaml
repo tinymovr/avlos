@@ -22,5 +22,9 @@ generators:
       output_impl: ../outputs/device.cpp
     cpp_header_includes:
     - codecs.hpp
+  generator_dbc:
+    enabled: true
+    paths:
+      output_file: ../outputs/test.dbc
 
 
