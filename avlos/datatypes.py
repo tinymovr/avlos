@@ -16,17 +16,13 @@ class DataType(Enum):
     FLOAT = 10
     DOUBLE = 11
 
+    @property
+    def c_name(self):
+        return c_type_map[self]
 
-datatype_names = {
-    "bool": DataType.BOOL,
-    "int8": DataType.INT8,
-    "uint8": DataType.UINT8,
-    "int16": DataType.INT16,
-    "uint16": DataType.UINT16,
-    "int32": DataType.INT32,
-    "uint32": DataType.UINT32,
-    "float": DataType.FLOAT,
-}
+    @property
+    def size(self):
+        return datatype_sizes[self]
 
 
 c_type_map = {
@@ -39,6 +35,31 @@ c_type_map = {
     DataType.UINT32: "uint32_t",
     DataType.FLOAT: "float",
     DataType.DOUBLE: "double",
+}
+
+datatype_sizes = {
+    DataType.BOOL: 1,
+    DataType.INT8: 1,
+    DataType.UINT8: 1,
+    DataType.INT16: 2,
+    DataType.UINT16: 2,
+    DataType.INT32: 4,
+    DataType.UINT32: 4,
+    DataType.FLOAT: 4,
+    DataType.DOUBLE: 8,
+}
+
+
+datatype_names = {
+    "bool": DataType.BOOL,
+    "int8": DataType.INT8,
+    "uint8": DataType.UINT8,
+    "int16": DataType.INT16,
+    "uint16": DataType.UINT16,
+    "int32": DataType.INT32,
+    "uint32": DataType.UINT32,
+    "float": DataType.FLOAT,
+    "double": DataType.DOUBLE,
 }
 
 

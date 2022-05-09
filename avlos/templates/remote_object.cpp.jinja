@@ -6,9 +6,9 @@
     {%- for attr in instance.remote_attributes.values() %}
         {%- if attr.remote_attributes %}
         {%- else %}
-{{type_map[attr.dtype]}} {{ instance.name }}::get_{{attr.name}}(void)
+{{attr.dtype.c_name}} {{ instance.name }}::get_{{attr.name}}(void)
 {
-    {{type_map[attr.dtype]}} value;
+    {{attr.dtype.c_name}} value;
     this->send({{attr.ep_id}}, this->_data, 0, true);
     if (this->recv({{attr.ep_id}}, this->_data, &(this->_dlc), RECV_DELAY_US)) 
     {
@@ -16,9 +16,9 @@
     }
     return value;
 }
-void {{ instance.name }}::set_{{attr.name}}({{type_map[attr.dtype]}} value)
+void {{ instance.name }}::set_{{attr.name}}({{attr.dtype.c_name}} value)
 {
-    this->send_cb({{attr.ep_id}}, this->_data, sizeof({{type_map[attr.dtype]}}), true);
+    this->send_cb({{attr.ep_id}}, this->_data, sizeof({{attr.dtype.c_name}}), true);
 }
         {%- endif %}
     {%- endfor %}

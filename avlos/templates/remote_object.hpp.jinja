@@ -20,8 +20,8 @@ class {{ instance.name }}
             {%- if attr.remote_attributes %}
         {{attr.name}} {{attr.name}};
             {%- else %}
-        {{type_map[attr.dtype]}} get_{{attr.name}}(void);
-        void set_{{attr.name}}({{type_map[attr.dtype]}} value);
+        {{attr.dtype.c_name}} get_{{attr.name}}(void);
+        void set_{{attr.name}}({{attr.dtype.c_name}} value);
             {%- endif %}
         {%- endfor %}
     {%- endif %}

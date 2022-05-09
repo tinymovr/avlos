@@ -20,11 +20,11 @@
 typedef void (*send_callback)(uint32_t arbitration_id, uint8_t *data, uint8_t dlc, bool rtr);
 typedef bool (*recv_callback)(uint32_t arbitration_id, uint8_t *data, uint8_t *dlc);
 
-class Tinymovr
+class Device
 {
     public:
 
-        Tinymovr(uint8_t _can_node_id, send_callback _send_cb, recv_callback _recv_cb):
+        Device(uint8_t _can_node_id, send_callback _send_cb, recv_callback _recv_cb):
             can_node_id(_can_node_id), send_cb(_send_cb), recv_cb(_recv_cb) {};
 
     {%- if instance.remote_attributes %}
@@ -33,8 +33,8 @@ class Tinymovr
         {{attr.name}} {{attr.name}};
 
             {%- else %}
-        {{type_map[attr.dtype]}} get_{{attr.name}}(void);
-        void set_{{attr.name}}({{type_map[attr.dtype]}} value);
+        {{attr.dtype.c_name}} get_{{attr.name}}(void);
+        void set_{{attr.name}}({{attr.dtype.c_name}} value);
 
             {%- endif %}
         {%- endfor %}
