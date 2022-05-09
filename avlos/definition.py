@@ -74,8 +74,8 @@ class RootNode(RemoteNode):
     Remote root node with a few additional attributes
     """
 
-    def __init__(self, version, **kwargs):
-        super().__init__(**kwargs)
+    def __init__(self, version, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.version = version
 
 
@@ -177,4 +177,7 @@ class RootNodeSchema(RemoteNodeSchema):
     @post_load
     def make_remote_node(self, data, **kwargs):
         if "remote_attributes" in data:
-            return RootNode(**data)
+            node = RootNode(**data)
+            for child in node.remote_attributes.values():
+                child._parent = node
+            return node
