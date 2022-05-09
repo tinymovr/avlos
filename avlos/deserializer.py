@@ -1,12 +1,12 @@
 import json
 import hashlib
-from avlos.definition import RemoteNodeSchema
+from avlos.definition import RootNodeSchema
 from avlos.counter import make_counter
 
 
 def deserialize(device_description):
     make_counter()
-    device_schema = RemoteNodeSchema()
+    device_schema = RootNodeSchema()
     device_obj = device_schema.load(device_description)
     dev_desc = json.dumps(device_description)
     device_obj.hash_string = hash_string_from_string(dev_desc)

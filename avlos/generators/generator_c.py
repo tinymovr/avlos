@@ -1,14 +1,12 @@
-
 from jinja2 import Environment, PackageLoader, select_autoescape
-from avlos.datatypes import c_type_map as type_map
 from avlos.generators.filters import avlos_endpoints, as_include
 
 env = Environment(loader=PackageLoader("avlos"), autoescape=select_autoescape())
 
 
 def process(instance, config):
-    env.filters['endpoints'] = avlos_endpoints
-    env.filters['as_include'] = as_include
+    env.filters["endpoints"] = avlos_endpoints
+    env.filters["as_include"] = as_include
 
     template = env.get_template("fw_endpoints.h.jinja")
     try:
@@ -17,7 +15,7 @@ def process(instance, config):
         includes = []
     with open(config["paths"]["output_header"], "w") as output_file:
         print(
-            template.render(instance=instance, type_map=type_map, includes=includes),
+            template.render(instance=instance, includes=includes),
             file=output_file,
         )
 
@@ -28,7 +26,6 @@ def process(instance, config):
         includes = []
     with open(config["paths"]["output_impl"], "w") as output_file:
         print(
-            template.render(instance=instance, type_map=type_map, includes=includes),
+            template.render(instance=instance, includes=includes),
             file=output_file,
         )
-

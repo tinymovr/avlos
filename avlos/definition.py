@@ -17,6 +17,7 @@ class RemoteNode(CommNode):
     """
     Remote node with parent, children and a comms channel
     """
+
     def __init__(self, remote_attributes, name, description=None):
         od = OrderedDict()
         for attrib in remote_attributes:
@@ -68,10 +69,21 @@ class RemoteNode(CommNode):
         return self.__str__()
 
 
+class RootNode(RemoteNode):
+    """
+    Remote root node with a few additional attributes
+    """
+
+    def __init__(self, version, **kwargs):
+        super().__init__(**kwargs)
+        self.version = version
+
+
 class RemoteEndpoint(CommNode):
     """
     Remote Endpoint with a value, parent and a comms channel
     """
+
     def __init__(
         self,
         name,
@@ -120,6 +132,7 @@ class RemoteNodeSchema(Schema):
     Custom Marshmallow schema for generating RemoteNode
     and RemoteEndpoint classes
     """
+
     name = fields.String(
         required=True, error_messages={"required": "Name is required."}
     )
@@ -156,3 +169,12 @@ class RemoteNodeSchema(Schema):
             raise ValidationError(
                 "Either a getter, setter or remote attributes list is required"
             )
+
+
+class RootNodeSchema(RemoteNodeSchema):
+    version = fields.String()
+
+    @post_load
+    def make_remote_node(self, data, **kwargs):
+        if "remote_attributes" in data:
+            return RootNode(**data)
