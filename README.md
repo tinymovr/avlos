@@ -13,21 +13,21 @@ Given a device description expressed in a YAML file as follows:
     - name: sn
         dtype: uint32
         c_getter: toaster_get_sn
-        description: The unique device serial number.
+        summary: The unique device serial number.
     - name: heater
       attributes:
       - name: temperature
           dtype: float
           unit: celsius
           c_getter: toaster_get_heater_temp
-          description: The toaster heater temperature.
+          summary: The toaster heater temperature.
     - name: relay
       attributes:
       - name: relay_state
           dtype: bool
           c_getter: toaster_get_relay_state
           c_setter: toaster_set_relay_state
-          description: The toaster heating relay element state.
+          summary: The toaster heating relay element state.
 
 
 , by default Avlos will generate the following C header(note: there are actually a few more stuff not included here for brevity):

@@ -18,14 +18,14 @@ class RemoteNode(CommNode):
     Remote node with parent, children and a comms channel
     """
 
-    def __init__(self, remote_attributes, name, description=None):
+    def __init__(self, remote_attributes, name, summary=None):
         od = OrderedDict()
         for attrib in remote_attributes:
             od[attrib.name] = attrib
         super().__setattr__("remote_attributes", od)
         super().__init__()
         self.name = name
-        self.description = description
+        self.summary = summary
 
     def __getattr__(self, __name):
         try:
@@ -87,7 +87,7 @@ class RemoteEndpoint(CommNode):
     def __init__(
         self,
         name,
-        description,
+        summary,
         dtype,
         c_getter=None,
         c_setter=None,
@@ -97,7 +97,7 @@ class RemoteEndpoint(CommNode):
     ):
         super().__init__()
         self.name = name
-        self.description = description
+        self.summary = summary
         self.dtype = dtype
         self.unit = unit
         self.c_getter = c_getter
@@ -136,7 +136,7 @@ class RemoteNodeSchema(Schema):
     name = fields.String(
         required=True, error_messages={"required": "Name is required."}
     )
-    description = fields.String()
+    summary = fields.String()
     remote_attributes = fields.List(fields.Nested(lambda: RemoteNodeSchema()))
     dtype = DataTypeField()
     unit = UnitField()

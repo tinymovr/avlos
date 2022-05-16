@@ -4,5 +4,5 @@ name: Device
 remote_attributes:
   - dtype: uint32
     c_getter: system_get_sn
-    description: Retrieve the unique device serial number.
+    summary: Retrieve the unique device serial number.
 

@@ -3,7 +3,6 @@ from rstcloth import RstCloth
 
 def process(instance, config):
 
-    
     with open(config["paths"]["output_file"], "w") as output_file:
         d = RstCloth(stream=output_file)
         state = {"ep_counter": 1, "prefix": ""}
@@ -33,7 +32,7 @@ def traverse(obj, state, d):
         d.li("Data Type: {}".format(obj.dtype))
         d.li("Unit: {}".format(obj.unit.units if obj.unit != None else "Not defined"))
         d.newline()
-        d.content(obj.description)
+        d.content(obj.summary)
         d.newline()
 
         state["ep_counter"] += 1
