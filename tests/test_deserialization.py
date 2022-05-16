@@ -1,5 +1,6 @@
 import yaml
 import importlib.resources
+import urllib.request
 from avlos.deserializer import deserialize
 import marshmallow
 import pint
@@ -17,6 +18,14 @@ class TestDeserialization(unittest.TestCase):
             obj = deserialize(yaml.safe_load(device_description))
             obj._channel = DummyChannel()
             print(obj)
+
+    def test_success_url(self):
+        device_desc_string = urllib.request.urlopen(
+            "https://raw.githubusercontent.com/tinymovr/Tinymovr/avlos/studio/Python/tinymovr/config/device.yaml"
+        ).read()
+        obj = deserialize(yaml.safe_load(device_desc_string))
+        obj._channel = DummyChannel()
+        print(obj)
 
     def test_undefined_unit(self):
         def_path_str = str(
