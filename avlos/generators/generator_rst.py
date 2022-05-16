@@ -2,7 +2,6 @@ from rstcloth import RstCloth
 
 
 def process(instance, config):
-
     with open(config["paths"]["output_file"], "w") as output_file:
         d = RstCloth(stream=output_file)
         state = {"ep_counter": 1, "prefix": ""}
