@@ -106,6 +106,7 @@ class RemoteEndpoint(CommNode):
         self.ep_id = ep_id
 
     def get_value(self):
+        assert self.c_getter
         self.channel.send([], self.ep_id)
         data = self.channel.recv(self.ep_id)
         value, *_ = self.channel.serializer.deserialize(data, self.dtype)
@@ -115,6 +116,7 @@ class RemoteEndpoint(CommNode):
             return value
 
     def set_value(self, __value):
+        assert self.c_setter
         data = self.channel.serializer.serialize([__value], self.dtype)
         self.channel.send(data, self.ep_id)
 
@@ -127,10 +129,78 @@ class RemoteEndpoint(CommNode):
         )
 
 
+class RemoteFunction(CommNode):
+    """
+    Remote Function with zero or more arguments, return
+    type, parent and a comms channel
+    """
+
+    def __init__(
+        self,
+        name,
+        summary,
+        c_caller,
+        arguments,
+        dtype=None,
+        rst_target=None,
+        ep_id=-1,
+    ):
+        super().__init__()
+        self.name = name
+        self.summary = summary
+        self.return_type = dtype
+        self.c_caller = c_caller
+        self.arguments = arguments
+        self.rst_target = rst_target
+        self.ep_id = ep_id
+
+    def __call__(self, *args):
+        pass
+
+    def str_dump(self):
+        return "{}. {}({}) -> {}".format(
+            self.ep_id,
+            self.name,
+            ", ".join(
+                [" ".join([arg.dtype.nickname, arg.name]) for arg in self.arguments]
+            ),
+            self.return_type,
+        )
+
+
+class RemoteArgument:
+    """
+    Class representing a RemoteFunction argument
+    """
+
+    def __init__(self, name, dtype, summary=None):
+        self.name = name
+        self.dtype = dtype
+        self.summary = summary
+
+
+class RemoteArgumentSchema(Schema):
+    """
+    Custom Marshmallow schema for generating RemoteFunction
+    arguments
+    """
+
+    name = fields.String(
+        required=True, error_messages={"required": "Name is required."}
+    )
+    summary = fields.String()
+    dtype = DataTypeField(required=True)
+    unit = UnitField()
+
+    @post_load
+    def make_remote_argument(self, data, **kwargs):
+        return RemoteArgument(**data)
+
+
 class RemoteNodeSchema(Schema):
     """
-    Custom Marshmallow schema for generating RemoteNode
-    and RemoteEndpoint classes
+    Custom Marshmallow schema for generating RemoteNode,
+    RemoteEndpoint and RemoteFunction classes
     """
 
     name = fields.String(
@@ -142,6 +212,8 @@ class RemoteNodeSchema(Schema):
     unit = UnitField()
     c_getter = fields.String()
     c_setter = fields.String()
+    c_caller = fields.String()
+    arguments = fields.List(fields.Nested(lambda: RemoteArgumentSchema()))
     rst_target = fields.String()
     ep_id = fields.Integer(default=-1)
 
@@ -156,8 +228,12 @@ class RemoteNodeSchema(Schema):
             for child in node.remote_attributes.values():
                 child._parent = node
             return node
-        data["ep_id"] = self.counter.next()
-        return RemoteEndpoint(**data)
+        elif "c_caller" in data:
+            data["ep_id"] = self.counter.next()
+            return RemoteFunction(**data)
+        else:
+            data["ep_id"] = self.counter.next()
+            return RemoteEndpoint(**data)
 
     @validates_schema
     def validate_getter_setter(self, data, **kwargs):
@@ -165,9 +241,14 @@ class RemoteNodeSchema(Schema):
             "remote_attributes" not in data
             and "c_getter" not in data
             and "c_setter" not in data
+            and "c_caller" not in data
         ):
             raise ValidationError(
-                "Either a getter, setter or remote attributes list is required"
+                "Either a getter, setter, caller or remote attributes list is required"
+            )
+        if "c_getter" in data and "c_setter" in data and "c_caller" in data:
+            raise ValidationError(
+                "A getter, setter, and caller cannot coexist in a single endpoint"
             )
 
 

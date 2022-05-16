@@ -11,31 +11,41 @@ remote_attributes:
     unit: volt
     c_getter: system_get_vbus
     summary: Retrieve the bus voltage.
+  - name: controller
+    remote_attributes:
+      - name: set_pos_vel_setpoints
+        summary: Set position and velocity setpoints.
+        c_caller: controller_set_pos_vel_setpoints
+        arguments:
+          - name: pos_setpoint
+            dtype: float
+          - name: vel_setpoint
+            dtype: float
   - name: motor
     remote_attributes:
-    - name: R
-      dtype: float
-      unit: ohm
-      c_getter: motor_get_R
-      c_setter: motor_set_R
-      summary: Access the motor Resistance value.
-    - name: L
-      dtype: float
-      unit: henry
-      c_getter: motor_get_L
-      c_setter: motor_set_L
-      summary: Access the motor Inductance value.
+      - name: R
+        dtype: float
+        unit: ohm
+        c_getter: motor_get_R
+        c_setter: motor_set_R
+        summary: Access the motor Resistance value.
+      - name: L
+        dtype: float
+        unit: henry
+        c_getter: motor_get_L
+        c_setter: motor_set_L
+        summary: Access the motor Inductance value.
   - name: encoder
     remote_attributes:
-    - name: position_estimate
-      dtype: float
-      unit: ticks
-      c_getter: encoder_get_pos_estimate
-      summary: Retrieve the encoder position estimate.
-    - name: bandwidth
-      dtype: float
-      unit: rad/s
-      c_getter: encoder_get_bandwidth
-      c_setter: encoder_set_bandwidth
-      summary: Access the encoder observer bandwidth.
+      - name: position_estimate
+        dtype: float
+        unit: ticks
+        c_getter: encoder_get_pos_estimate
+        summary: Retrieve the encoder position estimate.
+      - name: bandwidth
+        dtype: float
+        unit: rad/s
+        c_getter: encoder_get_bandwidth
+        c_setter: encoder_set_bandwidth
+        summary: Access the encoder observer bandwidth.
 

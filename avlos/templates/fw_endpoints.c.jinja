@@ -35,6 +35,25 @@ uint8_t {{attr.name}}_{{attr.ep_id}}(uint8_t * buffer, uint8_t * buffer_len, Avl
         return AVLOS_RET_WRITE;
     }
     {%- endif %}
+    {%- if attr.c_caller %}
+
+        uint8_t offset = 0;
+        {%- for arg in attr.arguments %}
+        {{ arg.dtype.c_name }} {{arg.name}};
+        memcpy(&{{arg.name}}, buffer+offset, sizeof({{arg.name}}));
+        offset += sizeof({{arg.name}});
+        {%- endfor %}
+
+        {% set comma = joiner(", ") %}
+        {%- if attr.return_type %}
+        {{attr.return_type.c_name}} ret_val = {{ attr.c_caller }}({%- for arg in attr.arguments %}{{ comma() }}{{ arg.name }} {%- endfor %});
+        memcpy(buffer, &v, sizeof(v));
+        {%- else %}
+        {{ attr.c_caller }}({%- for arg in attr.arguments %}{{ comma() }}{{ arg.name }} {%- endfor %});
+        {%- endif %}
+        
+        return AVLOS_RET_CALL;
+    {%- endif %}
     return AVLOS_RET_NOACTION;
 }
 

@@ -17,6 +17,10 @@ class DataType(Enum):
     DOUBLE = 11
 
     @property
+    def nickname(self):
+        return self.name.lower()
+
+    @property
     def c_name(self):
         return c_type_map[self]
 

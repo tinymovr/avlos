@@ -140,9 +140,17 @@ Given a device description expressed in a YAML file as follows:
     The toaster heating element relay state.
 
 
-It will also compute a checksum for the spec and add it as a getter function so that it can be retrieved by the client for comparing client and device specs. 
+It will also generate a Python object tree reflecting the functionality of the spec, and only needing a comms channel to realize communication with a remote device.
+
+Finally, it will compute a checksum for the spec and add it as a variable so that it can be retrieved by the client for comparing client and device specs. 
 
 The output location, as well as many other attributes of the files are configurable.
+
+Avlos offers:
+
+- A simple straightforward tree structure description, sufficient for most device types out there
+- A flexible templating system with several built-in generators, and a simple unassuming system to extend
+- Tight integration with physical units through the Pint module.
 
 ### Topics
 
