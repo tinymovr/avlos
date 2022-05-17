@@ -7,10 +7,11 @@ generators:
     paths:
       output_header: ../outputs/test.h
       output_impl: ../outputs/test.c
-    c_header_includes:
+    header_includes:
     - src/common.h
-    c_impl_includes:
+    impl_includes:
     - src/dust.h
+    - src/test.h
   generator_rst:
     enabled: true
     paths:
@@ -20,7 +21,7 @@ generators:
     paths:
       output_header: ../outputs/device.hpp
       output_impl: ../outputs/device.cpp
-    cpp_header_includes:
+    header_includes:
     - codecs.hpp
   generator_dbc:
     enabled: true

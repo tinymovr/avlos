@@ -22,7 +22,7 @@ class DataType(Enum):
 
     @property
     def c_name(self):
-        return c_type_map[self]
+        return c_type_map[self] or "void"
 
     @property
     def size(self):

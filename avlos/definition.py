@@ -148,7 +148,7 @@ class RemoteFunction(CommNode):
         super().__init__()
         self.name = name
         self.summary = summary
-        self.return_type = dtype
+        self.dtype = dtype
         self.c_caller = c_caller
         self.arguments = arguments
         self.rst_target = rst_target
@@ -164,7 +164,7 @@ class RemoteFunction(CommNode):
             ", ".join(
                 [" ".join([arg.dtype.nickname, arg.name]) for arg in self.arguments]
             ),
-            self.return_type,
+            self.dtype,
         )
 
 

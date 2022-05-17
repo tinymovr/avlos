@@ -12,6 +12,11 @@
 {%- if instance.remote_attributes %}
     {%- for attr in instance.remote_attributes.values() %}
         {%- if attr.remote_attributes %}
+        {%- elif attr.c_caller %}
+{{attr.dtype.c_name}} {{ instance.name }}::{{attr.name}}(void)
+{
+    
+}
         {%- else %}
 {{attr.dtype.c_name}} {{ instance.name }}::get_{{attr.name}}(void)
 {
