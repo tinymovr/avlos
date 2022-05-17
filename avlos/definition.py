@@ -178,9 +178,10 @@ class RemoteArgument:
     Class representing a RemoteFunction argument
     """
 
-    def __init__(self, name, dtype, summary=None):
+    def __init__(self, name, dtype, unit=None, summary=None):
         self.name = name
         self.dtype = dtype
+        self.unit = unit
         self.summary = summary
 
     @property
