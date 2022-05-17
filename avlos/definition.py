@@ -120,9 +120,9 @@ class RemoteEndpoint(CommNode):
         self.channel.send(data, self.ep_id)
 
     def str_dump(self):
-        return "{} ({}): {}".format(
+        return "{0} [{1}]: {2:.6g}".format(
             self.name,
-            self.dtype,
+            self.dtype.nickname,
             self.get_value(),
         )
 
@@ -154,7 +154,7 @@ class RemoteFunction(CommNode):
 
     def __call__(self, *args):
         data = self.channel.serializer.serialize(
-            args, [arg.dtype for arg in self.arguments]
+            args, *[arg.dtype for arg in self.arguments]
         )
         self.channel.send(data, self.ep_id)
         if not self.dtype.is_void:
@@ -169,7 +169,7 @@ class RemoteFunction(CommNode):
         return "{}({}) -> {}".format(
             self.name,
             ", ".join([arg.as_function_argument for arg in self.arguments]),
-            self.dtype,
+            self.dtype.nickname,
         )
 
 
