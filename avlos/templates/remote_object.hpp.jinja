@@ -26,6 +26,8 @@ class {{ instance.name }}
         {%- for attr in instance.remote_attributes.values() %}
             {%- if attr.remote_attributes %}
         {{attr.name}} {{attr.name}};
+            {%- elif attr.c_caller %}
+        {{attr.dtype.c_name}} {{attr.name}}();
             {%- else %}
         {{attr.dtype.c_name}} get_{{attr.name}}(void);
         void set_{{attr.name}}({{attr.dtype.c_name}} value);

@@ -22,7 +22,7 @@ class DataType(Enum):
 
     @property
     def c_name(self):
-        return c_type_map[self] or "void"
+        return c_type_map[self]
 
     @property
     def size(self):
@@ -30,6 +30,7 @@ class DataType(Enum):
 
 
 c_type_map = {
+    DataType.VOID: "void",
     DataType.BOOL: "bool",
     DataType.INT8: "int8_t",
     DataType.UINT8: "uint8_t",
@@ -42,6 +43,7 @@ c_type_map = {
 }
 
 datatype_sizes = {
+    DataType.VOID: 0,
     DataType.BOOL: 1,
     DataType.INT8: 1,
     DataType.UINT8: 1,
@@ -55,6 +57,7 @@ datatype_sizes = {
 
 
 datatype_names = {
+    "void": DataType.VOID,
     "bool": DataType.BOOL,
     "int8": DataType.INT8,
     "uint8": DataType.UINT8,
