@@ -3,14 +3,13 @@ from marshmallow import (
     Schema,
     fields,
     post_load,
-    validate,
     validates_schema,
     ValidationError,
 )
 from avlos.unit_field import UnitField
 from avlos.counter import get_counter
 from avlos.mixins.comm_node import CommNode
-from avlos.datatypes import DataTypeField, datatype_names
+from avlos.datatypes import DataTypeField
 
 
 class RemoteNode(CommNode):
@@ -30,7 +29,7 @@ class RemoteNode(CommNode):
     def __getattr__(self, __name):
         try:
             attr = self.remote_attributes[__name]
-            if isinstance(attr, RemoteNode):
+            if isinstance(attr, RemoteNode) or isinstance(attr, RemoteFunction):
                 return attr
             elif isinstance(attr, RemoteEndpoint):
                 return attr.get_value()
@@ -121,8 +120,7 @@ class RemoteEndpoint(CommNode):
         self.channel.send(data, self.ep_id)
 
     def str_dump(self):
-        return "{}. {} ({}): {}".format(
-            self.ep_id,
+        return "{} ({}): {}".format(
             self.name,
             self.dtype,
             self.get_value(),
@@ -155,15 +153,22 @@ class RemoteFunction(CommNode):
         self.ep_id = ep_id
 
     def __call__(self, *args):
-        pass
+        data = self.channel.serializer.serialize(
+            args, [arg.dtype for arg in self.arguments]
+        )
+        self.channel.send(data, self.ep_id)
+        if not self.dtype.is_void:
+            data = self.channel.recv(self.ep_id)
+            value, *_ = self.channel.serializer.deserialize(data, self.dtype)
+            try:
+                return value * self.unit
+            except TypeError:
+                return value
 
     def str_dump(self):
-        return "{}. {}({}) -> {}".format(
-            self.ep_id,
+        return "{}({}) -> {}".format(
             self.name,
-            ", ".join(
-                [" ".join([arg.dtype.nickname, arg.name]) for arg in self.arguments]
-            ),
+            ", ".join([arg.as_function_argument for arg in self.arguments]),
             self.dtype,
         )
 
@@ -177,6 +182,10 @@ class RemoteArgument:
         self.name = name
         self.dtype = dtype
         self.summary = summary
+
+    @property
+    def as_function_argument(self):
+        return " ".join([self.dtype.nickname, self.name])
 
 
 class RemoteArgumentSchema(Schema):
@@ -250,9 +259,17 @@ class RemoteNodeSchema(Schema):
             raise ValidationError(
                 "A getter, setter, and caller cannot coexist in a single endpoint"
             )
+        if (
+            "c_getter" in data or "c_setter" in data or "c_caller" in data
+        ) and "dtype" not in data:
+            raise ValidationError("Data type is required")
 
 
 class RootNodeSchema(RemoteNodeSchema):
+    """
+    Custom Marshmallow schema for the root node
+    """
+
     version = fields.String()
 
     @post_load

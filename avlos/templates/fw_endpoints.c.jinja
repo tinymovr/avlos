@@ -18,8 +18,6 @@ uint32_t avlos_proto_hash = {{ instance.hash_uint32 }};
 
 uint8_t {{attr.name}}_{{attr.ep_id}}(uint8_t * buffer, uint8_t * buffer_len, Avlos_Command cmd)
 {
-    
-
     {%- if attr.c_getter %}
     if (AVLOS_CMD_READ == cmd) {
         {{attr.dtype.c_name}} v;
@@ -38,8 +36,9 @@ uint8_t {{attr.name}}_{{attr.ep_id}}(uint8_t * buffer, uint8_t * buffer_len, Avl
     }
     {%- endif %}
     {%- if attr.c_caller %}
-
+        {%- if attr.arguments | length > 0 %}
     uint8_t offset = 0;
+        {%- endif %}
     {%- for arg in attr.arguments %}
     {{ arg.dtype.c_name }} {{arg.name}};
     memcpy(&{{arg.name}}, buffer+offset, sizeof({{arg.name}}));
@@ -47,9 +46,9 @@ uint8_t {{attr.name}}_{{attr.ep_id}}(uint8_t * buffer, uint8_t * buffer_len, Avl
     {%- endfor %}
 
     {%- set comma = joiner(", ") %}
-    {%- if attr.dtype %}
+    {%- if attr.dtype.c_name != "void" %}
     {{attr.dtype.c_name}} ret_val = {{ attr.c_caller }}({%- for arg in attr.arguments %}{{ comma() }}{{ arg.name }} {%- endfor %});
-    memcpy(buffer, &v, sizeof(v));
+    memcpy(buffer, &ret_val, sizeof(ret_val));
     {%- else %}
     {{ attr.c_caller }}({%- for arg in attr.arguments %}{{ comma() }}{{ arg.name }} {%- endfor %});
     {%- endif %}

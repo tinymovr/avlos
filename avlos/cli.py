@@ -22,10 +22,11 @@ shell_name = "Avlos"
 
 
 def run_cli():
+    """
+    Runs the Avlos CLI
+    """
     version: str = pkg_resources.require("avlos")[0].version
     arguments: Dict[str, str] = docopt(__doc__, version=shell_name + " " + str(version))
-
-    print(arguments)
 
     logger = configure_logging()
 

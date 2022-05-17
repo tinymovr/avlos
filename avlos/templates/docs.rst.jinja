@@ -1,0 +1,31 @@
+
+API REFERENCE
+=============
+
+Spec version {{ instance.version }}
+
+{% for attr in instance | endpoints %}
+{%- if attr.c_getter or attr.c_setter %}
+{{ attr.name }}
+-------------------------------------------------------------------
+
+ID: {{ attr.ep_id }}
+Type: {{ attr.dtype.nickname }}
+{% if None != attr.unit %}Units: {{attr.unit.units}} {%- endif %}
+
+{{ attr.summary }}
+
+{%- elif attr.c_caller %}
+{%- set comma = joiner(", ") %}
+{{ attr.name }}({%- for arg in attr.arguments %}{{ comma() }}{{ arg.name }} {%- endfor %}) -> {{ attr.dtype.nickname }}
+-------------------------------------------------------------------
+
+ID: {{ attr.ep_id }}
+{% if attr.dtype %}Return Type: {{ attr.dtype.nickname }} {%- endif %}
+{% if attr.unit %}Units: {{ attr.unit.units }} {%- endif %}
+
+{{ attr.summary }}
+
+{%- endif %}
+
+{% endfor %}

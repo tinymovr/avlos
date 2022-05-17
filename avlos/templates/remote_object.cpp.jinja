@@ -36,27 +36,4 @@ void {{ instance.name }}::set_{{attr.name}}({{attr.dtype.c_name}} value)
     {%- endfor %}
 {%- endif %}
 
-void {{ instance.name }}::send(uint8_t cmd_id, uint8_t *data, uint8_t data_size, bool rtr)
-{
-    const uint8_t arb_id = this->get_arbitration_id(cmd_id);
-    this->send_cb(arb_id, data, data_size, rtr);
-}
-
-bool {{ instance.name }}::recv(uint8_t cmd_id, uint8_t *data, uint8_t *data_size, uint16_t delay_us)
-{
-    // A delay of a few 100s of us needs to be inserted
-    // to ensure the response has been transmitted.
-    // TODO: Better handle this using an interrupt.
-    if (delay_us > 0)
-    {
-        delayMicroseconds(delay_us);
-    }
-    const uint8_t arb_id = this->get_arbitration_id(cmd_id);
-    return this->recv_cb(arb_id, data, data_size);
-}
-
-uint8_t {{ instance.name }}::get_arbitration_id(uint8_t cmd_id)
-{
-    return this->can_node_id << EP_BITS | cmd_id;
-}
 

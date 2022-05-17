@@ -28,6 +28,10 @@ class DataType(Enum):
     def size(self):
         return datatype_sizes[self]
 
+    @property
+    def is_void(self):
+        return DataType.VOID == self
+
 
 c_type_map = {
     DataType.VOID: "void",
