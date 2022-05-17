@@ -5,8 +5,7 @@ from avlos.deserializer import deserialize
 import marshmallow
 import pint
 import unittest
-from tests.dummy_channel import DummyChannel, DummyCodec
-from pprint import pprint
+from tests.dummy_channel import DummyChannel
 
 
 class TestDeserialization(unittest.TestCase):

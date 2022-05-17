@@ -11,6 +11,11 @@ remote_attributes:
     unit: volt
     c_getter: system_get_vbus
     summary: Retrieve the bus voltage.
+  - name: reset
+    summary: Reset the device.
+    c_caller: system_reset
+    dtype: void
+    arguments: []
   - name: controller
     remote_attributes:
       - name: set_pos_vel_setpoints
