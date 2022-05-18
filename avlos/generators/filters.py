@@ -4,8 +4,12 @@ def avlos_endpoints(input):
     of remote endpoints
     """
 
-    def traverse_endpoint_list(ep_list, ep_out_list):
+    def traverse_endpoint_list(ep_list, ep_out_list, stub=None):
         for ep in ep_list:
+            if stub:
+                ep.full_name = ".".join([stub, ep.name])
+            else:
+                ep.full_name = ep.name
             if (
                 hasattr(ep, "c_getter")
                 or hasattr(ep, "c_setter")
@@ -13,7 +17,9 @@ def avlos_endpoints(input):
             ):
                 ep_out_list.append(ep)
             elif hasattr(ep, "remote_attributes"):
-                traverse_endpoint_list(ep.remote_attributes.values(), ep_out_list)
+                traverse_endpoint_list(
+                    ep.remote_attributes.values(), ep_out_list, stub=ep.full_name
+                )
 
     ep_out_list = []
     if hasattr(input, "remote_attributes"):

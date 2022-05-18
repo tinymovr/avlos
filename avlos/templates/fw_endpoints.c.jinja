@@ -16,7 +16,7 @@ uint32_t avlos_proto_hash = {{ instance.hash_uint32 }};
 
 {%- for attr in instance | endpoints %}
 
-uint8_t {{attr.name}}_{{attr.ep_id}}(uint8_t * buffer, uint8_t * buffer_len, Avlos_Command cmd)
+uint8_t {{attr.full_name | replace(".", "_") }}(uint8_t * buffer, uint8_t * buffer_len, Avlos_Command cmd)
 {
     {%- if attr.c_getter %}
     if (AVLOS_CMD_READ == cmd) {
