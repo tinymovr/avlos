@@ -67,6 +67,9 @@ class RemoteNode(CommNode):
     def __repr__(self):
         return self.__str__()
 
+    def __dir__(self):
+        return self.remote_attributes.keys()
+
 
 class RootNode(RemoteNode):
     """
