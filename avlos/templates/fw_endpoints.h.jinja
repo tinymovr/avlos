@@ -32,13 +32,13 @@ extern uint8_t (*avlos_endpoints[{{ instance | endpoints | length }}])(uint8_t *
 {%- for attr in instance | endpoints %}
 
 /*
-* {{attr.full_name | replace(".", "_") }}
+* avlos_{{attr.full_name | replace(".", "_") }}
 *
 * {{ attr.summary }}
 *
 * @param buffer
 * @param buffer_len
 */
-uint8_t {{attr.full_name | replace(".", "_") }}(uint8_t * buffer, uint8_t * buffer_len, Avlos_Command cmd);
+uint8_t avlos_{{attr.full_name | replace(".", "_") }}(uint8_t * buffer, uint8_t * buffer_len, Avlos_Command cmd);
 
 {%- endfor %}

@@ -11,12 +11,12 @@
 {%- endfor %}
 
 {% set comma = joiner(", ") %}
-uint8_t (*avlos_endpoints[{{ instance | endpoints | length }}])(uint8_t * buffer, uint8_t * buffer_len, Avlos_Command cmd) = { {%- for attr in instance | endpoints %}{{ comma() }}&{{attr.name}}_{{attr.ep_id}}{%- endfor %} };
+uint8_t (*avlos_endpoints[{{ instance | endpoints | length }}])(uint8_t * buffer, uint8_t * buffer_len, Avlos_Command cmd) = { {%- for attr in instance | endpoints %}{{ comma() }}&avlos_{{attr.full_name | replace(".", "_") }}{%- endfor %} };
 uint32_t avlos_proto_hash = {{ instance.hash_uint32 }};
 
 {%- for attr in instance | endpoints %}
 
-uint8_t {{attr.full_name | replace(".", "_") }}(uint8_t * buffer, uint8_t * buffer_len, Avlos_Command cmd)
+uint8_t avlos_{{attr.full_name | replace(".", "_") }}(uint8_t * buffer, uint8_t * buffer_len, Avlos_Command cmd)
 {
     {%- if attr.c_getter %}
     if (AVLOS_CMD_READ == cmd) {
