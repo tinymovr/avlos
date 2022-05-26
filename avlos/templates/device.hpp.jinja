@@ -40,8 +40,16 @@ class Device
         {{attr.name}} {{attr.name}};
 
             {%- else %}
+                {%- if attr.c_getter %}
         {{attr.dtype.c_name}} get_{{attr.name}}(void);
+                {%- endif %}
+                {%- if attr.c_setter %}
         void set_{{attr.name}}({{attr.dtype.c_name}} value);
+                {%- endif %}
+                {%- if attr.c_caller %}
+                    {%- set comma = joiner(", ") %}
+        {{attr.dtype.c_name}} {{attr.name}}({%- for arg in attr.arguments %}{{ comma() }}{{arg.dtype.c_name}} {{ arg.name }} {%- endfor %});
+                {%- endif %}
 
             {%- endif %}
         {%- endfor %}
@@ -59,4 +67,4 @@ class Device
         bool recv(uint8_t cmd_id, uint8_t *data, uint8_t *data_size, uint16_t delay_us);
         uint8_t get_arbitration_id(uint8_t cmd_id);
 
-}
+};

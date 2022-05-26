@@ -15,20 +15,34 @@
     {%- for attr in instance.remote_attributes.values() %}
         {%- if attr.remote_attributes %}
         {%- else %}
-    {{attr.dtype.c_name}} Device::get_{{attr.name}}(void)
+            {%- if attr.c_getter %}
+
+{{attr.dtype.c_name}} Device::get_{{attr.name}}(void)
+{
+    {{attr.dtype.c_name}} value;
+    this->send({{attr.ep_id}}, this->_data, 0, true);
+    if (this->recv({{attr.ep_id}}, this->_data, &(this->_dlc), RECV_DELAY_US)) 
     {
-        {{attr.dtype.c_name}} value;
-        this->send({{attr.ep_id}}, this->_data, 0, true);
-        if (this->recv({{attr.ep_id}}, this->_data, &(this->_dlc), RECV_DELAY_US)) 
-        {
-            read_le(&value, this->_data);
-        }
-        return value;
+        read_le(&value, this->_data);
     }
-    void Device::set_{{attr.name}}({{attr.dtype.c_name}} value)
-    {
-        this->send_cb({{attr.ep_id}}, this->_data, sizeof({{attr.dtype.c_name}}), true);
-    }
+    return value;
+}
+            {%- endif %}
+            {%- if attr.c_setter %}
+
+void Device::set_{{attr.name}}({{attr.dtype.c_name}} value)
+{
+    this->send_cb({{attr.ep_id}}, this->_data, sizeof({{attr.dtype.c_name}}), true);
+}
+            {%- endif %}
+            {%- if attr.c_caller %}
+                {%- set comma = joiner(", ") %}
+
+{{attr.dtype.c_name}} Device::{{attr.name}}({%- for arg in attr.arguments %}{{ comma() }}{{arg.dtype.c_name}} {{ arg.name }} {%- endfor %})
+{
+    this->send_cb({{attr.ep_id}}, this->_data, sizeof({{attr.dtype.c_name}}), true);
+}
+            {%- endif %}
         {%- endif %}
     {%- endfor %}
 {%- endif %}

@@ -16,6 +16,15 @@ remote_attributes:
     c_caller: system_reset
     dtype: void
     arguments: []
+  - name: move_to
+    summary: Move to
+    c_caller: move_to
+    dtype: void
+    arguments: 
+      - name: position
+        dtype: float
+      - name: max_vel
+        dtype: float
   - name: controller
     remote_attributes:
       - name: set_pos_vel_setpoints
