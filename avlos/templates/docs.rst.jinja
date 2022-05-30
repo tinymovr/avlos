@@ -7,18 +7,22 @@ API REFERENCE
 Spec version {{ instance.version }}
 
 {% for attr in instance | endpoints %}
-{%- if attr.c_getter or attr.c_setter %}
-{{ attr.full_name }}
+
+rst_target
+    {%- if attr.rst_target %}.. _{{attr.rst_target}}:{%- endif %}
+
+    {%- if attr.c_getter or attr.c_setter %}
+        {{ attr.full_name }}
 -------------------------------------------------------------------
 
 ID: {{ attr.ep_id }}
 Type: {{ attr.dtype.nickname }}
-{% if None != attr.unit %}Units: {{attr.unit.units}} {%- endif %}
+        {% if None != attr.unit %}Units: {{attr.unit.units}} {%- endif %}
 
 {{ attr.summary }}
 
-{%- elif attr.c_caller %}
-{%- set comma = joiner(", ") %}
+        {%- elif attr.c_caller %}
+            {%- set comma = joiner(", ") %}
 {{ attr.name }}({%- for arg in attr.arguments %}{{ comma() }}{{ arg.name }} {%- endfor %}) -> {{ attr.dtype.nickname }}
 -------------------------------------------------------------------
 
@@ -28,6 +32,8 @@ ID: {{ attr.ep_id }}
 
 {{ attr.summary }}
 
-{%- endif %}
+        {%- endif %}
+
+    {%- endif %}
 
 {% endfor %}
