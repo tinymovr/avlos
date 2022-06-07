@@ -94,6 +94,7 @@ class RemoteEndpoint(CommNode):
         c_getter=None,
         c_setter=None,
         unit=None,
+        flags=None,
         rst_target=None,
         ep_id=-1,
     ):
@@ -102,6 +103,7 @@ class RemoteEndpoint(CommNode):
         self.summary = summary
         self.dtype = dtype
         self.unit = unit
+        self.flags = flags
         self.c_getter = c_getter
         self.c_setter = c_setter
         self.rst_target = rst_target
@@ -115,7 +117,12 @@ class RemoteEndpoint(CommNode):
         try:
             return value * self.unit
         except TypeError:
-            return value
+            pass
+        try:
+            return self.flags.match(value)
+        except AttributeError:
+            pass
+        return value
 
     def set_value(self, __value):
         assert self.c_setter
@@ -143,6 +150,8 @@ class RemoteFunction(CommNode):
         c_caller,
         arguments,
         dtype=None,
+        unit=None,
+        flags=None,
         rst_target=None,
         ep_id=-1,
     ):
@@ -150,6 +159,8 @@ class RemoteFunction(CommNode):
         self.name = name
         self.summary = summary
         self.dtype = dtype
+        self.unit = unit
+        self.flags = flags
         self.c_caller = c_caller
         self.arguments = arguments
         self.rst_target = rst_target
@@ -166,7 +177,12 @@ class RemoteFunction(CommNode):
             try:
                 return value * self.unit
             except TypeError:
-                return value
+                pass
+            try:
+                return self.flags.match(value)
+            except AttributeError:
+                pass
+            return value
 
     def str_dump(self):
         return "{}({}) -> {}".format(
@@ -249,7 +265,7 @@ class RemoteNodeSchema(Schema):
             return RemoteEndpoint(**data)
 
     @validates_schema
-    def validate_getter_setter(self, data, **kwargs):
+    def validate_schema(self, data, **kwargs):
         if (
             "remote_attributes" not in data
             and "c_getter" not in data
