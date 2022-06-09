@@ -6,6 +6,10 @@ remote_attributes:
     dtype: uint32
     c_getter: system_get_sn
     summary: Retrieve the unique device serial number.
+  - name: errors
+    flags: [NONE, UNDERVOLTAGE]
+    c_getter: system_get_error
+    summary: Retrieve the device error.
   - name: Vbus
     dtype: float
     unit: volt

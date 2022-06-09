@@ -83,7 +83,7 @@ class DataTypeField(fields.Field):
     def _serialize(self, value, attr, obj, **kwargs):
         if value is None:
             return ""
-        for k, v in dict.iteritems():
+        for k, v in datatype_names.iteritems():
             if v == value:
                 return k
 

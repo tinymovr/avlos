@@ -7,9 +7,10 @@ from marshmallow import (
     ValidationError,
 )
 from avlos.unit_field import UnitField
+from avlos.flags_field import FlagsField
 from avlos.counter import get_counter
 from avlos.mixins.comm_node import CommNode
-from avlos.datatypes import DataTypeField
+from avlos.datatypes import DataType, DataTypeField
 
 
 class RemoteNode(CommNode):
@@ -94,7 +95,6 @@ class RemoteEndpoint(CommNode):
         c_getter=None,
         c_setter=None,
         unit=None,
-        flags=None,
         rst_target=None,
         ep_id=-1,
     ):
@@ -103,7 +103,6 @@ class RemoteEndpoint(CommNode):
         self.summary = summary
         self.dtype = dtype
         self.unit = unit
-        self.flags = flags
         self.c_getter = c_getter
         self.c_setter = c_setter
         self.rst_target = rst_target
@@ -117,12 +116,7 @@ class RemoteEndpoint(CommNode):
         try:
             return value * self.unit
         except TypeError:
-            pass
-        try:
-            return self.flags.match(value)
-        except AttributeError:
-            pass
-        return value
+            return value
 
     def set_value(self, __value):
         assert self.c_setter
@@ -134,6 +128,50 @@ class RemoteEndpoint(CommNode):
             self.name,
             self.dtype.nickname,
             self.get_value(),
+        )
+
+
+class RemoteFlagsEndpoint(CommNode):
+    """
+    Remote Endpoint with a value represented as a bitmask
+    """
+
+    def __init__(
+        self,
+        name,
+        summary,
+        c_getter=None,
+        c_setter=None,
+        flags=None,
+        rst_target=None,
+        ep_id=-1,
+    ):
+        super().__init__()
+        self.name = name
+        self.summary = summary
+        self.flags = flags
+        self.c_getter = c_getter
+        self.c_setter = c_setter
+        self.rst_target = rst_target
+        self.ep_id = ep_id
+
+    def get_value(self):
+        assert self.c_getter
+        self.channel.send([], self.ep_id)
+        data = self.channel.recv(self.ep_id)
+        value, *_ = self.channel.serializer.deserialize(data, DataType.UINT8)
+        return self.flags.match(value)
+
+    def set_value(self, __value):
+        assert self.c_setter
+        data = self.channel.serializer.serialize([self.flags.mask(__value)], DataType.UINT8)
+        self.channel.send(data, self.ep_id)
+
+    def str_dump(self):
+        val = self.get_value()
+        return "{0}: {1}".format(
+            self.name,
+            " ".join(val) if len(val) > 0 else "-",
         )
 
 
@@ -238,6 +276,7 @@ class RemoteNodeSchema(Schema):
     summary = fields.String()
     remote_attributes = fields.List(fields.Nested(lambda: RemoteNodeSchema()))
     dtype = DataTypeField()
+    flags = FlagsField()
     unit = UnitField()
     c_getter = fields.String()
     c_setter = fields.String()
@@ -260,9 +299,12 @@ class RemoteNodeSchema(Schema):
         elif "c_caller" in data:
             data["ep_id"] = self.counter.next()
             return RemoteFunction(**data)
-        else:
+        elif "dtype" in data:
             data["ep_id"] = self.counter.next()
             return RemoteEndpoint(**data)
+        elif "flags" in data:
+            data["ep_id"] = self.counter.next()
+            return RemoteFlagsEndpoint(**data)
 
     @validates_schema
     def validate_schema(self, data, **kwargs):
@@ -281,8 +323,8 @@ class RemoteNodeSchema(Schema):
             )
         if (
             "c_getter" in data or "c_setter" in data or "c_caller" in data
-        ) and "dtype" not in data:
-            raise ValidationError("Data type is required")
+        ) and "dtype" not in data and "flags" not in data:
+            raise ValidationError("Data type or flags field is required")
 
 
 class RootNodeSchema(RemoteNodeSchema):
