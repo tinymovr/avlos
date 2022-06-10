@@ -171,7 +171,7 @@ class RemoteFlagsEndpoint(CommNode):
         val = self.get_value()
         return "{0}: {1}".format(
             self.name,
-            " ".join(val) if len(val) > 0 else "-",
+            " ".join(val) if len(val) > 0 else "(no flags)",
         )
 
 
