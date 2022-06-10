@@ -1,12 +1,13 @@
 import os
 from pathlib import Path
 from jinja2 import Environment, PackageLoader, select_autoescape
-
+from avlos.generators.filters import avlos_flags_eps
 
 env = Environment(loader=PackageLoader("avlos"), autoescape=select_autoescape())
 
 
 def process(instance, config):
+    env.filters["flags_eps"] = avlos_flags_eps
     process_header(instance, config)
     process_impl(instance, config)
 

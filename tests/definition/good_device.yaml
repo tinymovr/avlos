@@ -9,7 +9,7 @@ remote_attributes:
   - name: errors
     flags: [NONE, UNDERVOLTAGE]
     c_getter: system_get_error
-    summary: Retrieve the device error.
+    summary: Retrieve any device errors.
   - name: Vbus
     dtype: float
     unit: volt
@@ -54,6 +54,10 @@ remote_attributes:
         c_getter: motor_get_L
         c_setter: motor_set_L
         summary: Access the motor Inductance value.
+      - name: errors
+        flags: [NONE, R_OUT_OF_RANGE, L_OUT_OF_RANGE, INVALID_POLE_PAIRS]
+        c_getter: system_get_error
+        summary: Retrieve any motor errors.
   - name: encoder
     remote_attributes:
       - name: position_estimate

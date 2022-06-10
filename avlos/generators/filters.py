@@ -1,3 +1,6 @@
+from copy import copy
+
+
 def avlos_endpoints(input):
     """
     Traverse remote dictionary and return list
@@ -25,6 +28,15 @@ def avlos_endpoints(input):
     if hasattr(input, "remote_attributes"):
         traverse_endpoint_list(input.remote_attributes.values(), ep_out_list)
     return ep_out_list
+
+
+def avlos_flags_eps(input):
+    """
+    Traverse remote dictionary and return a list of flag typ eendpoints
+    """
+    ep_list = avlos_endpoints(input)
+    ep_flags_list = [ep for ep in ep_list if hasattr(ep, "flags")]
+    return ep_flags_list
 
 
 def as_include(input):

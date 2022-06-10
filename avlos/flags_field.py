@@ -37,3 +37,6 @@ class Flags:
             if self.flags in flags_list:
                 value |= (1 << i)
         return value
+
+    def __iter__(self):
+        return self.flags.__iter__()

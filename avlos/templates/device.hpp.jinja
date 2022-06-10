@@ -24,6 +24,17 @@
 #define EP_BITS (6)
 #define RECV_DELAY_US (160.0f)
 
+{%- for ep in instance | flags_eps %}
+
+enum {{ ep.full_name | replace(".", "_") }}_flags
+{
+    {%- set comma = joiner(", ") %}
+    {%- for flag in ep.flags %}{{ comma() }}
+    {{ ep.full_name | replace(".", "_") | upper }}_{{ flag }} = {{ loop.index }}
+    {%- endfor %}
+};
+{%- endfor %}
+
 typedef void (*send_callback)(uint32_t arbitration_id, uint8_t *data, uint8_t dlc, bool rtr);
 typedef bool (*recv_callback)(uint32_t arbitration_id, uint8_t *data, uint8_t *dlc);
 

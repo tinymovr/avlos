@@ -136,6 +136,8 @@ class RemoteFlagsEndpoint(CommNode):
     Remote Endpoint with a value represented as a bitmask
     """
 
+    flag_type = DataType.UINT8
+
     def __init__(
         self,
         name,
@@ -159,13 +161,27 @@ class RemoteFlagsEndpoint(CommNode):
         assert self.c_getter
         self.channel.send([], self.ep_id)
         data = self.channel.recv(self.ep_id)
-        value, *_ = self.channel.serializer.deserialize(data, DataType.UINT8)
+        value, *_ = self.channel.serializer.deserialize(data, self.flag_type)
         return self.flags.match(value)
 
     def set_value(self, __value):
         assert self.c_setter
-        data = self.channel.serializer.serialize([self.flags.mask(__value)], DataType.UINT8)
+        data = self.channel.serializer.serialize([self.flags.mask(__value)], self.flag_type)
         self.channel.send(data, self.ep_id)
+
+    @property
+    def dtype(self):
+        """
+        Mocks the endpoint datatype
+        """
+        return self.flag_type
+
+    @property
+    def unit(self):
+        """
+        Mocks the endpoint unit
+        """
+        return None
 
     def str_dump(self):
         val = self.get_value()
@@ -189,7 +205,6 @@ class RemoteFunction(CommNode):
         arguments,
         dtype=None,
         unit=None,
-        flags=None,
         rst_target=None,
         ep_id=-1,
     ):
@@ -198,7 +213,6 @@ class RemoteFunction(CommNode):
         self.summary = summary
         self.dtype = dtype
         self.unit = unit
-        self.flags = flags
         self.c_caller = c_caller
         self.arguments = arguments
         self.rst_target = rst_target
@@ -215,10 +229,6 @@ class RemoteFunction(CommNode):
             try:
                 return value * self.unit
             except TypeError:
-                pass
-            try:
-                return self.flags.match(value)
-            except AttributeError:
                 pass
             return value
 
