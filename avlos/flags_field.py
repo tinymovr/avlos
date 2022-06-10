@@ -13,7 +13,6 @@ class FlagsField(fields.Field):
         return " ".join(value.flag_list)
 
     def _deserialize(self, value, attr, data, **kwargs):
-        print(value)
         try:
             return Flags(value)
         except ValueError as error:
