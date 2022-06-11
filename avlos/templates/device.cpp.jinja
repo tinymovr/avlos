@@ -19,7 +19,7 @@
 
 {{attr.dtype.c_name}} Device::get_{{attr.name}}(void)
 {
-    {{attr.dtype.c_name}} value;
+    {{attr.dtype.c_name}} value = 0;
     this->send({{attr.ep_id}}, this->_data, 0, true);
     if (this->recv({{attr.ep_id}}, this->_data, &(this->_dlc), RECV_DELAY_US)) 
     {
