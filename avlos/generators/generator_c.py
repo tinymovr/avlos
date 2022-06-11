@@ -1,3 +1,4 @@
+import os
 from jinja2 import Environment, PackageLoader, select_autoescape
 from avlos.generators.filters import avlos_endpoints, avlos_flags_eps, as_include
 
@@ -14,7 +15,8 @@ def process(instance, config):
         includes = config["header_includes"]
     except KeyError:
         includes = []
-    with open(config["paths"]["output_header"], "w+") as output_file:
+    os.makedirs(os.path.dirname(config["paths"]["output_header"]), exist_ok=True)
+    with open(config["paths"]["output_header"], "w") as output_file:
         print(
             template.render(instance=instance, includes=includes),
             file=output_file,
@@ -25,7 +27,8 @@ def process(instance, config):
         includes = config["impl_includes"]
     except KeyError:
         includes = []
-    with open(config["paths"]["output_impl"], "w+") as output_file:
+    os.makedirs(os.path.dirname(config["paths"]["output_impl"]), exist_ok=True)
+    with open(config["paths"]["output_impl"], "w") as output_file:
         print(
             template.render(instance=instance, includes=includes),
             file=output_file,
