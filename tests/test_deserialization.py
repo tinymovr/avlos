@@ -20,7 +20,7 @@ class TestDeserialization(unittest.TestCase):
 
     def test_success_url(self):
         device_desc_string = urllib.request.urlopen(
-            "https://raw.githubusercontent.com/tinymovr/avlos/main/tests/definition/good_device.yaml?token=GHSAT0AAAAAABOYBI3BFKF6LTL74MM5MVWGYVE7KVQ"
+            "https://raw.githubusercontent.com/tinymovr/avlos/main/tests/definition/output_config.yaml?token=GHSAT0AAAAAABOYBI3AEMCK5GWSGTFML5LQYVE7S5A"
         ).read()
         obj = deserialize(yaml.safe_load(device_desc_string))
         obj._channel = DummyChannel()
