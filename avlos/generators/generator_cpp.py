@@ -19,7 +19,7 @@ def process_header(instance, config):
         includes = config["cpp_header_includes"]
     except KeyError:
         includes = []
-    with open(file, "w") as output_file:
+    with open(file, "w+") as output_file:
         print(
             template.render(instance=instance, includes=includes),
             file=output_file,
@@ -35,7 +35,7 @@ def recurse_header(remote_object, config):
         os.path.dirname(config["paths"]["output_header"]),
         remote_object.name + ".hpp",
     )
-    with open(file, "w") as output_file:
+    with open(file, "w+") as output_file:
         print(template.render(instance=remote_object), file=output_file)
     for attr in remote_object.remote_attributes.values():
         if hasattr(attr, "remote_attributes"):
@@ -49,7 +49,7 @@ def process_impl(instance, config):
         includes = config["cpp_impl_includes"]
     except KeyError:
         includes = []
-    with open(file, "w") as output_file:
+    with open(file, "w+") as output_file:
         print(
             template.render(instance=instance, includes=includes),
             file=output_file,
@@ -65,7 +65,7 @@ def recurse_impl(remote_object, config):
         os.path.dirname(config["paths"]["output_impl"]),
         remote_object.name + ".cpp",
     )
-    with open(file, "w") as output_file:
+    with open(file, "w+") as output_file:
         print(template.render(instance=remote_object), file=output_file)
     for attr in remote_object.remote_attributes.values():
         if hasattr(attr, "remote_attributes"):

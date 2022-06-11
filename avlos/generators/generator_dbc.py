@@ -8,7 +8,7 @@ def process(instance, config):
     env.filters["endpoints"] = avlos_endpoints
 
     template = env.get_template("device.dbc.jinja")
-    with open(config["paths"]["output_file"], "w") as output_file:
+    with open(config["paths"]["output_file"], "w+") as output_file:
         print(
             template.render(instance=instance),
             file=output_file,
