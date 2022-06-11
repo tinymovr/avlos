@@ -30,9 +30,10 @@ typedef enum
 
 typedef enum
 {
+    {{ ep.full_name | replace(".", "_") | upper }}_UNDEFINED = 0,
     {%- set comma = joiner(", ") %}
     {%- for flag in ep.flags %}{{ comma() }}
-    {{ ep.full_name | replace(".", "_") | upper }}_{{ flag }} = {{ loop.index }}
+    {{ ep.full_name | replace(".", "_") | upper }}_{{ flag }} = (1 << {{ loop.index0 }})
     {%- endfor %}
 } {{ ep.full_name | replace(".", "_") }}_flags;
 {%- endfor %}
