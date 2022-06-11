@@ -1,6 +1,6 @@
 import json
 import hashlib
-from avlos.definition import RootNodeSchema
+from avlos.definitions import RootNodeSchema
 from avlos.counter import make_counter
 
 
