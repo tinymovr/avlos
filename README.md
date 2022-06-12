@@ -1,4 +1,4 @@
-# Avlos
+<img src="avlos_logo.png" width="150"/>
 
 Given a tree that represents a remote embedded device, Avlos will generate code (embedded, client) for the remote client to talk to the device, related documentation and more. 
 
