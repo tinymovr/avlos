@@ -7,7 +7,6 @@ import avlos.generators.generator_c as generator_c
 import avlos.generators.generator_cpp as generator_cpp
 import avlos.generators.generator_rst as generator_rst
 import unittest
-from pprint import pprint
 
 
 class TestGeneration(unittest.TestCase):
