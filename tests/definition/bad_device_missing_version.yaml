@@ -1,0 +1,74 @@
+# missing version in root node
+
+name: tm
+remote_attributes:
+  - name: sn
+    dtype: uint32
+    c_getter: system_get_sn
+    summary: Retrieve the unique device serial number.
+  - name: errors
+    flags: [NONE, UNDERVOLTAGE]
+    c_getter: system_get_error
+    summary: Retrieve any device errors.
+  - name: Vbus
+    dtype: float
+    unit: volt
+    c_getter: system_get_vbus
+    summary: Retrieve the bus voltage.
+  - name: reset
+    summary: Reset the device.
+    c_caller: system_reset
+    dtype: void
+    arguments: []
+  - name: move_to
+    summary: Move to
+    c_caller: move_to
+    dtype: void
+    arguments: 
+      - name: position
+        dtype: float
+      - name: max_vel
+        dtype: float
+  - name: controller
+    remote_attributes:
+      - name: set_pos_vel_setpoints
+        summary: Set position and velocity setpoints.
+        c_caller: controller_set_pos_vel_setpoints
+        dtype: void
+        arguments:
+          - name: pos_setpoint
+            dtype: float
+          - name: vel_setpoint
+            dtype: float
+  - name: motor
+    remote_attributes:
+      - name: R
+        dtype: float
+        unit: ohm
+        c_getter: motor_get_R
+        c_setter: motor_set_R
+        summary: Access the motor Resistance value.
+      - name: L
+        dtype: float
+        unit: henry
+        c_getter: motor_get_L
+        c_setter: motor_set_L
+        summary: Access the motor Inductance value.
+      - name: errors
+        flags: [NONE, R_OUT_OF_RANGE, L_OUT_OF_RANGE, INVALID_POLE_PAIRS]
+        c_getter: system_get_error
+        summary: Retrieve any motor errors.
+  - name: encoder
+    remote_attributes:
+      - name: position_estimate
+        dtype: float
+        unit: ticks
+        c_getter: encoder_get_pos_estimate
+        summary: Retrieve the encoder position estimate.
+      - name: bandwidth
+        dtype: float
+        unit: rad/s
+        c_getter: encoder_get_bandwidth
+        c_setter: encoder_set_bandwidth
+        summary: Access the encoder observer bandwidth.
+
