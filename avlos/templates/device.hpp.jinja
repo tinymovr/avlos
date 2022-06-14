@@ -28,8 +28,8 @@
 
 enum {{ ep.full_name | replace(".", "_") }}_flags
 {
-    {{ ep.full_name | replace(".", "_") | upper }}_UNDEFINED = 0,
     {%- set comma = joiner(", ") %}
+    {{ ep.full_name | replace(".", "_") | upper }}_{{ ep.flags.default }} = 0,
     {%- for flag in ep.flags %}{{ comma() }}
     {{ ep.full_name | replace(".", "_") | upper }}_{{ flag }} = (1 << {{ loop.index0 }})
     {%- endfor %}

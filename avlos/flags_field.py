@@ -21,14 +21,17 @@ class FlagsField(fields.Field):
 
 class Flags:
 
-    def __init__(self, flags):
+    def __init__(self, flags, default="NONE"):
         self.flags = flags
+        self.default = default
 
     def match(self, value):
         matches = []
         for i in range(len(self.flags)):
             if bool((1 << i) & value):
                 matches.append(self.flags[i])
+        if 0 == len and None != self.default:
+            return [self.default]
         return matches
 
     def mask(self, flags_list):
