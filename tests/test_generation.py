@@ -2,7 +2,7 @@ import yaml
 import subprocess
 import importlib.resources
 from avlos.deserializer import deserialize
-from avlos.processor import process_file
+from avlos.processor import process_with_config_file
 import avlos.generators.generator_c as generator_c
 import avlos.generators.generator_cpp as generator_cpp
 import avlos.generators.generator_rst as generator_rst
@@ -90,4 +90,4 @@ class TestGeneration(unittest.TestCase):
         )
         with open(def_path_str) as device_desc_stream:
             obj = deserialize(yaml.safe_load(device_desc_stream))
-            process_file(obj, config_file_path_str)
+            process_with_config_file(obj, config_file_path_str)

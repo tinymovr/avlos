@@ -16,7 +16,7 @@ import pkg_resources
 import urllib.request
 from docopt import docopt
 from avlos.deserializer import deserialize
-from avlos.processor import process_file
+from avlos.processor import process_with_config_file
 
 shell_name = "Avlos"
 
@@ -35,11 +35,11 @@ def run_cli():
     if arguments["<spec_path>"]:
         with open(arguments["<spec_path>"]) as device_desc_stream:
             obj = deserialize(yaml.safe_load(device_desc_stream))
-            process_file(obj, config_path)
+            process_with_config_file(obj, config_path)
     elif arguments["<spec_url>"]:
         device_desc_string = urllib.request.urlopen(arguments["<spec_url>"]).read()
         obj = deserialize(yaml.safe_load(device_desc_string))
-        process_file(obj, config_path)
+        process_with_config_file(obj, config_path)
 
 
 def configure_logging() -> logging.Logger:
