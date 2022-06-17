@@ -7,7 +7,7 @@ env = Environment(loader=PackageLoader("avlos"), autoescape=select_autoescape())
 
 def process(instance, config):
     env.filters["endpoints"] = avlos_endpoints
-    env.filters["flags_eps"] = avlos_bitmask_eps
+    env.filters["bitmask_eps"] = avlos_bitmask_eps
     env.filters["as_include"] = as_include
 
     template = env.get_template("fw_endpoints.h.jinja")

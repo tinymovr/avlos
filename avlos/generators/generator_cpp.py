@@ -7,7 +7,7 @@ env = Environment(loader=PackageLoader("avlos"), autoescape=select_autoescape())
 
 
 def process(instance, config):
-    env.filters["flags_eps"] = avlos_bitmask_eps
+    env.filters["bitmask_eps"] = avlos_bitmask_eps
     process_header(instance, config)
     process_impl(instance, config)
 

@@ -26,13 +26,13 @@ typedef enum
     AVLOS_CMD_READ = 1
 } Avlos_Command;
 
-{%- for ep in instance | flags_eps %}
+{%- for ep in instance | bitmask_eps %}
 
 typedef enum
 {
     {%- set comma = joiner(", ") %}
-    {{ ep.full_name | replace(".", "_") | upper }}_{{ ep.flags.default }} = 0,
-    {%- for flag in ep.flags %}{{ comma() }}
+    {{ ep.full_name | replace(".", "_") | upper }}_{{ ep.bitmask.default }} = 0,
+    {%- for flag in ep.bitmask %}{{ comma() }}
     {{ ep.full_name | replace(".", "_") | upper }}_{{ flag }} = (1 << {{ loop.index0 }})
     {%- endfor %}
 } {{ ep.full_name | replace(".", "_") }}_flags;

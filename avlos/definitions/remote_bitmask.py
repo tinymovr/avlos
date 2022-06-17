@@ -15,14 +15,14 @@ class RemoteBitmask(CommNode):
         summary,
         c_getter=None,
         c_setter=None,
-        bitmask=None,
+        flags=None,
         rst_target=None,
         ep_id=-1,
     ):
         super().__init__()
         self.name = name
         self.summary = summary
-        self.bitmask = bitmask
+        self.bitmask = flags # flags is needed to deserialize
         self.c_getter = c_getter
         self.c_setter = c_setter
         self.rst_target = rst_target
