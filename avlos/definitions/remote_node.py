@@ -7,7 +7,7 @@ from marshmallow import (
     ValidationError,
 )
 from avlos.unit_field import UnitField
-from avlos.flags_field import FlagsField
+from avlos.bitmask_field import BitmaskField
 from avlos.counter import get_counter
 from avlos.datatypes import DataTypeField
 from avlos.mixins.comm_node import CommNode
@@ -90,7 +90,7 @@ class RemoteNodeSchema(Schema):
     summary = fields.String()
     remote_attributes = fields.List(fields.Nested(lambda: RemoteNodeSchema()))
     dtype = DataTypeField()
-    flags = FlagsField()
+    flags = BitmaskField()
     unit = UnitField()
     c_getter = fields.String()
     c_setter = fields.String()

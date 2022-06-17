@@ -30,13 +30,13 @@ def avlos_endpoints(input):
     return ep_out_list
 
 
-def avlos_flags_eps(input):
+def avlos_bitmask_eps(input):
     """
-    Traverse remote dictionary and return a list of flag typ eendpoints
+    Traverse remote dictionary and return a list of bitmask type endpoints
     """
     ep_list = avlos_endpoints(input)
-    ep_flags_list = [ep for ep in ep_list if hasattr(ep, "flags")]
-    return ep_flags_list
+    ep_bitmask_list = [ep for ep in ep_list if hasattr(ep, "bitmask")]
+    return ep_bitmask_list
 
 
 def as_include(input):

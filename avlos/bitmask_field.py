@@ -2,7 +2,7 @@ from sys import flags
 from marshmallow import fields, ValidationError
 
 
-class FlagsField(fields.Field):
+class BitmaskField(fields.Field):
     """
     Marshmallow Field that serializes to a string
     and deserializes to a bitmask of flags.
@@ -16,14 +16,14 @@ class FlagsField(fields.Field):
     def _deserialize(self, value, attr, data, **kwargs):
         try:
             assert(len(value) > 0)
-            return Flags(value)
+            return Bitmask(value)
         except ValueError as error:
             raise ValidationError("Invalid flags list.") from error
         except AssertionError as error:
             raise ValidationError("Empty flags list.") from error
 
 
-class Flags:
+class Bitmask:
 
     def __init__(self, flags, default="NONE"):
         self.flags = flags

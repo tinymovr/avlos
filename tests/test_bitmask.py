@@ -1,11 +1,11 @@
-from avlos.flags_field import Flags
+from avlos.bitmask_field import Bitmask
 import unittest
 
 
-class TestFlags(unittest.TestCase):
+class TestBitmask(unittest.TestCase):
 
     def setUp(self):
-        self.test_flag = Flags(["ONE", "TWO", "FOUR"])
+        self.test_bitmask = Bitmask(["ONE", "TWO", "FOUR"])
         self.reference = [
             ["NONE"],
             ["ONE"],
@@ -19,8 +19,8 @@ class TestFlags(unittest.TestCase):
 
     def test_number_to_flags_list(self):
         for i in range(8):
-            self.assertEqual(self.test_flag.match(i), self.reference[i])
+            self.assertEqual(self.test_bitmask.match(i), self.reference[i])
 
     def test_flags_list_to_number(self):
         for i in range(8):
-            self.assertEqual(self.test_flag.mask(self.reference[i]), i)
+            self.assertEqual(self.test_bitmask.mask(self.reference[i]), i)

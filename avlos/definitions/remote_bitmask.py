@@ -22,7 +22,7 @@ class RemoteBitmask(CommNode):
         super().__init__()
         self.name = name
         self.summary = summary
-        self.flags = flags
+        self.bitmask = flags
         self.c_getter = c_getter
         self.c_setter = c_setter
         self.rst_target = rst_target
@@ -33,12 +33,12 @@ class RemoteBitmask(CommNode):
         self.channel.send([], self.ep_id)
         data = self.channel.recv(self.ep_id)
         value, *_ = self.channel.serializer.deserialize(data, self.flag_type)
-        return self.flags.match(value)
+        return self.bitmask.match(value)
 
     def set_value(self, __value):
         assert self.c_setter
         data = self.channel.serializer.serialize(
-            [self.flags.mask(__value)], self.flag_type
+            [self.bitmask.mask(__value)], self.flag_type
         )
         self.channel.send(data, self.ep_id)
 
