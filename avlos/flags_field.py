@@ -1,3 +1,4 @@
+from sys import flags
 from marshmallow import fields, ValidationError
 
 
@@ -33,14 +34,14 @@ class Flags:
         for i in range(len(self.flags)):
             if bool((1 << i) & value):
                 matches.append(self.flags[i])
-        if 0 == len and None != self.default:
+        if 0 == len(matches) and None != self.default:
             return [self.default]
         return matches
 
     def mask(self, flags_list):
         value = 0
         for i in range(len(self.flags)):
-            if self.flags in flags_list:
+            if self.flags[i] in flags_list:
                 value |= (1 << i)
         return value
 
