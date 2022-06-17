@@ -1,13 +1,13 @@
 import os
 from jinja2 import Environment, PackageLoader, select_autoescape
-from avlos.generators.filters import avlos_endpoints, avlos_flags_eps, as_include
+from avlos.generators.filters import avlos_endpoints, avlos_bitmask_eps, as_include
 
 env = Environment(loader=PackageLoader("avlos"), autoescape=select_autoescape())
 
 
 def process(instance, config):
     env.filters["endpoints"] = avlos_endpoints
-    env.filters["flags_eps"] = avlos_flags_eps
+    env.filters["flags_eps"] = avlos_bitmask_eps
     env.filters["as_include"] = as_include
 
     template = env.get_template("fw_endpoints.h.jinja")
