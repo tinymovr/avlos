@@ -11,7 +11,7 @@ README = (HERE / "README.md").read_text()
 
 setup(
     name="Avlos",
-    version="0.1",
+    version="0.2",
     description="Avlos Remote Object Templating System",
     author="Yannis Chatzikonstantinou",
     author_email="yannis@tinymovr.com",
