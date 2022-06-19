@@ -28,6 +28,6 @@ class UnitField(fields.Field):
 
     def _deserialize(self, value, attr, data, **kwargs):
         try:
-            return get_registry()(value)
+            return get_registry().Unit(value)
         except ValueError as error:
             raise ValidationError("Invalid Pint unit.") from error
