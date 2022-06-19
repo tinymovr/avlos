@@ -11,6 +11,7 @@ from avlos.bitmask_field import BitmaskField
 from avlos.counter import get_counter
 from avlos.datatypes import DataTypeField
 from avlos.mixins.comm_node import CommNode
+from avlos.mixins.named_node import NamedNode
 from avlos.definitions import (
     RemoteAttribute,
     RemoteFunction,
@@ -19,7 +20,7 @@ from avlos.definitions import (
 )
 
 
-class RemoteNode(CommNode):
+class RemoteNode(CommNode, NamedNode):
     """
     Remote node with parent, children and a comms channel
     """
@@ -29,8 +30,8 @@ class RemoteNode(CommNode):
         for attrib in remote_attributes:
             od[attrib.name] = attrib
         super().__setattr__("remote_attributes", od)
-        super().__init__()
-        self.name = name
+        CommNode.__init__(self)
+        NamedNode.__init__(self, name)
         self.summary = summary
 
     def __getattr__(self, __name):

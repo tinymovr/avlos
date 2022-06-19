@@ -6,9 +6,10 @@ from marshmallow import (
 from avlos.unit_field import UnitField
 from avlos.datatypes import DataTypeField
 from avlos.mixins.comm_node import CommNode
+from avlos.mixins.named_node import NamedNode
 
 
-class RemoteFunction(CommNode):
+class RemoteFunction(CommNode, NamedNode):
     """
     Remote Function with zero or more arguments, return
     type, parent and a comms channel
@@ -25,8 +26,8 @@ class RemoteFunction(CommNode):
         rst_target=None,
         ep_id=-1,
     ):
-        super().__init__()
-        self.name = name
+        CommNode.__init__(self)
+        NamedNode.__init__(self, name)
         self.summary = summary
         self.dtype = dtype
         self.unit = unit

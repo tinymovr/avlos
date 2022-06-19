@@ -1,8 +1,9 @@
 from avlos.mixins.comm_node import CommNode
+from avlos.mixins.named_node import NamedNode
 from avlos.datatypes import DataType
 
 
-class RemoteBitmask(CommNode):
+class RemoteBitmask(CommNode, NamedNode):
     """
     Remote Endpoint with a value represented as a bitmask
     """
@@ -19,8 +20,8 @@ class RemoteBitmask(CommNode):
         rst_target=None,
         ep_id=-1,
     ):
-        super().__init__()
-        self.name = name
+        CommNode.__init__(self)
+        NamedNode.__init__(self, name)
         self.summary = summary
         self.bitmask = flags # flags is needed to deserialize
         self.c_getter = c_getter

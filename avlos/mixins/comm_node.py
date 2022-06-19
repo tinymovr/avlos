@@ -12,6 +12,7 @@ class CommNode:
 
     @cached_property
     def channel(self):
-        if None != self.parent:
+        try:
             return self.parent.channel
-        return self._channel
+        except AttributeError:
+            return self._channel
