@@ -14,20 +14,20 @@ Let's make a protocol to control a toaster. First we generate a spec file contai
 
     name: toaster
     version: "1.0"
-    attributes:
+    remote_attributes:
     - name: sn
         dtype: uint32
         c_getter: toaster_get_sn
         summary: The unique device serial number.
     - name: heater
-      attributes:
+      remote_attributes:
       - name: temperature
           dtype: float
           unit: celsius
           c_getter: toaster_get_heater_temp
           summary: The toaster heater temperature.
     - name: relay
-      attributes:
+      remote_attributes:
       - name: relay_state
           dtype: bool
           c_getter: toaster_get_relay_state
