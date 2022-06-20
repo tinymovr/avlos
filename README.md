@@ -2,7 +2,7 @@
 <img src="avlos_logo.png" width="160"/>
 </p>
 
-![main lint and test](https://github.com/tinymovr/avlos/actions/workflows/ci.yml/badge.svg)
+![main lint and test](https://github.com/tinymovr/avlos/actions/workflows/ci.yml/badge.svg) ![Discord](https://img.shields.io/discord/742400176664084535)
 
 [Αυλός (Avlόs)](https://en.wikipedia.org/wiki/Aulos), _flute_, also _channel_.
 
