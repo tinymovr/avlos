@@ -81,12 +81,12 @@ class TestGeneration(unittest.TestCase):
             }
             generator_rst.process(obj, config)
 
-    def test_output_config(self):
+    def test_avlos_config(self):
         def_path_str = str(
             importlib.resources.files("tests").joinpath("definition/good_device.yaml")
         )
         config_file_path_str = str(
-            importlib.resources.files("tests").joinpath("definition/output_config.yaml")
+            importlib.resources.files("tests").joinpath("definition/avlos_config.yaml")
         )
         with open(def_path_str) as device_desc_stream:
             obj = deserialize(yaml.safe_load(device_desc_stream))
