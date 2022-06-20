@@ -4,6 +4,8 @@
 
 ![main lint and test](https://github.com/tinymovr/avlos/actions/workflows/ci.yml/badge.svg)
 
+[Αυλός (Avlόs)](https://en.wikipedia.org/wiki/Aulos), _flute_, also _channel_.
+
 Given a remote embedded device, a client that wants to control the device, and a YAML file that represents the remote device structure that we want exposed to the client (the spec), Avlos will generate a protocol implementation to help communicate between the client and the remote device, based on the spec. It will also generate documentation and more. 
 
 ## Example
