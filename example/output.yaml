@@ -1,0 +1,14 @@
+generators:
+    generator_c:
+        enabled: true
+        paths:
+            output_header: fw/protocol.h
+            output_impl: fw/protocol.c
+        header_includes:
+        - header.h
+        impl_includes:
+        - test.h
+    generator_rst:
+        enabled: true
+        paths:
+            output_file: docs/protocol.rst
