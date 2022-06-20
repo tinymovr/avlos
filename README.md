@@ -11,6 +11,7 @@ Given a remote embedded device, a client that wants to control the device, and a
 Let's make a protocol to control a toaster. First we generate a spec file containing the structure we want the toaster to expose:
 
     name: toaster
+    version: "1.0"
     attributes:
     - name: sn
         dtype: uint32
@@ -66,10 +67,6 @@ The output config defines the output modules that will be used and their options
             impl_includes:
             - src/test.h
 
-A more complete example is available at [tests/definition/output_config.yaml](./tests/definition/output_config.yaml). Note that all the output paths defined in the output config are relative to that file. In contrast, includes are parsed as is.
-
-The available output modules are: `generator_c`, `generator_cpp`, `generator_rst`, `generator_dbc`. Note: A plugin system is in the works to enable on-the-fly generators to be included.
-
 ### Usage
 
 Ensure a device spec and an output config exist in the current folder.
@@ -77,6 +74,10 @@ Ensure a device spec and an output config exist in the current folder.
     avlos from file device.yaml
 
 This will generate the outputs according to the configuration in the output config file.
+
+### Example
+
+A complete project example using Avlos is available at [example/](./example). Note that all the output paths defined in the output config are relative to that file. In contrast, includes are parsed as is.
 
 ### Avlos offers:
 
@@ -89,8 +90,29 @@ This will generate the outputs according to the configuration in the output conf
 - An implementation of the comms channel, this is left to the user.
 - Segmentation of data into packets (this is planned)
 
-### Topics
+### Available Generators
+
+- generator_c: C Embedded Code
+- generator_cpp: C++ Client Code
+- generator_rst: RST-based Docs
+- generator_dbc: CAN Bus Database Format
+
+In addition, the object resulting from the deserialization of the spec can be used as a Python object for RPC, by supplying a channel as follows:
+
+    import yaml
+    from avlos import deserialize
+    from myProject import myChannel # update this
+    
+    device_description = ...
+    obj = deserialize(yaml.safe_load(device_description))
+    obj._channel = myChannel()
+
+### Various Notes
 
 - The Avlos_Command enum is structured so as to be compatible with CAN bus RTR field (i.e. 0 -> write, 1 -> read)
 - Even though Avlos generators generate a protocol hash for both device-side (as a variable) and client-side implementations (as an object attribute), the way the hash is retrieved/checked/enforced is not included. This is due to the fact that each comms channel may implement different means of performing the above.
+
+### License
+
+MIT
 
