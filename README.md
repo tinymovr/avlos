@@ -94,10 +94,10 @@ A complete project example using Avlos is available at [example/](./example). No
 
 ### Available Generators
 
-- generator_c: C Embedded Code
-- generator_cpp: C++ Client Code
-- generator_rst: RST-based Docs
-- generator_dbc: CAN Bus Database Format
+- __generator_c__: C Embedded Code
+- __generator_cpp__: C++ Client Code
+- __generator_rst__: RST-based Docs
+- __generator_dbc__: CAN Bus Database Format
 
 In addition, the object resulting from the deserialization of the spec can be used as a Python object for RPC, by supplying a channel as follows:
 
