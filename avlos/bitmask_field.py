@@ -24,7 +24,13 @@ class BitmaskField(fields.Field):
 
 
 class Bitmask:
-
+    """
+    Class that represents an assignment of flags to
+    a sequence of bits. Can convert int values to
+    lists of flags corresponding to the 1s in the
+    binary representation of the number. Also
+    the opposite
+    """
     def __init__(self, flags, default="NONE"):
         self.flags = flags
         self.default = default
