@@ -48,7 +48,11 @@ In addition, Avlos will compute a checksum for the spec and add it as a variable
 
 The output location, as well as many other attributes of the files are flexible and easily configurable.
 
-### Configuration
+### Installation
+
+    pip install avlos
+
+### Project Configuration
 
 #### Device Spec
 
