@@ -42,7 +42,7 @@ Given the above, Avlos can generate the following:
 
 - RestructuredText-based documentation for each endpoint.
 
-- CAN DBC file (CAN database), for every endpoint, for use with CAN-based comm channels.
+- [CAN DBC file](https://www.csselectronics.com/pages/can-dbc-file-database-intro) (CAN database), for every endpoint, for use with CAN-based comm channels.
 
 In addition, Avlos will compute a checksum for the spec and add it as a variable to the implementation so that it can be retrieved by the client for comparing client and device specs. 
 
