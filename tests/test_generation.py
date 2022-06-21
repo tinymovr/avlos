@@ -1,11 +1,13 @@
 import yaml
 import subprocess
+from pathlib import Path
 import importlib.resources
 from avlos.deserializer import deserialize
 from avlos.processor import process_with_config_file
 import avlos.generators.generator_c as generator_c
 import avlos.generators.generator_cpp as generator_cpp
 import avlos.generators.generator_rst as generator_rst
+from rstcheck_core import _extras, config as config_mod, runner
 import unittest
 
 
@@ -81,6 +83,14 @@ class TestGeneration(unittest.TestCase):
             }
             generator_rst.process(obj, config)
 
+        rstcheck_config = config_mod.RstcheckConfig()
+        path = Path(out_path_str)
+        _runner = runner.RstcheckMainRunner(
+            check_paths=[path], rstcheck_config=rstcheck_config, overwrite_config=False
+        )
+        _runner.check()
+        _runner.print_result()
+            
     def test_avlos_config(self):
         def_path_str = str(
             importlib.resources.files("tests").joinpath("definition/good_device.yaml")

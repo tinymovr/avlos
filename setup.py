@@ -18,6 +18,6 @@ setup(
     url="https://www.tinymovr.com",
     packages=find_packages(include=["avlos", "avlos.*"]),
     python_requires=">=3.6",
-    install_requires=["marshmallow", "pyyaml", "pint", "docopt", "jinja2"],
+    install_requires=["marshmallow", "pyyaml", "pint", "docopt", "jinja2", "rstcheck"],
     entry_points={"console_scripts": ["avlos=avlos.cli:run_cli"]}
 )
