@@ -8,11 +8,25 @@ class BaseChannel:
     """
 
     def send(self, data, ep_id):
+        """
+        Send data to endpoint ep_id. Implement this to
+        send data contained in the data byte array, to
+        the endpoint with id ep_id
+        """
         raise NotImplementedError
 
     def recv(self, ep_id, timeout=0.1):
+        """
+        Received data from endpoint ep_id. Implement this
+        ti receive data from endpoint with id ep_id. The
+        implementation should timeout after a period equal
+        to timeout has elapsed.
+        """
         raise NotImplementedError
 
     @cached_property
     def serializer(self):
+        """
+        Return a data codec appropriate for the channel.
+        """
         raise NotImplementedError
