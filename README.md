@@ -8,7 +8,7 @@
 
 Given a remote embedded device, a client that wants to control the device, and a YAML file that represents the remote device structure that we want exposed to the client (the spec), Avlos will generate a protocol implementation to help communicate between the client and the remote device, based on the spec. It will also generate documentation and more. 
 
-## Example
+## :bulb: Illustrative Use Case
 
 Let's make a protocol to control a toaster. First we generate a spec file containing the structure we want the toaster to expose:
 
@@ -48,17 +48,17 @@ In addition, Avlos will compute a checksum for the spec and add it as a variable
 
 The output location, as well as many other attributes of the files are flexible and easily configurable.
 
-### Installation
+## :gift: Installation
 
     pip install avlos
 
-### Project Configuration
+## :gear: Project Configuration
 
-#### Device Spec
+### Device Spec
 
 The Device Spec is a YAML file that defines how the device is structured. It consists of a tree-like structure. For an example of Spec file see the [tests/definition/good_device.yaml](./tests/definition/good_device.yaml) file.
 
-#### Output Config
+### Output Config
 
 The output config defines the output modules that will be used and their options. Example, showing C code generation for embedded devices:
 
@@ -73,7 +73,7 @@ The output config defines the output modules that will be used and their options
             impl_includes:
             - src/test.h
 
-### Usage
+## :zap: Usage
 
 Ensure a device spec and an output config exist in the current folder.
 
@@ -81,22 +81,11 @@ Ensure a device spec and an output config exist in the current folder.
 
 This will generate the outputs according to the configuration in the output config file.
 
-### Example
+## Example Project
 
 A complete project example using Avlos is available at [example/](./example). Note that all the output paths defined in the output config are relative to that file. In contrast, includes are parsed as is.
 
-### Avlos offers:
-
-- A simple straightforward tree structure description, sufficient for most device types out there
-- A flexible templating system with several built-in generators, and a simple unassuming system to extend
-- Tight integration with physical units through the Pint module.
-
-### Avlos does not offer:
-
-- An implementation of the comms channel, this is left to the user.
-- Segmentation of data into packets (this is planned)
-
-### Available Generators
+## :gem: Available Generators
 
 - __generator_c__: C Embedded Code
 - __generator_cpp__: C++ Client Code
@@ -113,12 +102,23 @@ In addition, the object resulting from the deserialization of the spec can be us
     obj = deserialize(yaml.safe_load(device_description))
     obj._channel = myChannel()
 
-### Various Notes
+## :memo: Various Notes
+
+### Avlos offers:
+
+- A simple straightforward tree structure description, sufficient for most device types out there
+- A flexible templating system with several built-in generators, and a simple unassuming system to extend
+- Tight integration with physical units through the Pint module.
+
+### Avlos does not offer:
+
+- An implementation of the comms channel, this is left to the user.
+- Segmentation of data into packets (this is planned)
 
 - The Avlos_Command enum is structured so as to be compatible with CAN bus RTR field (i.e. 0 -> write, 1 -> read)
 - Even though Avlos generators generate a protocol hash for both device-side (as a variable) and client-side implementations (as an object attribute), the way the hash is retrieved/checked/enforced is not included. This is due to the fact that each comms channel may implement different means of performing the above.
 
-### License
+## :key: License
 
 MIT
 
