@@ -8,6 +8,8 @@
 
 Given a remote embedded device, a client that wants to control the device, and a YAML file that represents the remote device structure that we want exposed to the client (the spec), Avlos will generate a protocol implementation to help communicate between the client and the remote device, based on the spec. It will also generate documentation and more. 
 
+Avlos has been originally developed as a communication layer for [Tinymovr](https://tinymovr.com)
+
 ## :bulb: Illustrative Use Case
 
 Let's make a protocol to control a toaster. First we generate a spec file containing the structure we want the toaster to expose:
