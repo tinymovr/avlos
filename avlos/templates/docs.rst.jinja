@@ -16,7 +16,7 @@ Spec version {{ instance.version }}
 
 ID: {{ attr.ep_id }}
 Type: {{ attr.dtype.nickname }}
-{% if None != attr.unit %}Units: {{attr.unit.units}} {%- endif %}
+{% if None != attr.unit %}Units: {{attr.unit}} {%- endif %}
 
 {{ attr.summary }}
 
@@ -27,7 +27,7 @@ Type: {{ attr.dtype.nickname }}
 
 ID: {{ attr.ep_id }}
 {% if attr.dtype %}Return Type: {{ attr.dtype.nickname }} {%- endif %}
-{% if attr.unit %}Units: {{ attr.unit.units }} {%- endif %}
+{% if attr.unit %}Units: {{ attr.unit }} {%- endif %}
 
 {{ attr.summary }}
 
