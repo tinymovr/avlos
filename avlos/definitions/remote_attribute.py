@@ -1,3 +1,4 @@
+import pint
 from avlos.mixins.comm_node import CommNode
 from avlos.mixins.named_node import NamedNode
 
@@ -40,6 +41,11 @@ class RemoteAttribute(CommNode, NamedNode):
 
     def set_value(self, __value):
         assert self.c_setter
+        try:
+            __value = __value.to(self.unit).magnitude
+        except AttributeError:
+            pass
+        print(__value)
         data = self.channel.serializer.serialize([__value], self.dtype)
         self.channel.send(data, self.ep_id)
 
