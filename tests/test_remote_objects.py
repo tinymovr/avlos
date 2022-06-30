@@ -7,8 +7,9 @@ from tests.dummy_channel import DummyChannel
 
 _reg = get_registry()
 
+
 class TestRemoteObjects(unittest.TestCase):
-    def test_properties(self):
+    def test_read_properties(self):
         def_path_str = str(
             importlib.resources.files("tests").joinpath("definition/good_device.yaml")
         )
