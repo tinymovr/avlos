@@ -45,7 +45,6 @@ class RemoteAttribute(CommNode, NamedNode):
             __value = __value.to(self.unit).magnitude
         except AttributeError:
             pass
-        print(__value)
         data = self.channel.serializer.serialize([__value], self.dtype)
         self.channel.send(data, self.ep_id)
 
