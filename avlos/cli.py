@@ -35,11 +35,11 @@ def run_cli():
     if arguments["<spec_path>"]:
         with open(arguments["<spec_path>"]) as device_desc_stream:
             obj = deserialize(yaml.safe_load(device_desc_stream))
-            process_with_config_file(obj, config_path)
+            process_with_config_file(obj, config_path, traverse_path=True)
     elif arguments["<spec_url>"]:
         device_desc_string = urllib.request.urlopen(arguments["<spec_url>"]).read()
         obj = deserialize(yaml.safe_load(device_desc_string))
-        process_with_config_file(obj, config_path)
+        process_with_config_file(obj, config_path, traverse_path=True)
 
 
 def configure_logging() -> logging.Logger:
