@@ -34,14 +34,15 @@ class RemoteBitmask(CommNode, NamedNode):
         self.channel.send([], self.ep_id)
         data = self.channel.recv(self.ep_id)
         value, *_ = self.channel.serializer.deserialize(data, self.flag_type)
-        return self.bitmask.match(value)
+        return self.bitmask(value)
 
     def set_value(self, __value):
-        assert self.c_setter
-        data = self.channel.serializer.serialize(
-            [self.bitmask.mask(__value)], self.flag_type
-        )
-        self.channel.send(data, self.ep_id)
+        raise NotImplementedError
+        # assert self.c_setter
+        # data = self.channel.serializer.serialize(
+        #     [self.bitmask.mask(__value)], self.flag_type
+        # )
+        # self.channel.send(data, self.ep_id)
 
     @property
     def dtype(self):
@@ -61,5 +62,5 @@ class RemoteBitmask(CommNode, NamedNode):
         val = self.get_value()
         return "{0}: {1}".format(
             self.name,
-            " ".join(val) if len(val) > 0 else "(no flags)",
+            str(val) if val > 0 else "(no flags)",
         )

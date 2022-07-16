@@ -29,9 +29,9 @@
 enum {{ ep.full_name | replace(".", "_") }}_flags
 {
     {%- set comma = joiner(", ") %}
-    {{ ep.full_name | replace(".", "_") | upper }}_{{ ep.bitmask.default }} = 0,
+    {{ ep.full_name | replace(".", "_") | upper }}_NONE = 0,
     {%- for flag in ep.bitmask %}{{ comma() }}
-    {{ ep.full_name | replace(".", "_") | upper }}_{{ flag }} = (1 << {{ loop.index0 }})
+    {{ ep.full_name | replace(".", "_") | upper }}_{{ flag.name }} = (1 << {{ loop.index0 }})
     {%- endfor %}
 };
 {%- endfor %}
