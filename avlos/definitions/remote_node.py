@@ -37,10 +37,10 @@ class RemoteNode(CommNode, NamedNode):
     def __getattr__(self, __name):
         try:
             attr = self.remote_attributes[__name]
-            if isinstance(attr, RemoteNode) or isinstance(attr, RemoteFunction):
+            try:
+                return attr.get_value()    
+            except AttributeError:
                 return attr
-            elif isinstance(attr, RemoteAttribute):
-                return attr.get_value()
         except KeyError:
             raise AttributeError(__name)
 
