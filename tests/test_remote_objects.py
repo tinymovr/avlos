@@ -27,3 +27,20 @@ class TestRemoteObjects(unittest.TestCase):
             self.assertEqual(0.1 * _reg("ohm"), obj.motor.R)
 
             obj.controller.set_pos_vel_setpoints(0, 0)
+
+    def test_non_existent_attributes(self):
+        def_path_str = str(
+            importlib.resources.files("tests").joinpath("definition/good_device.yaml")
+        )
+        with open(def_path_str) as device_description:
+            obj = deserialize(yaml.safe_load(device_description))
+            obj._channel = DummyChannel()
+            with self.assertRaises(AttributeError):
+                val = obj.foo
+                print(val)
+            with self.assertRaises(AttributeError):
+                val = obj.controller.bar
+                print(val)
+
+
+        
