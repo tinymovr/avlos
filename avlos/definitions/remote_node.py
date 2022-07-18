@@ -52,6 +52,17 @@ class RemoteNode(CommNode, NamedNode):
         except KeyError:
             super().__setattr__(__name, __value)
 
+    def export_flags(self, namespace):
+        """
+        Recurse children and export bitmask to
+        indicated namespace
+        """
+        for child in self.remote_attributes:
+            try:
+                child.export_flags(namespace)
+            except AttributeError:
+                pass
+
     def str_dump(self, indent, depth):
         if depth <= 0:
             return "..."
@@ -97,6 +108,7 @@ class RemoteNodeSchema(Schema):
     c_setter = fields.String()
     c_caller = fields.String()
     arguments = fields.List(fields.Nested(lambda: RemoteArgumentSchema()))
+    export = fields.Bool(default=False)
     rst_target = fields.String()
     ep_id = fields.Integer(default=-1)
 

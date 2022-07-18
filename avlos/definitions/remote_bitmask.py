@@ -18,6 +18,7 @@ class RemoteBitmask(CommNode, NamedNode):
         c_setter=None,
         flags=None,
         rst_target=None,
+        export=False,
         ep_id=-1,
     ):
         CommNode.__init__(self)
@@ -26,6 +27,7 @@ class RemoteBitmask(CommNode, NamedNode):
         self.bitmask = flags # flags is needed to deserialize
         self.c_getter = c_getter
         self.c_setter = c_setter
+        self.export = export
         self.rst_target = rst_target
         self.ep_id = ep_id
 
@@ -43,6 +45,14 @@ class RemoteBitmask(CommNode, NamedNode):
         #     [self.bitmask.mask(__value)], self.flag_type
         # )
         # self.channel.send(data, self.ep_id)
+
+    def export_flags(self, namespace):
+        """
+        Export the members of the bitmask to the
+        indicated namespace
+        """
+        if self.export:
+            namespace.update(self.bitmask.__members__)
 
     @property
     def dtype(self):
