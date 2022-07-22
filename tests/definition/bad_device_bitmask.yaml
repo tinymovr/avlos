@@ -5,13 +5,13 @@ version: "0.0"
 remote_attributes:
   - name: sn
     dtype: uint32
-    c_getter: system_get_sn
+    getter_name: system_get_sn
     summary: Retrieve the unique device serial number.
   - name: Vbus
     dtype: float
-    c_getter: system_get_vbus
+    getter_name: system_get_vbus
     summary: Retrieve the bus voltage.
   - name: errors
     flags: []
-    c_getter: system_get_errors
+    getter_name: system_get_errors
     summary: Retrieve the system errors.

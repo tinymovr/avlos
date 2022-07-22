@@ -27,10 +27,10 @@ class {{ instance.name }}
             {%- if attr.remote_attributes %}
         {{attr.name}} {{attr.name}};
 
-            {%- elif attr.c_getter %}
+            {%- elif attr.getter_name %}
         {{attr.dtype.c_name}} get_{{attr.name}}(void);
             {%- endif %}
-            {%- if attr.c_setter %}
+            {%- if attr.setter_name %}
         void set_{{attr.name}}({{attr.dtype.c_name}} value);
             {%- endif %}
             {%- if attr.c_caller %}

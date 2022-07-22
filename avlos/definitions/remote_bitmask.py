@@ -14,8 +14,8 @@ class RemoteBitmask(CommNode, NamedNode):
         self,
         name,
         summary,
-        c_getter=None,
-        c_setter=None,
+        getter_name=None,
+        setter_name=None,
         flags=None,
         rst_target=None,
         export=False,
@@ -25,14 +25,14 @@ class RemoteBitmask(CommNode, NamedNode):
         NamedNode.__init__(self, name)
         self.summary = summary
         self.bitmask = flags # flags is needed to deserialize
-        self.c_getter = c_getter
-        self.c_setter = c_setter
+        self.getter_name = getter_name
+        self.setter_name = setter_name
         self.export = export
         self.rst_target = rst_target
         self.ep_id = ep_id
 
     def get_value(self):
-        assert self.c_getter
+        assert self.getter_name
         self.channel.send([], self.ep_id)
         data = self.channel.recv(self.ep_id)
         value, *_ = self.channel.serializer.deserialize(data, self.flag_type)
@@ -40,7 +40,7 @@ class RemoteBitmask(CommNode, NamedNode):
 
     def set_value(self, __value):
         raise NotImplementedError
-        # assert self.c_setter
+        # assert self.setter_name
         # data = self.channel.serializer.serialize(
         #     [self.bitmask.mask(__value)], self.flag_type
         # )

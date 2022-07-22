@@ -15,7 +15,7 @@
     {%- for attr in instance.remote_attributes.values() %}
         {%- if attr.remote_attributes %}
         {%- else %}
-            {%- if attr.c_getter %}
+            {%- if attr.getter_name %}
 
 {{attr.dtype.c_name}} Device::get_{{attr.name}}(void)
 {
@@ -28,7 +28,7 @@
     return value;
 }
             {%- endif %}
-            {%- if attr.c_setter %}
+            {%- if attr.setter_name %}
 
 void Device::set_{{attr.name}}({{attr.dtype.c_name}} value)
 {

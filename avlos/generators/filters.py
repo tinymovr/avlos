@@ -10,8 +10,8 @@ def avlos_endpoints(input):
     def traverse_endpoint_list(ep_list, ep_out_list):
         for ep in ep_list:
             if (
-                hasattr(ep, "c_getter")
-                or hasattr(ep, "c_setter")
+                hasattr(ep, "getter_name")
+                or hasattr(ep, "setter_name")
                 or hasattr(ep, "c_caller")
             ):
                 ep_out_list.append(ep)

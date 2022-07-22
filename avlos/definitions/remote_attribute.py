@@ -13,8 +13,8 @@ class RemoteAttribute(CommNode, NamedNode):
         name,
         summary,
         dtype,
-        c_getter=None,
-        c_setter=None,
+        getter_name=None,
+        setter_name=None,
         unit=None,
         rst_target=None,
         ep_id=-1,
@@ -24,13 +24,13 @@ class RemoteAttribute(CommNode, NamedNode):
         self.summary = summary
         self.dtype = dtype
         self.unit = unit
-        self.c_getter = c_getter
-        self.c_setter = c_setter
+        self.getter_name = getter_name
+        self.setter_name = setter_name
         self.rst_target = rst_target
         self.ep_id = ep_id
 
     def get_value(self):
-        assert self.c_getter
+        assert self.getter_name
         self.channel.send([], self.ep_id)
         data = self.channel.recv(self.ep_id)
         value, *_ = self.channel.serializer.deserialize(data, self.dtype)
@@ -40,7 +40,7 @@ class RemoteAttribute(CommNode, NamedNode):
             return value
 
     def set_value(self, __value):
-        assert self.c_setter
+        assert self.setter_name
         try:
             __value = __value.to(self.unit).magnitude
         except AttributeError:

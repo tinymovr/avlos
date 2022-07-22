@@ -4,10 +4,10 @@ name: Device
 remote_attributes:
   - name: sn
     dtype: uint32
-    c_getter: system_get_sn
+    getter_name: system_get_sn
     summary: Retrieve the unique device serial number.
   - name: Vbus
     dtype: float
     unit: yadda
-    c_getter: system_get_vbus
+    getter_name: system_get_vbus
     summary: Retrieve the bus voltage.

@@ -21,21 +21,21 @@ Let's make a protocol to control a toaster. First we generate a spec file contai
     remote_attributes:
     - name: sn
         dtype: uint32
-        c_getter: toaster_get_sn
+        getter_name: toaster_get_sn
         summary: The unique device serial number.
     - name: heater
       remote_attributes:
       - name: temperature
           dtype: float
           unit: celsius
-          c_getter: toaster_get_heater_temp
+          getter_name: toaster_get_heater_temp
           summary: The toaster heater temperature.
     - name: relay
       remote_attributes:
       - name: relay_state
           dtype: bool
-          c_getter: toaster_get_relay_state
-          c_setter: toaster_set_relay_state
+          getter_name: toaster_get_relay_state
+          setter_name: toaster_set_relay_state
           summary: The toaster heating relay element state.
 
 Given the above, Avlos can generate the following:

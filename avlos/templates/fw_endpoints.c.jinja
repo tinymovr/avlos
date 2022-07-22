@@ -23,20 +23,20 @@ uint32_t _avlos_get_proto_hash(void)
 
 uint8_t avlos_{{attr.full_name | replace(".", "_") }}(uint8_t * buffer, uint8_t * buffer_len, Avlos_Command cmd)
 {
-    {%- if attr.c_getter %}
+    {%- if attr.getter_name %}
     if (AVLOS_CMD_READ == cmd) {
         {{attr.dtype.c_name}} v;
-        v = {{ attr.c_getter }}();
+        v = {{ attr.getter_name }}();
         *buffer_len = sizeof(v);
         memcpy(buffer, &v, sizeof(v));
         return AVLOS_RET_READ;
     }
     {%- endif %}
-    {%- if attr.c_setter %}
-    {% if attr.c_getter %}else {% endif %}if (AVLOS_CMD_WRITE == cmd) {
+    {%- if attr.setter_name %}
+    {% if attr.getter_name %}else {% endif %}if (AVLOS_CMD_WRITE == cmd) {
         {{attr.dtype.c_name}} v;
         memcpy(&v, buffer, sizeof(v));
-        {{ attr.c_setter }}(v);
+        {{ attr.setter_name }}(v);
         return AVLOS_RET_WRITE;
     }
     {%- endif %}

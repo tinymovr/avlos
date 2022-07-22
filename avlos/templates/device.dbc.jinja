@@ -2,14 +2,14 @@
 VERSION "{{instance.version}}"
 
 {% for attr in instance | endpoints %}
-  {%- if attr.c_getter or attr.c_setter %}
-    {%- if attr.c_getter %}
-BO_ {{attr.ep_id}} {{attr.c_getter}}: {{attr.dtype.size}} Vector__XXX
-  SG_ {{attr.c_getter}} : 0|{{attr.dtype.size}}@1+ (1,0) "<{{attr.unit.units}}>" Vector__XXX
+  {%- if attr.getter_name or attr.setter_name %}
+    {%- if attr.getter_name %}
+BO_ {{attr.ep_id}} {{attr.getter_name}}: {{attr.dtype.size}} Vector__XXX
+  SG_ {{attr.getter_name}} : 0|{{attr.dtype.size}}@1+ (1,0) "<{{attr.unit.units}}>" Vector__XXX
     {%- endif %}
-    {%- if attr.c_setter %}
-BO_ {{attr.ep_id}} {{attr.c_setter}}: {{attr.dtype.size}} Vector__XXX
-  SG_ {{attr.c_setter}} : 0|{{attr.dtype.size}}@1+ (1,0) "<{{attr.unit.units}}>" Vector__XXX
+    {%- if attr.setter_name %}
+BO_ {{attr.ep_id}} {{attr.setter_name}}: {{attr.dtype.size}} Vector__XXX
+  SG_ {{attr.setter_name}} : 0|{{attr.dtype.size}}@1+ (1,0) "<{{attr.unit.units}}>" Vector__XXX
     {%- endif %}
   {%- elif attr.c_caller %}
 BO_ {{attr.ep_id}} {{attr.c_caller}}: {{attr.arg_total_size}} Vector__XXX

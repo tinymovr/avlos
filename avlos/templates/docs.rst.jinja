@@ -10,7 +10,7 @@ Spec version {{ instance.version }}
 {%- if attr.rst_target %}
 .. _{{attr.rst_target}}:
 {% endif %}
-    {%- if attr.c_getter or attr.c_setter %}
+    {%- if attr.getter_name or attr.setter_name %}
 {{ attr.full_name }}
 -------------------------------------------------------------------
 

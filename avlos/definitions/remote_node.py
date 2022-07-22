@@ -104,8 +104,8 @@ class RemoteNodeSchema(Schema):
     dtype = DataTypeField()
     flags = BitmaskField()
     unit = UnitField()
-    c_getter = fields.String()
-    c_setter = fields.String()
+    getter_name = fields.String()
+    setter_name = fields.String()
     c_caller = fields.String()
     arguments = fields.List(fields.Nested(lambda: RemoteArgumentSchema()))
     export = fields.Bool(default=False)
@@ -137,19 +137,19 @@ class RemoteNodeSchema(Schema):
     def validate_schema(self, data, **kwargs):
         if (
             "remote_attributes" not in data
-            and "c_getter" not in data
-            and "c_setter" not in data
+            and "getter_name" not in data
+            and "setter_name" not in data
             and "c_caller" not in data
         ):
             raise ValidationError(
                 "Either a getter, setter, caller or remote attributes list is required"
             )
-        if "c_getter" in data and "c_setter" in data and "c_caller" in data:
+        if "getter_name" in data and "setter_name" in data and "c_caller" in data:
             raise ValidationError(
                 "A getter, setter, and caller cannot coexist in a single endpoint"
             )
         if (
-            ("c_getter" in data or "c_setter" in data or "c_caller" in data)
+            ("getter_name" in data or "setter_name" in data or "c_caller" in data)
             and "dtype" not in data
             and "flags" not in data
         ):
