@@ -33,7 +33,7 @@ class {{ instance.name }}
             {%- if attr.setter_name %}
         void set_{{attr.name}}({{attr.dtype.c_name}} value);
             {%- endif %}
-            {%- if attr.c_caller %}
+            {%- if attr.caller_name %}
                 {%- set comma = joiner(", ") %}
         {{attr.dtype.c_name}} {{attr.name}}({%- for arg in attr.arguments %}{{ comma() }}{{arg.dtype.c_name}} {{ arg.name }} {%- endfor %});
             {%- endif %}

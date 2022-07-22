@@ -11,8 +11,8 @@ BO_ {{attr.ep_id}} {{attr.getter_name}}: {{attr.dtype.size}} Vector__XXX
 BO_ {{attr.ep_id}} {{attr.setter_name}}: {{attr.dtype.size}} Vector__XXX
   SG_ {{attr.setter_name}} : 0|{{attr.dtype.size}}@1+ (1,0) "<{{attr.unit.units}}>" Vector__XXX
     {%- endif %}
-  {%- elif attr.c_caller %}
-BO_ {{attr.ep_id}} {{attr.c_caller}}: {{attr.arg_total_size}} Vector__XXX
+  {%- elif attr.caller_name %}
+BO_ {{attr.ep_id}} {{attr.caller_name}}: {{attr.arg_total_size}} Vector__XXX
     {%- set count = [0] %}
     {%- for arg in attr.arguments %}
   SG_ {{arg.name}} : {{count[0]}}|{{arg.dtype.size}}@1+ (1,0) "<{{arg.unit.units}}>" Vector__XXX

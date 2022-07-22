@@ -40,7 +40,7 @@ uint8_t avlos_{{attr.full_name | replace(".", "_") }}(uint8_t * buffer, uint8_t 
         return AVLOS_RET_WRITE;
     }
     {%- endif %}
-    {%- if attr.c_caller %}
+    {%- if attr.caller_name %}
         {%- if attr.arguments | length > 0 %}
     uint8_t offset = 0;
         {%- endif %}
@@ -52,10 +52,10 @@ uint8_t avlos_{{attr.full_name | replace(".", "_") }}(uint8_t * buffer, uint8_t 
 
     {%- set comma = joiner(", ") %}
     {%- if attr.dtype.c_name != "void" %}
-    {{attr.dtype.c_name}} ret_val = {{ attr.c_caller }}({%- for arg in attr.arguments %}{{ comma() }}{{ arg.name }} {%- endfor %});
+    {{attr.dtype.c_name}} ret_val = {{ attr.caller_name }}({%- for arg in attr.arguments %}{{ comma() }}{{ arg.name }} {%- endfor %});
     memcpy(buffer, &ret_val, sizeof(ret_val));
     {%- else %}
-    {{ attr.c_caller }}({%- for arg in attr.arguments %}{{ comma() }}{{ arg.name }} {%- endfor %});
+    {{ attr.caller_name }}({%- for arg in attr.arguments %}{{ comma() }}{{ arg.name }} {%- endfor %});
     {%- endif %}
 
     return AVLOS_RET_CALL;

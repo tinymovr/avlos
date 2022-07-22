@@ -106,7 +106,7 @@ class RemoteNodeSchema(Schema):
     unit = UnitField()
     getter_name = fields.String()
     setter_name = fields.String()
-    c_caller = fields.String()
+    caller_name = fields.String()
     arguments = fields.List(fields.Nested(lambda: RemoteArgumentSchema()))
     export = fields.Bool(default=False)
     rst_target = fields.String()
@@ -123,7 +123,7 @@ class RemoteNodeSchema(Schema):
             for child in node.remote_attributes.values():
                 child._parent = node
             return node
-        elif "c_caller" in data:
+        elif "caller_name" in data:
             data["ep_id"] = self.counter.next()
             return RemoteFunction(**data)
         elif "dtype" in data:
@@ -139,17 +139,17 @@ class RemoteNodeSchema(Schema):
             "remote_attributes" not in data
             and "getter_name" not in data
             and "setter_name" not in data
-            and "c_caller" not in data
+            and "caller_name" not in data
         ):
             raise ValidationError(
                 "Either a getter, setter, caller or remote attributes list is required"
             )
-        if "getter_name" in data and "setter_name" in data and "c_caller" in data:
+        if "getter_name" in data and "setter_name" in data and "caller_name" in data:
             raise ValidationError(
                 "A getter, setter, and caller cannot coexist in a single endpoint"
             )
         if (
-            ("getter_name" in data or "setter_name" in data or "c_caller" in data)
+            ("getter_name" in data or "setter_name" in data or "caller_name" in data)
             and "dtype" not in data
             and "flags" not in data
         ):

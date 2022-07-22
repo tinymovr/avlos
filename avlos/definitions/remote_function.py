@@ -19,7 +19,7 @@ class RemoteFunction(CommNode, NamedNode):
         self,
         name,
         summary,
-        c_caller,
+        caller_name,
         arguments,
         dtype=None,
         unit=None,
@@ -31,7 +31,7 @@ class RemoteFunction(CommNode, NamedNode):
         self.summary = summary
         self.dtype = dtype
         self.unit = unit
-        self.c_caller = c_caller
+        self.caller_name = caller_name
         self.arguments = arguments
         self.rst_target = rst_target
         self.ep_id = ep_id

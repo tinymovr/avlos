@@ -17,12 +17,12 @@ remote_attributes:
     summary: Retrieve the bus voltage.
   - name: reset
     summary: Reset the device.
-    c_caller: system_reset
+    caller_name: system_reset
     dtype: void
     arguments: []
   - name: move_to
     summary: Move to
-    c_caller: move_to
+    caller_name: move_to
     dtype: void
     arguments: 
       - name: position
@@ -33,7 +33,7 @@ remote_attributes:
     remote_attributes:
       - name: set_pos_vel_setpoints
         summary: Set position and velocity setpoints.
-        c_caller: controller_set_pos_vel_setpoints
+        caller_name: controller_set_pos_vel_setpoints
         dtype: void
         arguments:
           - name: pos_setpoint

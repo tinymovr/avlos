@@ -20,7 +20,7 @@ Type: {{ attr.dtype.nickname }}
 
 {{ attr.summary }}
 
-    {%- elif attr.c_caller %}
+    {%- elif attr.caller_name %}
         {%- set comma = joiner(", ") %}
 {{ attr.name }}({%- for arg in attr.arguments %}{{ comma() }}{{ arg.name }} {%- endfor %}) -> {{ attr.dtype.nickname }}
 -------------------------------------------------------------------

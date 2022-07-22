@@ -12,7 +12,7 @@ def avlos_endpoints(input):
             if (
                 hasattr(ep, "getter_name")
                 or hasattr(ep, "setter_name")
-                or hasattr(ep, "c_caller")
+                or hasattr(ep, "caller_name")
             ):
                 ep_out_list.append(ep)
             elif hasattr(ep, "remote_attributes"):

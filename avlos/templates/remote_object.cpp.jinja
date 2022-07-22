@@ -33,7 +33,7 @@ void Device::set_{{attr.name}}({{attr.dtype.c_name}} value)
     this->send_cb({{attr.ep_id}}, this->_data, sizeof({{attr.dtype.c_name}}), true);
 }
             {%- endif %}
-            {%- if attr.c_caller %}
+            {%- if attr.caller_name %}
                 {%- set comma = joiner(", ") %}
 
 {{attr.dtype.c_name}} Device::{{attr.name}}({%- for arg in attr.arguments %}{{ comma() }}{{arg.dtype.c_name}} {{ arg.name }} {%- endfor %})
