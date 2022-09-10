@@ -107,6 +107,7 @@ class RemoteNodeSchema(Schema):
     getter_name = fields.String()
     setter_name = fields.String()
     caller_name = fields.String()
+    dynamic_value = fields.Bool(default=False)
     arguments = fields.List(fields.Nested(lambda: RemoteArgumentSchema()))
     export = fields.Bool(default=False)
     rst_target = fields.String()

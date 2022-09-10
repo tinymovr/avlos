@@ -8,11 +8,13 @@ remote_attributes:
     summary: Retrieve the unique device serial number.
   - name: errors
     flags: [UNDERVOLTAGE]
+    dynamic_value: True
     getter_name: system_get_error
     summary: Retrieve any device errors.
   - name: Vbus
     dtype: float
     unit: volt
+    dynamic_value: True
     getter_name: system_get_vbus
     summary: Retrieve the bus voltage.
   - name: reset
@@ -63,6 +65,7 @@ remote_attributes:
       - name: position_estimate
         dtype: float
         unit: ticks
+        dynamic_value: True
         getter_name: encoder_get_pos_estimate
         summary: Retrieve the encoder position estimate.
       - name: bandwidth
