@@ -19,6 +19,7 @@ generators:
   generator_cpp:
     enabled: true
     paths:
+      output_helpers: ../outputs/helpers.hpp
       output_header: ../outputs/device.hpp
       output_impl: ../outputs/device.cpp
     header_includes:

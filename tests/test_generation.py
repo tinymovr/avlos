@@ -44,6 +44,9 @@ class TestGeneration(unittest.TestCase):
         def_path_str = str(
             importlib.resources.files("tests").joinpath("definition/good_device.yaml")
         )
+        helper_path_str = str(
+            importlib.resources.files("tests").joinpath("outputs/helpers.hpp")
+        )
         header_path_str = str(
             importlib.resources.files("tests").joinpath("outputs/device.hpp")
         )
@@ -55,6 +58,7 @@ class TestGeneration(unittest.TestCase):
             config = {
                 "hash_string": "0x9e8dc7ac",
                 "paths": {
+                    "output_helpers": helper_path_str,
                     "output_header": header_path_str,
                     "output_impl": impl_path_str,
                 },
