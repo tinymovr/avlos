@@ -32,7 +32,7 @@
 
 void Device::set_{{attr.name}}({{attr.dtype.c_name}} value)
 {
-    this->send_cb({{attr.ep_id}}, this->_data, sizeof({{attr.dtype.c_name}}), true);
+    this->send_cb({{attr.ep_id}}, this->_data, 0, false);
 }
             {%- endif %}
             {%- if attr.caller_name %}
@@ -40,34 +40,16 @@ void Device::set_{{attr.name}}({{attr.dtype.c_name}} value)
 
 {{attr.dtype.c_name}} Device::{{attr.name}}({%- for arg in attr.arguments %}{{ comma() }}{{arg.dtype.c_name}} {{ arg.name }} {%- endfor %})
 {
-    this->send_cb({{attr.ep_id}}, this->_data, sizeof({{attr.dtype.c_name}}), true);
+    {%- if attr.dtype.c_name == "void" %}
+    this->send({{attr.ep_id}}, this->_data, 0, true);
+    {%- else %}
+    this->send({{attr.ep_id}}, this->_data, sizeof({{attr.dtype.c_name}}), false);
+    {%- endif %}
 }
             {%- endif %}
         {%- endif %}
     {%- endfor %}
 {%- endif %}
 
-void Device::send(uint8_t cmd_id, uint8_t *data, uint8_t data_size, bool rtr)
-{
-    const uint8_t arb_id = this->get_arbitration_id(cmd_id);
-    this->send_cb(arb_id, data, data_size, rtr);
-}
 
-bool Device::recv(uint8_t cmd_id, uint8_t *data, uint8_t *data_size, uint16_t delay_us)
-{
-    // A delay of a few 100s of us needs to be inserted
-    // to ensure the response has been transmitted.
-    // TODO: Better handle this using an interrupt.
-    if (delay_us > 0)
-    {
-        delayMicroseconds(delay_us);
-    }
-    const uint8_t arb_id = this->get_arbitration_id(cmd_id);
-    return this->recv_cb(arb_id, data, data_size);
-}
-
-uint8_t Device::get_arbitration_id(uint8_t cmd_id)
-{
-    return this->can_node_id << EP_BITS | cmd_id;
-}
 

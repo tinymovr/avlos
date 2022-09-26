@@ -9,6 +9,7 @@
 #pragma once
 
 #include <cstdint>
+#include <{{ helper_file | file_from_path }}>
 
 {%- if instance.remote_attributes %}
     {%- for attr in instance.remote_attributes.values() %}
@@ -18,9 +19,19 @@
     {%- endfor %}
 {%- endif %}
 
-class {{ instance.name }}
+class {{ instance.name }} : Node
 {
     public:
+
+        {{ instance.name }}(uint8_t _can_node_id, send_callback _send_cb, recv_callback _recv_cb):
+            Node(_can_node_id, _send_cb, _recv_cb) 
+{%- if instance.remote_attributes %}
+    {%- for attr in instance.remote_attributes.values() %}
+        {%- if attr.remote_attributes %}
+            , {{attr.name}}(_can_node_id, _send_cb, _recv_cb)
+        {%- endif %}
+    {%- endfor %}
+{%- endif %} {};
 
     {%- if instance.remote_attributes %}
         {%- for attr in instance.remote_attributes.values() %}

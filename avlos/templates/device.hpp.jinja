@@ -9,6 +9,7 @@
 #pragma once
 
 #include <cstdint>
+#include <{{ helper_file | file_from_path }}>
 {%- for include in includes %}
 #include <{{ include }}>
 {%- endfor %}
@@ -20,9 +21,6 @@
         {%- endif %}
     {%- endfor %}
 {%- endif %}
-
-#define EP_BITS (6)
-#define RECV_DELAY_US (160.0f)
 
 {%- for ep in instance | bitmask_eps %}
 
@@ -36,15 +34,19 @@ enum {{ ep.full_name | replace(".", "_") }}_flags
 };
 {%- endfor %}
 
-typedef void (*send_callback)(uint32_t arbitration_id, uint8_t *data, uint8_t dlc, bool rtr);
-typedef bool (*recv_callback)(uint32_t arbitration_id, uint8_t *data, uint8_t *dlc);
-
-class Device
+class Device : Node
 {
     public:
 
         Device(uint8_t _can_node_id, send_callback _send_cb, recv_callback _recv_cb):
-            can_node_id(_can_node_id), send_cb(_send_cb), recv_cb(_recv_cb) {};
+            Node(_can_node_id, _send_cb, _recv_cb) 
+{%- if instance.remote_attributes %}
+    {%- for attr in instance.remote_attributes.values() %}
+        {%- if attr.remote_attributes %}
+            , {{attr.name}}(_can_node_id, _send_cb, _recv_cb)
+        {%- endif %}
+    {%- endfor %}
+{%- endif %} {};
 
     {%- if instance.remote_attributes %}
         {%- for attr in instance.remote_attributes.values() %}
@@ -66,17 +68,5 @@ class Device
             {%- endif %}
         {%- endfor %}
     {%- endif %}
-
-    private:
-
-        uint8_t can_node_id;
-        send_callback send_cb;
-        recv_callback recv_cb;
-        uint8_t _data[8];
-        uint8_t _dlc;
-
-        void send(uint8_t cmd_id, uint8_t *data, uint8_t data_size, bool rtr);
-        bool recv(uint8_t cmd_id, uint8_t *data, uint8_t *data_size, uint16_t delay_us);
-        uint8_t get_arbitration_id(uint8_t cmd_id);
 
 };

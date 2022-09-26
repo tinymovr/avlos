@@ -8,14 +8,13 @@
 
 #include <{{ instance.name }}.hpp>
 
-
 {%- if instance.remote_attributes %}
     {%- for attr in instance.remote_attributes.values() %}
         {%- if attr.remote_attributes %}
         {%- else %}
             {%- if attr.getter_name %}
 
-{{attr.dtype.c_name}} Device::get_{{attr.name}}(void)
+{{attr.dtype.c_name}} {{ instance.name }}::get_{{attr.name}}(void)
 {
     {{attr.dtype.c_name}} value = 0;
     this->send({{attr.ep_id}}, this->_data, 0, true);
@@ -28,17 +27,28 @@
             {%- endif %}
             {%- if attr.setter_name %}
 
-void Device::set_{{attr.name}}({{attr.dtype.c_name}} value)
+void {{ instance.name }}::set_{{attr.name}}({{attr.dtype.c_name}} value)
 {
-    this->send_cb({{attr.ep_id}}, this->_data, sizeof({{attr.dtype.c_name}}), true);
+    write_le(this->_data, value);
+    this->send({{attr.ep_id}}, this->_data, sizeof({{attr.dtype.c_name}}), false);
 }
             {%- endif %}
             {%- if attr.caller_name %}
                 {%- set comma = joiner(", ") %}
 
-{{attr.dtype.c_name}} Device::{{attr.name}}({%- for arg in attr.arguments %}{{ comma() }}{{arg.dtype.c_name}} {{ arg.name }} {%- endfor %})
+{{attr.dtype.c_name}} {{ instance.name }}::{{attr.name}}({%- for arg in attr.arguments %}{{ comma() }}{{arg.dtype.c_name}} {{ arg.name }} {%- endfor %})
 {
-    this->send_cb({{attr.ep_id}}, this->_data, sizeof({{attr.dtype.c_name}}), true);
+    {%- if attr.arguments|length == 0 %}
+    this->send({{attr.ep_id}}, this->_data, 0, true);
+    {%- else %}
+    uint8_t data_len = 0;
+        {%- for arg in attr.arguments %}
+    write_le(this->_data + data_len, {{ arg.name }});
+    data_len += sizeof({{ arg.name }});
+        {%- endfor %}
+
+    this->send({{attr.ep_id}}, this->_data, data_len, false);
+    {%- endif %}
 }
             {%- endif %}
         {%- endif %}

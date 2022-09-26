@@ -1,3 +1,4 @@
+import os
 from copy import copy
 
 
@@ -43,3 +44,10 @@ def as_include(input):
     elif input.startswith("<") and input.endswith(">"):
         return input
     return "<" + input + ">"
+
+
+def file_from_path(input):
+    """
+    Get the file string from a path string
+    """
+    return os.path.basename(input)
