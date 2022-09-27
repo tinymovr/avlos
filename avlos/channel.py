@@ -25,6 +25,13 @@ class BaseChannel:
         raise NotImplementedError
 
     @cached_property
+    def max_ep_id(self):
+        """
+        Max value that the endpoint can get for this channel.
+        """
+        raise NotImplementedError
+
+    @cached_property
     def serializer(self):
         """
         Return a data codec appropriate for the channel.
