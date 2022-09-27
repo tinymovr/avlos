@@ -1,7 +1,7 @@
 from functools import cached_property
 
-class CommNode:
 
+class CommNode:
     def __init__(self):
         self._parent = None
         self._channel = None
@@ -16,3 +16,6 @@ class CommNode:
             return self.parent.channel
         except AttributeError:
             return self._channel
+
+    def set_channel(self, channel):
+        self._channel = channel
