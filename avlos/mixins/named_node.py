@@ -1,7 +1,7 @@
 from functools import cached_property
 
-class NamedNode:
 
+class NamedNode:
     def __init__(self, name, include_base_name=False):
         self._parent = None
         self.name = name
