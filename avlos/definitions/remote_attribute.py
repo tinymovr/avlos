@@ -18,7 +18,7 @@ class RemoteAttribute(CommNode, NamedNode):
         unit=None,
         rst_target=None,
         ep_id=-1,
-        dynamic_value=False
+        dynamic_value=False,
     ):
         CommNode.__init__(self)
         NamedNode.__init__(self, name)
@@ -56,4 +56,3 @@ class RemoteAttribute(CommNode, NamedNode):
             self.dtype.nickname,
             self.get_value(),
         )
-

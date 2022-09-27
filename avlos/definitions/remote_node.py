@@ -38,7 +38,7 @@ class RemoteNode(CommNode, NamedNode):
         try:
             attr = self.remote_attributes[__name]
             try:
-                return attr.get_value()    
+                return attr.get_value()
             except AttributeError:
                 return attr
         except KeyError:

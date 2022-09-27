@@ -20,12 +20,12 @@ class RemoteBitmask(CommNode, NamedNode):
         rst_target=None,
         export=False,
         ep_id=-1,
-        dynamic_value=False
+        dynamic_value=False,
     ):
         CommNode.__init__(self)
         NamedNode.__init__(self, name)
         self.summary = summary
-        self.bitmask = flags # flags is needed to deserialize
+        self.bitmask = flags  # flags is needed to deserialize
         self.getter_name = getter_name
         self.setter_name = setter_name
         self.export = export
