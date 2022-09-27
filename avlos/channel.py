@@ -17,8 +17,8 @@ class BaseChannel:
 
     def recv(self, ep_id, timeout=0.1):
         """
-        Received data from endpoint ep_id. Implement this
-        ti receive data from endpoint with id ep_id. The
+        Receive data from endpoint ep_id. Implement this
+        to receive data from endpoint with id ep_id. The
         implementation should timeout after a period equal
         to timeout has elapsed.
         """
