@@ -104,7 +104,7 @@ In addition, the object resulting from the deserialization of the spec can be us
     
     device_description = ...
     obj = deserialize(yaml.safe_load(device_description))
-    obj._channel = myChannel()
+    obj.set_channel(myChannel)
 
 ## :memo: Various Notes
 
