@@ -1,4 +1,3 @@
-import pint
 from avlos.mixins.comm_node import CommNode
 from avlos.mixins.named_node import NamedNode
 
@@ -32,7 +31,7 @@ class RemoteAttribute(CommNode, NamedNode):
         self.dynamic_value = dynamic_value
 
     def get_value(self):
-        assert self.getter_name
+        assert self.getter_name, "No getter function available"
         self.channel.send([], self.ep_id)
         data = self.channel.recv(self.ep_id)
         value, *_ = self.channel.serializer.deserialize(data, self.dtype)
@@ -42,7 +41,7 @@ class RemoteAttribute(CommNode, NamedNode):
             return value
 
     def set_value(self, __value):
-        assert self.setter_name
+        assert self.setter_name, "No setter function available"
         try:
             __value = __value.to(self.unit).magnitude
         except AttributeError:
