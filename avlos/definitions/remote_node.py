@@ -119,6 +119,11 @@ class RemoteNodeSchema(Schema):
 
     @post_load
     def make_remote_node(self, data, **kwargs):
+        """
+        Decide on which type of object to instantiate
+        based on the initialization data available.
+        Overrides the post_load hook.
+        """
         if "remote_attributes" in data:
             node = RemoteNode(**data)
             for child in node.remote_attributes.values():
