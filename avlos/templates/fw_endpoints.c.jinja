@@ -54,6 +54,7 @@ uint8_t avlos_{{attr.full_name | replace(".", "_") }}(uint8_t * buffer, uint8_t 
     {%- if attr.dtype.c_name != "void" %}
     {{attr.dtype.c_name}} ret_val = {{ attr.caller_name }}({%- for arg in attr.arguments %}{{ comma() }}{{ arg.name }} {%- endfor %});
     memcpy(buffer, &ret_val, sizeof(ret_val));
+    *buffer_len = sizeof(ret_val);
     {%- else %}
     {{ attr.caller_name }}({%- for arg in attr.arguments %}{{ comma() }}{{ arg.name }} {%- endfor %});
     {%- endif %}
