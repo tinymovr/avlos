@@ -9,7 +9,7 @@ _reg = get_registry()
 
 
 class TestRemoteObjects(unittest.TestCase):
-    def test_read_properties(self):
+    def test_read_remote_properties(self):
         def_path_str = str(
             importlib.resources.files("tests").joinpath("definition/good_device.yaml")
         )
@@ -28,7 +28,19 @@ class TestRemoteObjects(unittest.TestCase):
 
             obj.controller.set_pos_vel_setpoints(0, 0)
 
-    def test_non_existent_attributes(self):
+    def test_remote_function_call(self):
+        def_path_str = str(
+            importlib.resources.files("tests").joinpath("definition/good_device.yaml")
+        )
+        with open(def_path_str) as device_description:
+            obj = deserialize(yaml.safe_load(device_description))
+            obj._channel = DummyChannel()
+
+        self.assertEqual(0, obj.controller.set_pos_vel_setpoints(1, 2))
+        obj._channel.set_value(100.0)
+        self.assertEqual(100 * _reg("tick"), obj.controller.set_pos_vel_setpoints(0, 0))
+
+    def test_non_existent_remote_attributes_fail(self):
         def_path_str = str(
             importlib.resources.files("tests").joinpath("definition/good_device.yaml")
         )
@@ -41,6 +53,8 @@ class TestRemoteObjects(unittest.TestCase):
             with self.assertRaises(AttributeError):
                 val = obj.controller.bar
                 print(val)
+
+    
 
 
         

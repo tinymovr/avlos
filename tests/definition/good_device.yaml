@@ -35,8 +35,9 @@ remote_attributes:
     remote_attributes:
       - name: set_pos_vel_setpoints
         summary: Set position and velocity setpoints.
-        caller_name: controller_set_pos_vel_setpoints
-        dtype: void
+        caller_name: set_position_velocity_setpoints
+        dtype: float
+        unit: ticks
         arguments:
           - name: pos_setpoint
             dtype: float
