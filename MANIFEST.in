@@ -1,0 +1,9 @@
+include *.md
+include LICENSE
+recursive-include avlos *.jinja
+recursive-include example *.c
+recursive-include example *.md
+recursive-include example *.rst
+recursive-include example *.yaml
+recursive-include tests *.py
+recursive-include tests *.yaml
