@@ -5,17 +5,20 @@ VERSION "{{instance.version}}"
   {%- if attr.getter_name or attr.setter_name %}
     {%- if attr.getter_name %}
 BO_ {{attr.ep_id}} {{attr.getter_name}}: {{attr.dtype.size}} Vector__XXX
-  SG_ {{attr.getter_name}} : 0|{{attr.dtype.size}}@1+ (1,0) "<{{attr.unit.units}}>" Vector__XXX
+  SG_ {{attr.name}} : 0|{{attr.dtype.size}}@1+ (1,0) [0|0] "{{attr.unit}}" Vector__XXX
     {%- endif %}
     {%- if attr.setter_name %}
 BO_ {{attr.ep_id}} {{attr.setter_name}}: {{attr.dtype.size}} Vector__XXX
-  SG_ {{attr.setter_name}} : 0|{{attr.dtype.size}}@1+ (1,0) "<{{attr.unit.units}}>" Vector__XXX
+  SG_ {{attr.name}} : 0|{{attr.dtype.size}}@1+ (1,0) [0|0] "{{attr.unit}}" Vector__XXX
     {%- endif %}
   {%- elif attr.caller_name %}
-BO_ {{attr.ep_id}} {{attr.caller_name}}: {{attr.arg_total_size}} Vector__XXX
+BO_ {{attr.ep_id}} {{attr.caller_name}}: {{[attr.arguments|length, 1]|max}} Vector__XXX
+    {%- if attr.arguments|length == 0%}
+  SG_ {{attr.name}} : 0|{{[attr.dtype.size, 1]|max}}@1+ (1,0) [0|0] "{{attr.unit}}" Vector__XXX
+    {%- endif %}
     {%- set count = [0] %}
     {%- for arg in attr.arguments %}
-  SG_ {{arg.name}} : {{count[0]}}|{{arg.dtype.size}}@1+ (1,0) "<{{arg.unit.units}}>" Vector__XXX
+  SG_ {{arg.name}} : {{count[0]}}|{{arg.dtype.size}}@1+ (1,0) [0|0] "{{attr.unit}}" Vector__XXX
       {%- if count.append(count.pop() + arg.dtype.size) %}{% endif %} {# increment count by 1 #}
     {%- endfor %}
   {%- endif %}
