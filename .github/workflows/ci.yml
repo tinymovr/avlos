@@ -3,7 +3,7 @@ name: Avlos Lint/Test
 on: [push]
 
 jobs:
-  test-studio:
+  test-avlos:
 
     runs-on: ubuntu-latest
     strategy:
