@@ -112,6 +112,7 @@ class RemoteNodeSchema(Schema):
     export = fields.Bool(default=False)
     rst_target = fields.String()
     ep_id = fields.Integer(default=-1)
+    meta = fields.Dict(default={})
 
     def __init__(self, *args, **kwargs):
         self.counter = get_counter()

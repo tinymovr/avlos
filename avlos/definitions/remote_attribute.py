@@ -1,8 +1,9 @@
 from avlos.mixins.comm_node import CommNode
 from avlos.mixins.named_node import NamedNode
+from avlos.mixins.meta_node import MetaNode
 
 
-class RemoteAttribute(CommNode, NamedNode):
+class RemoteAttribute(CommNode, NamedNode, MetaNode):
     """
     Remote Endpoint with a value, parent and a comms channel
     """
@@ -18,9 +19,11 @@ class RemoteAttribute(CommNode, NamedNode):
         rst_target=None,
         ep_id=-1,
         dynamic_value=False,
+        meta={}
     ):
         CommNode.__init__(self)
         NamedNode.__init__(self, name)
+        MetaNode.__init__(self, meta_dict=meta)
         self.summary = summary
         self.dtype = dtype
         self.unit = unit
