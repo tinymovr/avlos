@@ -22,7 +22,7 @@ class RemoteBitmask(CommNode, NamedNode, MetaNode):
         export=False,
         ep_id=-1,
         dynamic_value=False,
-        meta={}
+        meta={},
     ):
         CommNode.__init__(self)
         NamedNode.__init__(self, name)

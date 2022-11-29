@@ -67,7 +67,3 @@ class TestRemoteObjects(unittest.TestCase):
             self.assertEqual(0, len(obj.sn.meta))
             with self.assertRaises(KeyError):
                 d = obj.sn.meta["reload_data"]
-    
-
-
-        

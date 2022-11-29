@@ -26,7 +26,7 @@ class RemoteFunction(CommNode, NamedNode, MetaNode):
         unit=None,
         rst_target=None,
         ep_id=-1,
-        meta={}
+        meta={},
     ):
         CommNode.__init__(self)
         NamedNode.__init__(self, name)

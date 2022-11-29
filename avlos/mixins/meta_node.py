@@ -1,4 +1,3 @@
-
 class MetaNode:
     def __init__(self, meta_dict):
         self.meta_dict = meta_dict

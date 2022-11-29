@@ -36,7 +36,9 @@ def process_header(instance, config):
     os.makedirs(os.path.dirname(config["paths"]["output_header"]), exist_ok=True)
     with open(file, "w") as output_file:
         print(
-            template.render(instance=instance, includes=includes, helper_file=helper_file),
+            template.render(
+                instance=instance, includes=includes, helper_file=helper_file
+            ),
             file=output_file,
         )
     for attr in instance.remote_attributes.values():
@@ -53,7 +55,10 @@ def recurse_header(remote_object, config):
     helper_file = config["paths"]["output_helpers"]
     os.makedirs(os.path.dirname(config["paths"]["output_header"]), exist_ok=True)
     with open(file, "w") as output_file:
-        print(template.render(instance=remote_object, helper_file=helper_file), file=output_file)
+        print(
+            template.render(instance=remote_object, helper_file=helper_file),
+            file=output_file,
+        )
     for attr in remote_object.remote_attributes.values():
         if hasattr(attr, "remote_attributes"):
             recurse_header(attr, config)

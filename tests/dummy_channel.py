@@ -2,8 +2,9 @@ class DummyChannel:
     """
     Dummy channel class
     """
+
     def __init__(self, value=0):
-        self.value =value
+        self.value = value
 
     def send(self, data, ep_id):
         pass
@@ -23,6 +24,7 @@ class DummyCodec:
     """
     Dummy CODEC class
     """
+
     def serialize(self, values, *args):
         pass
 

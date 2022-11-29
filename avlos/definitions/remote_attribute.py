@@ -19,7 +19,7 @@ class RemoteAttribute(CommNode, NamedNode, MetaNode):
         rst_target=None,
         ep_id=-1,
         dynamic_value=False,
-        meta={}
+        meta={},
     ):
         CommNode.__init__(self)
         NamedNode.__init__(self, name)
