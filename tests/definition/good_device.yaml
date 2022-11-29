@@ -11,6 +11,7 @@ remote_attributes:
     dynamic_value: True
     getter_name: system_get_error
     summary: Retrieve any device errors.
+    meta: {"lalala": "ok"}
   - name: Vbus
     dtype: float
     unit: volt
@@ -22,6 +23,7 @@ remote_attributes:
     caller_name: system_reset
     dtype: void
     arguments: []
+    meta: {"reload_data": True}
   - name: move_to
     summary: Move to
     caller_name: move_to

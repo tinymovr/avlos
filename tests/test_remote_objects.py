@@ -54,6 +54,19 @@ class TestRemoteObjects(unittest.TestCase):
                 val = obj.controller.bar
                 print(val)
 
+    def test_meta_dictionary(self):
+        def_path_str = str(
+            importlib.resources.files("tests").joinpath("definition/good_device.yaml")
+        )
+        with open(def_path_str) as device_description:
+            obj = deserialize(yaml.safe_load(device_description))
+            self.assertEqual(1, len(obj.errors.meta))
+            self.assertEqual("ok", obj.errors.meta["lalala"])
+            self.assertEqual(1, len(obj.reset.meta))
+            self.assertEqual(True, obj.reset.meta["reload_data"])
+            self.assertEqual(0, len(obj.sn.meta))
+            with self.assertRaises(KeyError):
+                d = obj.sn.meta["reload_data"]
     
 
 
