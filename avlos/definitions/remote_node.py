@@ -8,6 +8,7 @@ from marshmallow import (
 )
 from avlos.unit_field import UnitField
 from avlos.bitmask_field import BitmaskField
+from avlos.enum_field import EnumField
 from avlos.counter import get_counter
 from avlos.datatypes import DataTypeField
 from avlos.mixins.comm_node import CommNode
@@ -17,6 +18,7 @@ from avlos.definitions import (
     RemoteFunction,
     RemoteArgumentSchema,
     RemoteBitmask,
+    RemoteEnum,
 )
 
 
@@ -103,6 +105,7 @@ class RemoteNodeSchema(Schema):
     remote_attributes = fields.List(fields.Nested(lambda: RemoteNodeSchema()))
     dtype = DataTypeField()
     flags = BitmaskField()
+    options = EnumField()
     unit = UnitField()
     getter_name = fields.String()
     setter_name = fields.String()
@@ -139,6 +142,9 @@ class RemoteNodeSchema(Schema):
         elif "flags" in data:
             data["ep_id"] = self.counter.next()
             return RemoteBitmask(**data)
+        elif "options" in data:
+            data["ep_id"] = self.counter.next()
+            return RemoteEnum(**data)
 
     @validates_schema
     def validate_schema(self, data, **kwargs):
@@ -159,5 +165,6 @@ class RemoteNodeSchema(Schema):
             ("getter_name" in data or "setter_name" in data or "caller_name" in data)
             and "dtype" not in data
             and "flags" not in data
+            and "options" not in data
         ):
-            raise ValidationError("Data type or flags field is required")
+            raise ValidationError("Data type, flags or options field is required")
