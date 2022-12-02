@@ -36,6 +36,17 @@ class TestDeserialization(unittest.TestCase):
             with self.assertRaises(pint.errors.UndefinedUnitError):
                 deserialize(yaml.safe_load(device_description))
 
+    def test_bitmask_labels(self):
+        def_path_str = str(
+            importlib.resources.files("tests").joinpath(
+                "definition/good_device.yaml"
+            )
+        )
+        with open(def_path_str) as device_description:
+            device = deserialize(yaml.safe_load(device_description))
+            device._channel = DummyChannel()
+            self.assertEqual(device.errors.value, 0)
+
     def test_empty_bitmask_labels(self):
         def_path_str = str(
             importlib.resources.files("tests").joinpath(
