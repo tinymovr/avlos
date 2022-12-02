@@ -45,11 +45,6 @@ class RemoteBitmask(CommNode, NamedNode, MetaNode):
 
     def set_value(self, __value):
         raise NotImplementedError
-        # assert self.setter_name
-        # data = self.channel.serializer.serialize(
-        #     [self.bitmask.mask(__value)], self.flag_type
-        # )
-        # self.channel.send(data, self.ep_id)
 
     def export_flags(self, namespace):
         """
