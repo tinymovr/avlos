@@ -21,7 +21,6 @@ class RemoteBitmask(CommNode, NamedNode, MetaNode):
         rst_target=None,
         export=False,
         ep_id=-1,
-        dynamic_value=False,
         meta={},
     ):
         CommNode.__init__(self)
@@ -34,7 +33,6 @@ class RemoteBitmask(CommNode, NamedNode, MetaNode):
         self.export = export
         self.rst_target = rst_target
         self.ep_id = ep_id
-        self.dynamic_value = dynamic_value
 
     def get_value(self):
         assert self.getter_name

@@ -18,7 +18,6 @@ class RemoteAttribute(CommNode, NamedNode, MetaNode):
         unit=None,
         rst_target=None,
         ep_id=-1,
-        dynamic_value=False,
         meta={},
     ):
         CommNode.__init__(self)
@@ -31,7 +30,6 @@ class RemoteAttribute(CommNode, NamedNode, MetaNode):
         self.setter_name = setter_name
         self.rst_target = rst_target
         self.ep_id = ep_id
-        self.dynamic_value = dynamic_value
 
     def get_value(self):
         assert self.getter_name, "No getter function available"

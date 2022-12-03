@@ -8,14 +8,14 @@ remote_attributes:
     summary: Retrieve the unique device serial number.
   - name: errors
     flags: [UNDERVOLTAGE]
-    dynamic_value: True
+    meta: {dynamic: True}
     getter_name: system_get_error
     summary: Retrieve any device errors.
     meta: {"lalala": "ok"}
   - name: Vbus
     dtype: float
     unit: volt
-    dynamic_value: True
+    meta: {dynamic: True}
     getter_name: system_get_vbus
     summary: Retrieve the bus voltage.
   - name: reset
@@ -23,7 +23,7 @@ remote_attributes:
     caller_name: system_reset
     dtype: void
     arguments: []
-    meta: {"reload_data": True}
+    meta: {reload_data: True}
   - name: move_to
     summary: Move to
     caller_name: move_to
@@ -68,7 +68,7 @@ remote_attributes:
       - name: position_estimate
         dtype: float
         unit: ticks
-        dynamic_value: True
+        meta: {dynamic: True}
         getter_name: encoder_get_pos_estimate
         summary: Retrieve the encoder position estimate.
       - name: bandwidth
