@@ -5,15 +5,23 @@ class DummyChannel:
 
     def __init__(self, value=0):
         self.value = value
+        self.write = False
 
     def send(self, data, ep_id):
-        pass
+        if self.write:
+            self.value = data
 
     def recv(self, ep_id):
         return [self.value]
 
     def set_value(self, value):
         self.value = value
+
+    def write_on(self):
+        self.write = True
+
+    def write_off(self):
+        self.write = False
 
     @property
     def serializer(self):
@@ -26,7 +34,7 @@ class DummyCodec:
     """
 
     def serialize(self, values, *args):
-        pass
+        return values[0]
 
     def deserialize(self, data, *args):
         return data
