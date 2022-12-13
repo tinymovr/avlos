@@ -15,6 +15,7 @@ class DataType(Enum):
     INT64 = 9
     FLOAT = 10
     DOUBLE = 11
+    STR=12
 
     @property
     def nickname(self):
@@ -44,6 +45,7 @@ c_type_map = {
     DataType.UINT32: "uint32_t",
     DataType.FLOAT: "float",
     DataType.DOUBLE: "double",
+    DataType.STR: "str"
 }
 
 datatype_sizes = {
@@ -57,6 +59,7 @@ datatype_sizes = {
     DataType.UINT32: 4,
     DataType.FLOAT: 4,
     DataType.DOUBLE: 8,
+    DataType.STR: -1
 }
 
 
@@ -71,6 +74,7 @@ datatype_names = {
     "uint32": DataType.UINT32,
     "float": DataType.FLOAT,
     "double": DataType.DOUBLE,
+    "string": DataType.STR
 }
 
 
