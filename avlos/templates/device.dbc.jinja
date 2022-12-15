@@ -5,11 +5,11 @@ VERSION "{{instance.version}}"
   {%- if attr.getter_name or attr.setter_name %}
     {%- if attr.getter_name %}
 BO_ {{attr.ep_id}} {{attr.getter_name}}: {{attr.dtype.size}} Vector__XXX
-  SG_ {{attr.name}} : 0|{{attr.dtype.size}}@1+ (1,0) [0|0] "{{attr.unit}}" Vector__XXX
+  SG_ {{attr.name}} : 0|{{[attr.dtype.size, 1]|max}}@1+ (1,0) [0|0] "{{attr.unit}}" Vector__XXX
     {%- endif %}
     {%- if attr.setter_name %}
 BO_ {{attr.ep_id}} {{attr.setter_name}}: {{attr.dtype.size}} Vector__XXX
-  SG_ {{attr.name}} : 0|{{attr.dtype.size}}@1+ (1,0) [0|0] "{{attr.unit}}" Vector__XXX
+  SG_ {{attr.name}} : 0|{{[attr.dtype.size, 1]|max}}@1+ (1,0) [0|0] "{{attr.unit}}" Vector__XXX
     {%- endif %}
   {%- elif attr.caller_name %}
 BO_ {{attr.ep_id}} {{attr.caller_name}}: {{[attr.arguments|length, 1]|max}} Vector__XXX
