@@ -57,12 +57,14 @@ remote_attributes:
         unit: ohm
         getter_name: motor_get_R
         setter_name: motor_set_R
+        meta: {export: True}
         summary: Access the motor Resistance value.
       - name: L
         dtype: float
         unit: henry
         getter_name: motor_get_L
         setter_name: motor_set_L
+        meta: {export: True}
         summary: Access the motor Inductance value.
       - name: errors
         flags: [R_OUT_OF_RANGE, L_OUT_OF_RANGE, INVALID_POLE_PAIRS]
@@ -79,6 +81,7 @@ remote_attributes:
       - name: bandwidth
         dtype: float
         unit: rad/s
+        meta: {export: True}
         getter_name: encoder_get_bandwidth
         setter_name: encoder_set_bandwidth
         summary: Access the encoder observer bandwidth.
