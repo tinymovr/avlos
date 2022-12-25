@@ -13,6 +13,7 @@ from avlos.counter import get_counter
 from avlos.datatypes import DataTypeField
 from avlos.mixins.comm_node import CommNode
 from avlos.mixins.named_node import NamedNode
+from avlos.mixins.impex_node import ImpexNode
 from avlos.definitions import (
     RemoteAttribute,
     RemoteFunction,
@@ -22,7 +23,7 @@ from avlos.definitions import (
 )
 
 
-class RemoteNode(CommNode, NamedNode):
+class RemoteNode(CommNode, NamedNode, ImpexNode):
     """
     Remote node with parent, children and a comms channel
     """

@@ -1,10 +1,11 @@
 from avlos.mixins.comm_node import CommNode
 from avlos.mixins.named_node import NamedNode
 from avlos.mixins.meta_node import MetaNode
+from avlos.mixins.impex_node import ImpexNode
 from avlos.datatypes import DataType
 
 
-class RemoteBitmask(CommNode, NamedNode, MetaNode):
+class RemoteBitmask(CommNode, NamedNode, MetaNode, ImpexNode):
     """
     Remote Endpoint with a value represented as a bitmask
     """

@@ -1,9 +1,10 @@
 from avlos.mixins.comm_node import CommNode
 from avlos.mixins.named_node import NamedNode
 from avlos.mixins.meta_node import MetaNode
+from avlos.mixins.impex_node import ImpexNode
 
 
-class RemoteAttribute(CommNode, NamedNode, MetaNode):
+class RemoteAttribute(CommNode, NamedNode, MetaNode, ImpexNode):
     """
     Remote Endpoint with a value, parent and a comms channel
     """
