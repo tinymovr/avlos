@@ -11,6 +11,10 @@ class CommNode:
         return self._parent
 
     @cached_property
+    def root(self):
+        return self._parent.root
+
+    @cached_property
     def channel(self):
         try:
             return self.parent.channel

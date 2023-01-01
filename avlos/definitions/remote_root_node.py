@@ -1,3 +1,4 @@
+from functools import cached_property
 from marshmallow import fields, post_load
 from avlos.definitions import RemoteNode, RemoteNodeSchema
 
@@ -10,6 +11,10 @@ class RootNode(RemoteNode):
     def __init__(self, version, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.version = version
+    
+    @cached_property
+    def root(self):
+        return self
 
 
 class RootNodeSchema(RemoteNodeSchema):
