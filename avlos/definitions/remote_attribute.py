@@ -1,3 +1,4 @@
+from avlos import get_registry
 from avlos.mixins.comm_node import CommNode
 from avlos.mixins.named_node import NamedNode
 from avlos.mixins.meta_node import MetaNode
@@ -42,14 +43,17 @@ class RemoteAttribute(CommNode, NamedNode, MetaNode, ImpexNode):
         except TypeError:
             return value
 
-    def set_value(self, __value):
+    def set_value(self, val):
         assert self.setter_name, "No setter function available"
         try:
-            __value = __value.to(self.unit).magnitude
+            val = val.to(self.unit).magnitude
         except AttributeError:
             pass
-        data = self.channel.serializer.serialize([__value], self.dtype)
+        data = self.channel.serializer.serialize([val], self.dtype)
         self.channel.send(data, self.ep_id)
+
+    def set_value_with_string(self, str_val):
+        self.set_value(get_registry()(str_val))
 
     def str_dump(self):
         return "{0} [{1}]: {2:.6g}".format(
