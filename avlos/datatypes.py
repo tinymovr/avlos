@@ -33,6 +33,12 @@ class DataType(Enum):
     def is_void(self):
         return DataType.VOID == self
 
+    def from_string(self, str_value):
+        if self == DataType.VOID:
+            return None
+        else:
+            return py_type_map[self](str_value)
+
 
 c_type_map = {
     DataType.VOID: "void",
@@ -46,6 +52,20 @@ c_type_map = {
     DataType.FLOAT: "float",
     DataType.DOUBLE: "double",
     DataType.STR: "str"
+}
+
+py_type_map = {
+    DataType.VOID: None,
+    DataType.BOOL: bool,
+    DataType.INT8: int,
+    DataType.UINT8: int,
+    DataType.INT16: int,
+    DataType.UINT16: int,
+    DataType.INT32: int,
+    DataType.UINT32: int,
+    DataType.FLOAT: float,
+    DataType.DOUBLE: float,
+    DataType.STR: str
 }
 
 datatype_sizes = {
