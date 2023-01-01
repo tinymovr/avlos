@@ -8,10 +8,9 @@ from avlos.datatypes import DataTypeField
 from avlos.mixins.comm_node import CommNode
 from avlos.mixins.named_node import NamedNode
 from avlos.mixins.meta_node import MetaNode
-from avlos.mixins.impex_node import ImpexNode
 
 
-class RemoteFunction(CommNode, NamedNode, MetaNode, ImpexNode):
+class RemoteFunction(CommNode, NamedNode, MetaNode):
     """
     Remote Function with zero or more arguments, return
     type, parent and a comms channel
