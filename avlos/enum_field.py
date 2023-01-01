@@ -1,4 +1,3 @@
-
 import enum
 from marshmallow import fields, ValidationError
 
@@ -14,7 +13,7 @@ class EnumField(fields.Field):
 
     def _deserialize(self, value, attr, data, **kwargs):
         try:
-            assert(len(value) > 0)
+            assert len(value) > 0
             return enum.IntEnum(attr, value)
         except ValueError as error:
             raise ValidationError("Invalid enum list.") from error

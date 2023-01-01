@@ -3,6 +3,11 @@ from marshmallow import fields, ValidationError
 
 
 class DataType(Enum):
+    """
+    Enum that represents a datatype. Includes
+    various convenience functions
+    """
+
     VOID = 0
     BOOL = 1
     UINT8 = 2
@@ -15,7 +20,7 @@ class DataType(Enum):
     INT64 = 9
     FLOAT = 10
     DOUBLE = 11
-    STR=12
+    STR = 12
 
     @property
     def nickname(self):
@@ -51,7 +56,7 @@ c_type_map = {
     DataType.UINT32: "uint32_t",
     DataType.FLOAT: "float",
     DataType.DOUBLE: "double",
-    DataType.STR: "str"
+    DataType.STR: "str",
 }
 
 py_type_map = {
@@ -65,7 +70,7 @@ py_type_map = {
     DataType.UINT32: int,
     DataType.FLOAT: float,
     DataType.DOUBLE: float,
-    DataType.STR: str
+    DataType.STR: str,
 }
 
 datatype_sizes = {
@@ -79,7 +84,7 @@ datatype_sizes = {
     DataType.UINT32: 4,
     DataType.FLOAT: 4,
     DataType.DOUBLE: 8,
-    DataType.STR: -1
+    DataType.STR: -1,
 }
 
 
@@ -94,7 +99,7 @@ datatype_names = {
     "uint32": DataType.UINT32,
     "float": DataType.FLOAT,
     "double": DataType.DOUBLE,
-    "string": DataType.STR
+    "string": DataType.STR,
 }
 
 
