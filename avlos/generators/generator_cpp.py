@@ -30,7 +30,7 @@ def process_header(instance, config):
     file_path = config["paths"]["output_header"]
     helper_file = config["paths"]["output_helpers"]
     try:
-        includes = config["cpp_header_includes"]
+        includes = config["header_includes"]
     except KeyError:
         includes = []
     os.makedirs(os.path.dirname(config["paths"]["output_header"]), exist_ok=True)
@@ -68,7 +68,7 @@ def process_impl(instance, config):
     template = env.get_template("device.cpp.jinja")
     file_path = config["paths"]["output_impl"]
     try:
-        includes = config["cpp_impl_includes"]
+        includes = config["impl_includes"]
     except KeyError:
         includes = []
     includes.append(Path(config["paths"]["output_header"]).name)
