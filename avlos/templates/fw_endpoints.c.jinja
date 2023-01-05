@@ -6,6 +6,44 @@
 * content is regenerated.
 */
 
+{%- macro getter_byval(attr) -%}
+    if (AVLOS_CMD_READ == cmd) {
+        {{attr.dtype.c_name}} v;
+        v = {{ attr.getter_name }}();
+        *buffer_len = sizeof(v);
+        memcpy(buffer, &v, sizeof(v));
+        return AVLOS_RET_READ;
+    }
+{%- endmacro %}
+
+{%- macro getter_char(attr) -%}
+    if (AVLOS_CMD_READ == cmd) {
+        {{attr.dtype.c_name}} v;
+        v = {{ attr.getter_name }}();
+        *buffer_len = sizeof(v);
+        memcpy(buffer, &v, sizeof(v));
+        return AVLOS_RET_READ;
+    }
+{%- endmacro %}
+
+{%- macro setter_byval(attr) -%}
+    {% if attr.getter_name %}else {% endif %}if (AVLOS_CMD_WRITE == cmd) {
+        {{attr.dtype.c_name}} v;
+        memcpy(&v, buffer, sizeof(v));
+        {{ attr.setter_name }}(v);
+        return AVLOS_RET_WRITE;
+    }
+{%- endmacro %}
+
+{%- macro setter_char(attr) -%}
+    {% if attr.getter_name %}else {% endif %}if (AVLOS_CMD_WRITE == cmd) {
+        {{attr.dtype.c_name}} v;
+        memcpy(&v, buffer, sizeof(v));
+        {{ attr.setter_name }}(v);
+        return AVLOS_RET_WRITE;
+    }
+{%- endmacro %}
+
 {%- for include in includes %}
 #include {{ include | as_include }}
 {%- endfor %}
@@ -24,21 +62,22 @@ uint32_t _avlos_get_proto_hash(void)
 uint8_t avlos_{{attr.full_name | replace(".", "_") }}(uint8_t * buffer, uint8_t * buffer_len, Avlos_Command cmd)
 {
     {%- if attr.getter_name %}
-    if (AVLOS_CMD_READ == cmd) {
-        {{attr.dtype.c_name}} v;
-        v = {{ attr.getter_name }}();
-        *buffer_len = sizeof(v);
-        memcpy(buffer, &v, sizeof(v));
-        return AVLOS_RET_READ;
-    }
+
+        {%- if attr.dtype.c_name == "char[]" %}
+{{ getter_char(attr) }}
+        {%- else %}
+{{ getter_byval(attr) }}
+        {%- endif %}
+
     {%- endif %}
     {%- if attr.setter_name %}
-    {% if attr.getter_name %}else {% endif %}if (AVLOS_CMD_WRITE == cmd) {
-        {{attr.dtype.c_name}} v;
-        memcpy(&v, buffer, sizeof(v));
-        {{ attr.setter_name }}(v);
-        return AVLOS_RET_WRITE;
-    }
+
+        {%- if attr.dtype.c_name == "char[]" %}
+{{ setter_char(attr) }}
+        {%- else %}
+{{ setter_byval(attr) }}
+        {%- endif %}
+
     {%- endif %}
     {%- if attr.caller_name %}
         {%- if attr.arguments | length > 0 %}
