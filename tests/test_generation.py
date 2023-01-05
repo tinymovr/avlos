@@ -62,7 +62,7 @@ class TestGeneration(unittest.TestCase):
                     "output_header": header_path_str,
                     "output_impl": impl_path_str,
                 },
-                "header_includes": {"codecs.hpp"},
+                "header_includes": {"string"},
             }
             generator_cpp.process(obj, config)
 

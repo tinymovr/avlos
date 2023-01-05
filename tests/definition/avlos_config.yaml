@@ -23,7 +23,10 @@ generators:
       output_header: ../outputs/_device.hpp
       output_impl: ../outputs/_device.cpp
     header_includes:
-    - codecs.hpp
+    - dust
+    - test
+    impl_includes:
+    - test
   generator_dbc:
     enabled: true
     paths:
