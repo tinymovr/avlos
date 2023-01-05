@@ -16,9 +16,9 @@ def process(instance, config):
 
 def process_helpers(instance, config):
     template = env.get_template("helpers.hpp.jinja")
-    file = config["paths"]["output_helpers"]
+    file_path = config["paths"]["output_helpers"]
     os.makedirs(os.path.dirname(config["paths"]["output_helpers"]), exist_ok=True)
-    with open(file, "w") as output_file:
+    with open(file_path, "w") as output_file:
         print(
             template.render(instance=instance),
             file=output_file,
@@ -27,14 +27,14 @@ def process_helpers(instance, config):
 
 def process_header(instance, config):
     template = env.get_template("device.hpp.jinja")
-    file = config["paths"]["output_header"]
+    file_path = config["paths"]["output_header"]
     helper_file = config["paths"]["output_helpers"]
     try:
         includes = config["cpp_header_includes"]
     except KeyError:
         includes = []
     os.makedirs(os.path.dirname(config["paths"]["output_header"]), exist_ok=True)
-    with open(file, "w") as output_file:
+    with open(file_path, "w") as output_file:
         print(
             template.render(
                 instance=instance, includes=includes, helper_file=helper_file
@@ -48,13 +48,13 @@ def process_header(instance, config):
 
 def recurse_header(remote_object, config):
     template = env.get_template("remote_object.hpp.jinja")
-    file = os.path.join(
+    file_path = os.path.join(
         os.path.dirname(config["paths"]["output_header"]),
         remote_object.name + ".hpp",
     )
     helper_file = config["paths"]["output_helpers"]
     os.makedirs(os.path.dirname(config["paths"]["output_header"]), exist_ok=True)
-    with open(file, "w") as output_file:
+    with open(file_path, "w") as output_file:
         print(
             template.render(instance=remote_object, helper_file=helper_file),
             file=output_file,
@@ -66,12 +66,13 @@ def recurse_header(remote_object, config):
 
 def process_impl(instance, config):
     template = env.get_template("device.cpp.jinja")
-    file = config["paths"]["output_impl"]
+    file_path = config["paths"]["output_impl"]
     try:
         includes = config["cpp_impl_includes"]
     except KeyError:
         includes = []
-    with open(file, "w") as output_file:
+    includes.append(Path(config["paths"]["output_header"]).name)
+    with open(file_path, "w") as output_file:
         print(
             template.render(instance=instance, includes=includes),
             file=output_file,
@@ -83,11 +84,11 @@ def process_impl(instance, config):
 
 def recurse_impl(remote_object, config):
     template = env.get_template("remote_object.cpp.jinja")
-    file = os.path.join(
+    file_path = os.path.join(
         os.path.dirname(config["paths"]["output_impl"]),
         remote_object.name + ".cpp",
     )
-    with open(file, "w") as output_file:
+    with open(file_path, "w") as output_file:
         print(template.render(instance=remote_object), file=output_file)
     for attr in remote_object.remote_attributes.values():
         if hasattr(attr, "remote_attributes"):
