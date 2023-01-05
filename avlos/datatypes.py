@@ -56,7 +56,7 @@ c_type_map = {
     DataType.UINT32: "uint32_t",
     DataType.FLOAT: "float",
     DataType.DOUBLE: "double",
-    DataType.STR: "str",
+    DataType.STR: "char[]",
 }
 
 py_type_map = {

@@ -55,10 +55,18 @@ class Device : Node
 
             {%- else %}
                 {%- if attr.getter_name %}
+                    {%- if attr.dtype.c_name == "char[]" %}
+        void get_{{attr.name}}(char out_value[]);
+                    {%- else %}
         {{attr.dtype.c_name}} get_{{attr.name}}(void);
+                    {%- endif %}
                 {%- endif %}
                 {%- if attr.setter_name %}
+                    {%- if attr.dtype.c_name == "char[]" %}
+        void set_{{attr.name}}(char value[]);
+                    {%- else %}
         void set_{{attr.name}}({{attr.dtype.c_name}} value);
+                    {%- endif %}
                 {%- endif %}
                 {%- if attr.caller_name %}
                     {%- set comma = joiner(", ") %}
