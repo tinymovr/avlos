@@ -48,10 +48,10 @@ class TestGeneration(unittest.TestCase):
             importlib.resources.files("tests").joinpath("outputs/helpers.hpp")
         )
         header_path_str = str(
-            importlib.resources.files("tests").joinpath("outputs/device.hpp")
+            importlib.resources.files("tests").joinpath("outputs/base_device.hpp")
         )
         impl_path_str = str(
-            importlib.resources.files("tests").joinpath("outputs/device.cpp")
+            importlib.resources.files("tests").joinpath("outputs/base_device.cpp")
         )
         with open(def_path_str) as device_desc_stream:
             obj = deserialize(yaml.safe_load(device_desc_stream))

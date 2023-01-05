@@ -20,13 +20,11 @@ generators:
     enabled: true
     paths:
       output_helpers: ../outputs/helpers.hpp
-      output_header: ../outputs/device.hpp
-      output_impl: ../outputs/device.cpp
+      output_header: ../outputs/_device.hpp
+      output_impl: ../outputs/_device.cpp
     header_includes:
     - codecs.hpp
   generator_dbc:
     enabled: true
     paths:
       output_file: ../outputs/test.dbc
-
-
