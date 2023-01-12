@@ -26,5 +26,6 @@ class TestCounter(unittest.TestCase):
         make_counter()
         counter = get_counter()
         self.assertEqual(0, counter.count)
+        self.assertEqual(0, counter.next())
         self.assertEqual(1, counter.next())
-        self.assertEqual(counter.next(), counter.count+1)
+        self.assertEqual(counter.next()+1, counter.count)
