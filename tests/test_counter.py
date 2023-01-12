@@ -1,4 +1,4 @@
-from avlos.counter import get_counter, make_counter
+from avlos.counter import get_counter, make_counter, delete_counter
 
 import unittest
 
@@ -9,6 +9,7 @@ class TestCounter(unittest.TestCase):
         self.assertIsNone(make_counter())
 
     def test_get_counter(self):
+        delete_counter()
         self.assertIsNone(get_counter())
         make_counter()
         self.assertIsNotNone(get_counter())

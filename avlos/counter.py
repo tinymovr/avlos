@@ -34,3 +34,10 @@ def get_counter():
     Get the global counter
     """
     return counter
+
+def delete_counter():
+    """
+    Delete the global counter
+    """
+    global counter
+    counter = None
