@@ -14,7 +14,7 @@ class EnumField(fields.Field):
     def _deserialize(self, value, attr, data, **kwargs):
         try:
             assert len(value) > 0
-            return enum.IntEnum(attr, value)
+            return enum.IntEnum(attr, value, start=0)
         except ValueError as error:
             raise ValidationError("Invalid enum list.") from error
         except AssertionError as error:
