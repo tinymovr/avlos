@@ -20,8 +20,8 @@ generators:
     enabled: true
     paths:
       output_helpers: ../outputs/helpers.hpp
-      output_header: ../outputs/_device.hpp
-      output_impl: ../outputs/_device.cpp
+      output_header: ../outputs/my_device.hpp
+      output_impl: ../outputs/my_device.cpp
     header_includes:
     - dust
     - test
