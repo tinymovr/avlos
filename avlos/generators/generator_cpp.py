@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 from jinja2 import Environment, PackageLoader, select_autoescape
-from avlos.generators.filters import avlos_bitmask_eps, file_from_path
+from avlos.generators.filters import avlos_bitmask_eps, file_from_path, capitalize_first
 
 env = Environment(loader=PackageLoader("avlos"), autoescape=select_autoescape())
 
@@ -9,6 +9,7 @@ env = Environment(loader=PackageLoader("avlos"), autoescape=select_autoescape())
 def process(instance, config):
     env.filters["bitmask_eps"] = avlos_bitmask_eps
     env.filters["file_from_path"] = file_from_path
+    env.filters["capitalize_first"] = capitalize_first
     process_helpers(instance, config)
     process_header(instance, config)
     process_impl(instance, config)
@@ -37,7 +38,10 @@ def process_header(instance, config):
     with open(file_path, "w") as output_file:
         print(
             template.render(
-                instance=instance, includes=includes, helper_file=helper_file
+                instance=instance,
+                includes=includes,
+                helper_file=helper_file,
+                device_name=Path(config["paths"]["output_header"]).stem,
             ),
             file=output_file,
         )
@@ -74,7 +78,11 @@ def process_impl(instance, config):
     includes.append(Path(config["paths"]["output_header"]).name)
     with open(file_path, "w") as output_file:
         print(
-            template.render(instance=instance, includes=includes),
+            template.render(
+                instance=instance,
+                includes=includes,
+                device_name=Path(config["paths"]["output_header"]).stem,
+            ),
             file=output_file,
         )
     for attr in instance.remote_attributes.values():

@@ -7,7 +7,7 @@
 */
 
 {%- macro getter_byval(attr) -%}
-{{attr.dtype.c_name}} Device::get_{{attr.name}}(void)
+{{attr.dtype.c_name}} {{ device_name | capitalize_first }}::get_{{attr.name}}(void)
 {
     {{attr.dtype.c_name}} value = 0;
     this->send({{attr.ep_id}}, this->_data, 0, true);
@@ -20,7 +20,7 @@
 {%- endmacro %}
 
 {%- macro getter_char(attr) -%}
-void Device::get_{{attr.name}}(char out_value[])
+void {{ device_name | capitalize_first }}::get_{{attr.name}}(char out_value[])
 {
     this->send({{attr.ep_id}}, this->_data, 0, true);
     this->_dlc = 0;
@@ -32,14 +32,14 @@ void Device::get_{{attr.name}}(char out_value[])
 {%- endmacro %}
 
 {%- macro setter_byval(attr) -%}
-void Device::set_{{attr.name}}({{attr.dtype.c_name}} value)
+void {{ device_name | capitalize_first }}::set_{{attr.name}}({{attr.dtype.c_name}} value)
 {
     this->send({{attr.ep_id}}, this->_data, 0, false);
 }
 {%- endmacro %}
 
 {%- macro setter_char(attr) -%}
-void Device::set_{{attr.name}}(char value[])
+void {{ device_name | capitalize_first }}::set_{{attr.name}}(char value[])
 {
     memcpy(this->_data, value, sizeof(value));
     this->send({{attr.ep_id}}, this->_data, sizeof(value), false);
@@ -75,7 +75,7 @@ void Device::set_{{attr.name}}(char value[])
             {%- if attr.caller_name %}
                 {%- set comma = joiner(", ") %}
 
-{{attr.dtype.c_name}} Device::{{attr.name}}({%- for arg in attr.arguments %}{{ comma() }}{{arg.dtype.c_name}} {{ arg.name }} {%- endfor %})
+{{attr.dtype.c_name}} {{ device_name | capitalize_first }}::{{attr.name}}({%- for arg in attr.arguments %}{{ comma() }}{{arg.dtype.c_name}} {{ arg.name }} {%- endfor %})
 {
     {%- if attr.dtype.c_name == "void" %}
     this->send({{attr.ep_id}}, this->_data, 0, true);

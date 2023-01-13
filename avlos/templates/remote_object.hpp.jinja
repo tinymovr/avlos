@@ -19,11 +19,11 @@
     {%- endfor %}
 {%- endif %}
 
-class {{ instance.name }} : Node
+class {{ instance.name | capitalize_first }} : Node
 {
     public:
 
-        {{ instance.name }}(uint8_t _can_node_id, send_callback _send_cb, recv_callback _recv_cb):
+        {{ instance.name | capitalize_first }}(uint8_t _can_node_id, send_callback _send_cb, recv_callback _recv_cb):
             Node(_can_node_id, _send_cb, _recv_cb) 
 {%- if instance.remote_attributes %}
     {%- for attr in instance.remote_attributes.values() %}

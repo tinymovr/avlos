@@ -22,6 +22,8 @@
     {%- endfor %}
 {%- endif %}
 
+static uint32_t avlos_proto_hash = {{ instance.hash_uint32 }};
+
 {%- for ep in instance | bitmask_eps %}
 
 enum {{ ep.full_name | replace(".", "_") }}_flags
@@ -34,16 +36,16 @@ enum {{ ep.full_name | replace(".", "_") }}_flags
 };
 {%- endfor %}
 
-class Device : Node
+class {{ device_name | capitalize_first }} : Node
 {
     public:
 
-        Device(uint8_t _can_node_id, send_callback _send_cb, recv_callback _recv_cb):
+        {{ device_name | capitalize_first }}(uint8_t _can_node_id, send_callback _send_cb, recv_callback _recv_cb):
             Node(_can_node_id, _send_cb, _recv_cb) 
 {%- if instance.remote_attributes %}
     {%- for attr in instance.remote_attributes.values() %}
         {%- if attr.remote_attributes %}
-            , {{attr.name}}(_can_node_id, _send_cb, _recv_cb)
+            , {{attr.name | capitalize_first}}(_can_node_id, _send_cb, _recv_cb)
         {%- endif %}
     {%- endfor %}
 {%- endif %} {};
@@ -51,7 +53,7 @@ class Device : Node
     {%- if instance.remote_attributes %}
         {%- for attr in instance.remote_attributes.values() %}
             {%- if attr.remote_attributes %}
-        {{attr.name}} {{attr.name}};
+        {{attr.name | capitalize_first}} {{attr.name}};
 
             {%- else %}
                 {%- if attr.getter_name %}
