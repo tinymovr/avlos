@@ -25,6 +25,13 @@ def avlos_endpoints(input):
     return ep_out_list
 
 
+def avlos_enum_eps(input):
+    """
+    Traverse remote dictionary and return a list of enum type endpoints
+    """
+    return [ep for ep in avlos_endpoints(input) if hasattr(ep, "options")]
+
+
 def avlos_bitmask_eps(input):
     """
     Traverse remote dictionary and return a list of bitmask type endpoints

@@ -38,6 +38,17 @@ typedef enum
 } {{ ep.full_name | replace(".", "_") }}_flags;
 {%- endfor %}
 
+{%- for ep in instance | enum_eps %}
+
+typedef enum
+{
+    {%- set comma = joiner(", ") %}
+    {%- for option in ep.options %}{{ comma() }}
+    {{ ep.full_name | replace(".", "_") | upper }}_{{ option.name }} = {{ loop.index0 }}
+    {%- endfor %}
+} {{ ep.full_name | replace(".", "_") }}_options;
+{%- endfor %}
+
 extern uint32_t avlos_proto_hash;
 extern uint8_t (*avlos_endpoints[{{ instance | endpoints | length }}])(uint8_t * buffer, uint8_t * buffer_len, Avlos_Command cmd);
 extern uint32_t _avlos_get_proto_hash(void);

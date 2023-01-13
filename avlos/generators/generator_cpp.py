@@ -1,12 +1,18 @@
 import os
 from pathlib import Path
 from jinja2 import Environment, PackageLoader, select_autoescape
-from avlos.generators.filters import avlos_bitmask_eps, file_from_path, capitalize_first
+from avlos.generators.filters import (
+    avlos_enum_eps,
+    avlos_bitmask_eps,
+    file_from_path,
+    capitalize_first,
+)
 
 env = Environment(loader=PackageLoader("avlos"), autoescape=select_autoescape())
 
 
 def process(instance, config):
+    env.filters["enum_eps"] = avlos_enum_eps
     env.filters["bitmask_eps"] = avlos_bitmask_eps
     env.filters["file_from_path"] = file_from_path
     env.filters["capitalize_first"] = capitalize_first

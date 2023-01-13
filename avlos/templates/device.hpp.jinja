@@ -35,6 +35,17 @@ enum {{ ep.full_name | replace(".", "_") }}_flags
 };
 {%- endfor %}
 
+{%- for ep in instance | enum_eps %}
+
+enum {{ ep.full_name | replace(".", "_") }}_options
+{
+    {%- set comma = joiner(", ") %}
+    {%- for option in ep.options %}{{ comma() }}
+    {{ ep.full_name | replace(".", "_") | upper }}_{{ option.name }} = {{ loop.index0 }}
+    {%- endfor %}
+};
+{%- endfor %}
+
 class {{ device_name | capitalize_first }} : Node
 {
     public:

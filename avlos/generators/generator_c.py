@@ -2,9 +2,9 @@ import os
 from jinja2 import Environment, PackageLoader, select_autoescape
 from avlos.generators.filters import (
     avlos_endpoints,
+    avlos_enum_eps,
     avlos_bitmask_eps,
     as_include,
-    file_from_path,
 )
 
 env = Environment(loader=PackageLoader("avlos"), autoescape=select_autoescape())
@@ -12,6 +12,7 @@ env = Environment(loader=PackageLoader("avlos"), autoescape=select_autoescape())
 
 def process(instance, config):
     env.filters["endpoints"] = avlos_endpoints
+    env.filters["enum_eps"] = avlos_enum_eps
     env.filters["bitmask_eps"] = avlos_bitmask_eps
     env.filters["as_include"] = as_include
 
