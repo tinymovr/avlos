@@ -50,6 +50,11 @@ remote_attributes:
             dtype: float
           - name: vel_setpoint
             dtype: float
+      - name: mode
+        summary: Control mode
+        getter_name: controller_get_mode
+        setter_name: controller_set_mode
+        options: [IDLE, CLOSED_LOOP]
   - name: motor
     remote_attributes:
       - name: R

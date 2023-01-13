@@ -38,6 +38,20 @@ class TestRemoteObjects(unittest.TestCase):
             obj._channel.write_off()
             self.assertEqual(obj.nickname, "other")
 
+    def test_remote_enum(self):
+        def_path_str = str(
+            importlib.resources.files("tests").joinpath("definition/good_device.yaml")
+        )
+        with open(def_path_str) as device_description:
+
+            obj = deserialize(yaml.safe_load(device_description))
+            obj._channel = DummyChannel()
+            modes = obj.controller.remote_attributes["mode"].options
+            obj._channel.set_value(0)
+            self.assertEqual(obj.controller.mode, modes.IDLE)
+            obj._channel.set_value(1)
+            self.assertEqual(obj.controller.mode, modes.CLOSED_LOOP)
+
     def test_remote_function_call(self):
         def_path_str = str(
             importlib.resources.files("tests").joinpath("definition/good_device.yaml")
