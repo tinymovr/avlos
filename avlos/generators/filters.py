@@ -51,3 +51,11 @@ def file_from_path(input):
     Get the file string from a path string
     """
     return os.path.basename(input)
+
+
+def capitalize_first(input):
+    """
+    Capitalize the first character of a
+    string, leaving the rest unchanged
+    """
+    return input[0].upper() + input[1:]

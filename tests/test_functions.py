@@ -1,4 +1,4 @@
-from avlos.generators.filters import as_include, file_from_path
+from avlos.generators.filters import as_include, file_from_path, capitalize_first
 import unittest
 
 
@@ -11,3 +11,6 @@ class TestFunctions(unittest.TestCase):
         self.assertEqual("<test.h>", as_include("test.h"))
         self.assertEqual("<test.h>", as_include("<test.h>"))
         self.assertEqual('"test.h"', as_include('"test.h"'))
+
+    def test_capitalize_first(self):
+        self.assertEqual(capitalize_first("bob Meadow"), "Bob Meadow")
