@@ -29,9 +29,7 @@ def avlos_bitmask_eps(input):
     """
     Traverse remote dictionary and return a list of bitmask type endpoints
     """
-    ep_list = avlos_endpoints(input)
-    ep_bitmask_list = [ep for ep in ep_list if hasattr(ep, "bitmask")]
-    return ep_bitmask_list
+    return [ep for ep in avlos_endpoints(input) if hasattr(ep, "bitmask")]
 
 
 def as_include(input):
