@@ -47,7 +47,7 @@ void {{ instance.name | capitalize_first }}::set_{{attr.name}}(char value[])
 }
 {%- endmacro %}
 
-#include <{{ instance.name | capitalize_first }}.hpp>
+#include <{{ instance.name }}.hpp>
 {% if instance.remote_attributes %}
     {%- for attr in instance.remote_attributes.values() %}
         {%- if attr.remote_attributes %}

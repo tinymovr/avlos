@@ -8,7 +8,6 @@
 
 #pragma once
 
-#include <cstdint>
 #include <{{ helper_file | file_from_path }}>
 {%- for include in includes %}
 #include <{{ include }}>
@@ -45,7 +44,7 @@ class {{ device_name | capitalize_first }} : Node
 {%- if instance.remote_attributes %}
     {%- for attr in instance.remote_attributes.values() %}
         {%- if attr.remote_attributes %}
-            , {{attr.name | capitalize_first}}(_can_node_id, _send_cb, _recv_cb)
+            , {{attr.name}}(_can_node_id, _send_cb, _recv_cb)
         {%- endif %}
     {%- endfor %}
 {%- endif %} {};
