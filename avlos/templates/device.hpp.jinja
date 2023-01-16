@@ -63,7 +63,7 @@ class {{ device_name | capitalize_first }} : Node
     {%- if instance.remote_attributes %}
         {%- for attr in instance.remote_attributes.values() %}
             {%- if attr.remote_attributes %}
-        {{attr.name | capitalize_first}} {{attr.name}};
+        {{attr.name | capitalize_first}}_ {{attr.name}};
 
             {%- else %}
                 {%- if attr.getter_name %}
