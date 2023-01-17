@@ -34,7 +34,7 @@ void {{ instance.name | capitalize_first }}_::get_{{attr.name}}(char out_value[]
 {%- macro setter_byval(attr) -%}
 void {{ instance.name | capitalize_first }}_::set_{{attr.name}}({{attr.dtype.c_name}} value)
 {
-    write_le(this->_data, value);
+    write_le(value, this->_data);
     this->send({{attr.ep_id}}, this->_data, sizeof({{attr.dtype.c_name}}), false);
 }
 {%- endmacro %}
@@ -80,7 +80,7 @@ void {{ instance.name | capitalize_first }}_::set_{{attr.name}}(char value[])
     {%- else %}
     uint8_t data_len = 0;
         {%- for arg in attr.arguments %}
-    write_le(this->_data + data_len, {{ arg.name }});
+    write_le({{ arg.name }}, this->_data + data_len);
     data_len += sizeof({{ arg.name }});
         {%- endfor %}
 
