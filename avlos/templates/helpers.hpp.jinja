@@ -8,10 +8,16 @@
 
 #pragma once
 
-#ifdef ARDUINO | __cplusplus < 201103L
+#if defined ARDUINO || __cplusplus < 201103L
 #include <stdint.h>
+#include <stddef.h>
 #else
 #include <cstdint>
+#include <cstddef>
+#endif
+
+#if defined ARDUINO
+#include "Arduino.h"
 #endif
 
 #define EP_BITS (6)
