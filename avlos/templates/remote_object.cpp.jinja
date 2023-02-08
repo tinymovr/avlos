@@ -86,6 +86,16 @@ void {{ instance.name | capitalize_first }}_::set_{{attr.name}}(char value[])
 
     this->send({{attr.ep_id}}, this->_data, data_len, false);
     {%- endif %}
+
+    {%- if attr.dtype.c_name != "void" %}
+    {{attr.dtype.c_name}} value = 0;
+    this->send(17, this->_data, 0, true);
+    if (this->recv(17, this->_data, &(this->_dlc), RECV_DELAY_US)) 
+    {
+        read_le(&value, this->_data);
+    }
+    return value;
+    {%- endif %}
 }
             {%- endif %}
         {%- endif %}
