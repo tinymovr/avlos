@@ -82,6 +82,7 @@ def process_impl(instance, config):
     except KeyError:
         includes = []
     includes.append(Path(config["paths"]["output_header"]).name)
+    os.makedirs(os.path.dirname(config["paths"]["output_impl"]), exist_ok=True)
     with open(file_path, "w") as output_file:
         print(
             template.render(
@@ -102,6 +103,7 @@ def recurse_impl(remote_object, config):
         os.path.dirname(config["paths"]["output_impl"]),
         remote_object.name + ".cpp",
     )
+    os.makedirs(os.path.dirname(config["paths"]["output_impl"]), exist_ok=True)
     with open(file_path, "w") as output_file:
         print(template.render(instance=remote_object), file=output_file)
     for attr in remote_object.remote_attributes.values():
