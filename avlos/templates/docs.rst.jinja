@@ -20,6 +20,13 @@ Type: {{ attr.dtype.nickname }}
 
 {{ attr.summary }}
 
+{% if attr.bitmask %}Flags: {% for flag in attr.bitmask %}
+- {{ flag.name }}
+{%- endfor %}{%- endif %}
+{%- if attr.options %}Options: {% for flag in attr.options %}
+- {{ flag.name }}
+{%- endfor %}{%- endif %}
+
     {%- elif attr.caller_name %}
         {%- set comma = joiner(", ") %}
 {{ attr.name }}({%- for arg in attr.arguments %}{{ comma() }}{{ arg.name }} {%- endfor %}) -> {{ attr.dtype.nickname }}

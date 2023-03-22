@@ -23,8 +23,14 @@
 #define EP_BITS (6)
 #define RECV_DELAY_US (160.0f)
 
+enum recv_result {
+    RECV_OK = 0,
+    RECV_ERROR_ARB_ID = (1 << 0), 
+    RECV_ERROR_TIMEOUT = (1 << 1)
+};
+
 typedef void (*send_callback)(uint32_t arbitration_id, uint8_t *data, uint8_t dlc, bool rtr);
-typedef bool (*recv_callback)(uint32_t arbitration_id, uint8_t *data, uint8_t *dlc);
+typedef recv_result (*recv_callback)(uint32_t arbitration_id, uint8_t *data, uint8_t *dlc);
 
 class Node {
     public:
@@ -59,7 +65,15 @@ class Node {
         }
 #endif
         const uint8_t arb_id = this->get_arbitration_id(cmd_id);
-        return this->recv_cb(arb_id, data, data_size);
+        recv_result r;
+        do {
+            r = this->recv_cb(arb_id, data, data_size);
+        } while (r == RECV_ERROR_ARB_ID);
+        if (RECV_OK == r)
+        {
+            return true;
+        }
+        return false;
     }
 };
 
