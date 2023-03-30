@@ -2,7 +2,7 @@
 <img src="avlos_logo.png" width="160"/>
 </p>
 
-![main lint and test](https://github.com/tinymovr/avlos/actions/workflows/ci.yml/badge.svg) ![docs build](https://github.com/tinymovr/avlos/actions/workflows/docs.yml/badge.svg) [![Discord](https://img.shields.io/discord/742400176664084535)](https://discord.gg/CzcCaXbU)
+![main lint and test](https://github.com/tinymovr/avlos/actions/workflows/ci.yml/badge.svg) ![docs build](https://github.com/tinymovr/avlos/actions/workflows/docs.yml/badge.svg) [![Discord](https://img.shields.io/discord/742400176664084535)](https://discord.gg/CzcCaXbU) [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 [Αυλός (Avlόs)](https://en.wikipedia.org/wiki/Aulos), _flute_, also _channel_.
 

@@ -9,7 +9,6 @@ from tests.dummy_channel import DummyChannel
 
 
 class TestImpex(unittest.TestCase):
-    
     def test_import_export_root_object(self):
         def_path_str = str(
             importlib.resources.files("tests").joinpath("definition/good_device.yaml")
@@ -25,7 +24,3 @@ class TestImpex(unittest.TestCase):
             json_string = json.dumps(values, cls=AvlosEncoder)
             imported_values = json.loads(json_string)
             root.import_values(imported_values)
-
-
-            
- 

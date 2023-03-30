@@ -4,7 +4,6 @@ import unittest
 
 
 class TestCounter(unittest.TestCase):
-
     def test_make_counter_return(self):
         self.assertIsNone(make_counter())
 
@@ -29,4 +28,4 @@ class TestCounter(unittest.TestCase):
         self.assertEqual(0, counter.count)
         self.assertEqual(0, counter.next())
         self.assertEqual(1, counter.next())
-        self.assertEqual(counter.next()+1, counter.count)
+        self.assertEqual(counter.next() + 1, counter.count)

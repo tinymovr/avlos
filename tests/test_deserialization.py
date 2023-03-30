@@ -38,9 +38,7 @@ class TestDeserialization(unittest.TestCase):
 
     def test_bitmask_labels(self):
         def_path_str = str(
-            importlib.resources.files("tests").joinpath(
-                "definition/good_device.yaml"
-            )
+            importlib.resources.files("tests").joinpath("definition/good_device.yaml")
         )
         with open(def_path_str) as device_description:
             device = deserialize(yaml.safe_load(device_description))

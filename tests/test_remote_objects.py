@@ -9,7 +9,6 @@ _reg = get_registry()
 
 
 class TestRemoteObjects(unittest.TestCase):
-    
     def test_read_remote_properties(self):
         def_path_str = str(
             importlib.resources.files("tests").joinpath("definition/good_device.yaml")

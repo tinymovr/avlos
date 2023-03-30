@@ -35,6 +35,7 @@ def get_counter():
     """
     return counter
 
+
 def delete_counter():
     """
     Delete the global counter

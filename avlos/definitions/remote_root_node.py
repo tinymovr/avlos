@@ -11,7 +11,7 @@ class RootNode(RemoteNode):
     def __init__(self, version, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.version = version
-    
+
     @cached_property
     def root(self):
         return self

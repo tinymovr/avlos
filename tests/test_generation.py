@@ -94,7 +94,7 @@ class TestGeneration(unittest.TestCase):
         )
         _runner.check()
         _runner.print_result()
-            
+
     def test_avlos_config(self):
         def_path_str = str(
             importlib.resources.files("tests").joinpath("definition/good_device.yaml")
