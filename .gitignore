@@ -164,3 +164,4 @@ cython_debug/
 example/docs/*
 example/fw/*
 example/client/*
+.DS_Store
