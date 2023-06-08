@@ -27,10 +27,25 @@ The output config defines the output modules that will be used and their options
 Usage
 -----
 
-Ensure a device spec and an output config exist in the current folder.
+Using a Local File
+******************
+
+Ensure the device spec and the output config exist in the current folder.
 
 .. code-block:: console
 
     avlos from file device.yaml
+
+This will generate the outputs according to the configuration in the output config file.
+
+
+Using a URL
+***********
+
+Ensure the output config exists in the current folder.
+
+.. code-block:: console
+
+    avlos from url https://your.url/spec.yaml
 
 This will generate the outputs according to the configuration in the output config file.
