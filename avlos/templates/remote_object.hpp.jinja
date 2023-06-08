@@ -22,12 +22,12 @@ class {{ instance.name | capitalize_first }}_ : Node
 {
     public:
 
-        {{ instance.name | capitalize_first }}_(uint8_t _can_node_id, send_callback _send_cb, recv_callback _recv_cb, delay_us_callback _delay_us_cb):
-            Node(_can_node_id, _send_cb, _recv_cb, _delay_us_cb) 
+        {{ instance.name | capitalize_first }}_(uint8_t _can_node_id, send_callback _send_cb, recv_callback _recv_cb, delay_us_callback _delay_us_cb, uint32_t _delay_us_value):
+            Node(_can_node_id, _send_cb, _recv_cb, _delay_us_cb, _delay_us_value) 
 {%- if instance.remote_attributes %}
     {%- for attr in instance.remote_attributes.values() %}
         {%- if attr.remote_attributes %}
-            , {{attr.name}}(_can_node_id, _send_cb, _recv_cb, _delay_us_cb)
+            , {{attr.name}}(_can_node_id, _send_cb, _recv_cb, _delay_us_cb, _delay_us_value)
         {%- endif %}
     {%- endfor %}
 {%- endif %} {};
