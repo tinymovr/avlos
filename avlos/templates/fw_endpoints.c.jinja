@@ -81,12 +81,12 @@ uint8_t avlos_{{attr.full_name | replace(".", "_") }}(uint8_t * buffer, uint8_t 
     {%- endif %}
     {%- if attr.caller_name %}
         {%- if attr.arguments | length > 0 %}
-    uint8_t offset = 0;
+    uint8_t _offset = 0;
         {%- endif %}
     {%- for arg in attr.arguments %}
     {{ arg.dtype.c_name }} {{arg.name}};
-    memcpy(&{{arg.name}}, buffer+offset, sizeof({{arg.name}}));
-    offset += sizeof({{arg.name}});
+    memcpy(&{{arg.name}}, buffer+_offset, sizeof({{arg.name}}));
+    _offset += sizeof({{arg.name}});
     {%- endfor %}
 
     {%- set comma = joiner(", ") %}
