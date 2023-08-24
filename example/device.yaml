@@ -1,5 +1,4 @@
 name: toaster
-version: "1.0"
 remote_attributes:
 - name: sn
   dtype: uint32

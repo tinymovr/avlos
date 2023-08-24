@@ -55,16 +55,6 @@ class TestDeserialization(unittest.TestCase):
             with self.assertRaises(marshmallow.exceptions.ValidationError):
                 deserialize(yaml.safe_load(device_description))
 
-    def test_missing_version(self):
-        def_path_str = str(
-            importlib.resources.files("tests").joinpath(
-                "definition/bad_device_missing_version.yaml"
-            )
-        )
-        with open(def_path_str) as device_description:
-            with self.assertRaises(TypeError):
-                deserialize(yaml.safe_load(device_description))
-
     def test_validation_fail(self):
         def_path_str = str(
             importlib.resources.files("tests").joinpath(

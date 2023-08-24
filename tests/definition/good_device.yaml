@@ -1,6 +1,5 @@
 
 name: tm
-version: "0.1"
 remote_attributes:
   - name: nickname
     dtype: string

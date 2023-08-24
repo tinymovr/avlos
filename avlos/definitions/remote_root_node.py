@@ -8,10 +8,6 @@ class RootNode(RemoteNode):
     Remote root node with a few additional attributes
     """
 
-    def __init__(self, version, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.version = version
-
     @cached_property
     def root(self):
         return self
@@ -21,8 +17,6 @@ class RootNodeSchema(RemoteNodeSchema):
     """
     Custom Marshmallow schema for the root node
     """
-
-    version = fields.String()
 
     @post_load
     def make_remote_node(self, data, **kwargs):

@@ -1,7 +1,6 @@
 # bad endpoint unit
 
 name: Device
-version: "0.0"
 remote_attributes:
   - name: sn
     dtype: uint32

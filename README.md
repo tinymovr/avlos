@@ -21,7 +21,6 @@ Avlos has been originally developed as a communication layer for [Tinymovr](http
 Let's make a protocol to control a toaster. First we generate a spec file containing the structure we want the toaster to expose:
 
     name: toaster
-    version: "1.0"
     remote_attributes:
     - name: sn
         dtype: uint32
