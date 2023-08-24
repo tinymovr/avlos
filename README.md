@@ -107,7 +107,9 @@ In addition, the object resulting from the deserialization of the spec can be us
     
     device_description = ...
     obj = deserialize(yaml.safe_load(device_description))
-    obj.set_channel(myChannel)
+    obj.set_channel(myChannel())
+
+The `myChannel` class is a subclass of `BaseChannel` that needs to implements `recv`, `send`, `max_ep_id`, `max_packet_size` and `serializer`. The abstract `BaseChannel` class is defined in [channel.py](avlos/channel.py).
 
 ## :memo: Various Notes
 
