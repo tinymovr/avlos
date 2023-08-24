@@ -14,7 +14,6 @@ class TestRemoteObjects(unittest.TestCase):
             importlib.resources.files("tests").joinpath("definition/good_device.yaml")
         )
         with open(def_path_str) as device_description:
-
             obj = deserialize(yaml.safe_load(device_description))
             obj._channel = DummyChannel()
 
@@ -42,7 +41,6 @@ class TestRemoteObjects(unittest.TestCase):
             importlib.resources.files("tests").joinpath("definition/good_device.yaml")
         )
         with open(def_path_str) as device_description:
-
             obj = deserialize(yaml.safe_load(device_description))
             obj._channel = DummyChannel()
             modes = obj.controller.remote_attributes["mode"].options
