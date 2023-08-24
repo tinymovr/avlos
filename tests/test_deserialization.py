@@ -55,6 +55,17 @@ class TestDeserialization(unittest.TestCase):
             with self.assertRaises(marshmallow.exceptions.ValidationError):
                 deserialize(yaml.safe_load(device_description))
 
+    def test_version_field_present(self):
+        def_path_str = str(
+            importlib.resources.files("tests").joinpath(
+                "definition/obsolete_device.yaml"
+            )
+        )
+        with open(def_path_str) as device_description:
+            device = deserialize(yaml.safe_load(device_description))
+            device._channel = DummyChannel()
+            self.assertEqual(device.errors.value, 0)
+
     def test_validation_fail(self):
         def_path_str = str(
             importlib.resources.files("tests").joinpath(
