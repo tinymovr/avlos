@@ -7,7 +7,6 @@ def avlos_endpoints(input):
     Traverse remote dictionary and return list
     of remote endpoints
     """
-
     def traverse_endpoint_list(ep_list, ep_out_list):
         for ep in ep_list:
             if (
