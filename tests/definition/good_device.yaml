@@ -35,8 +35,7 @@ remote_attributes:
     arguments: 
       - name: position
         dtype: float
-      - name: max_vel
-        dtype: float
+        unit: tick
   - name: controller
     remote_attributes:
       - name: set_pos_vel_setpoints
