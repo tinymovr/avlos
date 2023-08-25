@@ -61,6 +61,21 @@ class TestRemoteObjects(unittest.TestCase):
         obj._channel.set_value(100.0)
         self.assertEqual(100 * _reg("tick"), obj.controller.set_pos_vel_setpoints(0, 0))
 
+    def test_remote_function_call_w_units(self):
+        def_path_str = str(
+            importlib.resources.files("tests").joinpath("definition/good_device.yaml")
+        )
+        with open(def_path_str) as device_description:
+            obj = deserialize(yaml.safe_load(device_description))
+            obj._channel = DummyChannel()
+
+        obj._channel.write_on()
+        obj.move_to(1 * _reg("turn"))
+        self.assertEqual(8192, obj._channel.value)
+        obj.move_to(-100)
+        self.assertEqual(-100, obj._channel.value)
+        obj._channel.write_off()
+
     def test_non_existent_remote_attributes_fail(self):
         def_path_str = str(
             importlib.resources.files("tests").joinpath("definition/good_device.yaml")
