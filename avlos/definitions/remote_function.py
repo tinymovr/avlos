@@ -40,8 +40,14 @@ class RemoteFunction(CommNode, NamedNode, MetaNode):
         self.ep_id = ep_id
 
     def __call__(self, *args):
+        mags = []
+        for arg_val, arg_obj in zip(args, self.arguments):
+            try:
+                mags.append(arg_val.to(arg_obj.unit).magnitude)
+            except AttributeError:
+                mags.append(arg_val)
         data = self.channel.serializer.serialize(
-            args, *[arg.dtype for arg in self.arguments]
+            mags, *[arg.dtype for arg in self.arguments]
         )
         self.channel.send(data, self.ep_id)
         if not self.dtype.is_void:
