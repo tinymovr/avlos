@@ -36,7 +36,7 @@ class TestRemoteObjects(unittest.TestCase):
             obj._channel.write_off()
             self.assertEqual(obj.nickname, "other")
 
-    def test_remote_enum(self):
+    def test_remote_enum_read(self):
         def_path_str = str(
             importlib.resources.files("tests").joinpath("definition/good_device.yaml")
         )
@@ -48,6 +48,40 @@ class TestRemoteObjects(unittest.TestCase):
             self.assertEqual(obj.controller.mode, modes.IDLE)
             obj._channel.set_value(1)
             self.assertEqual(obj.controller.mode, modes.CLOSED_LOOP)
+
+    def test_remote_enum_write(self):
+        def_path_str = str(
+            importlib.resources.files("tests").joinpath("definition/good_device.yaml")
+        )
+        with open(def_path_str) as device_description:
+            obj = deserialize(yaml.safe_load(device_description))
+            obj._channel = DummyChannel()
+            modes = obj.controller.remote_attributes["mode"].options
+            obj._channel.write_on()
+
+            # Test setting the value using an integer
+            obj.controller.mode = 0
+            self.assertEqual(obj._channel.value, 0)
+
+            # Test setting the value using another integer
+            obj.controller.mode = 1
+            self.assertEqual(obj._channel.value, 1)
+
+            # Test setting the value using an enum member
+            obj.controller.mode = modes.IDLE
+            self.assertEqual(obj._channel.value, 0)
+
+            # Test setting the value using another enum member
+            obj.controller.mode = modes.CLOSED_LOOP
+            self.assertEqual(obj._channel.value, 1)
+
+            # Test setting the value using a string corresponding to an enum member
+            obj.controller.mode = "IDLE"
+            self.assertEqual(obj._channel.value, 0)
+
+            # Test setting the value using another string corresponding to an enum member
+            obj.controller.mode = "CLOSED_LOOP"
+            self.assertEqual(obj._channel.value, 1)
 
     def test_remote_function_call(self):
         def_path_str = str(
