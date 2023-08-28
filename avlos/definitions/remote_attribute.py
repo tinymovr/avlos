@@ -43,17 +43,17 @@ class RemoteAttribute(CommNode, NamedNode, MetaNode, ImpexNode):
         except TypeError:
             return value
 
-    def set_value(self, val):
+    def set_value(self, __value):
         assert self.setter_name, "No setter function available"
         try:
-            val = val.to(self.unit).magnitude
+            __value = __value.to(self.unit).magnitude
         except AttributeError:
             pass
-        data = self.channel.serializer.serialize([val], self.dtype)
+        data = self.channel.serializer.serialize([__value], self.dtype)
         self.channel.send(data, self.ep_id)
 
-    def set_value_with_string(self, str_val):
-        self.set_value(get_registry()(str_val))
+    def set_value_with_string(self, __str_value):
+        self.set_value(get_registry()(__str_value))
 
     def str_dump(self):
         return "{0} [{1}]: {2:.6g}".format(

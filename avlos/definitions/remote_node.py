@@ -50,8 +50,7 @@ class RemoteNode(CommNode, NamedNode, ImpexNode):
     def __setattr__(self, __name, __value):
         try:
             attr = self.remote_attributes[__name]
-            if isinstance(attr, RemoteAttribute):
-                return attr.set_value(__value)
+            return attr.set_value(__value)
         except KeyError:
             super().__setattr__(__name, __value)
 

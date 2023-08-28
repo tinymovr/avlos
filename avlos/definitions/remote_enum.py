@@ -43,7 +43,25 @@ class RemoteEnum(CommNode, NamedNode, MetaNode, ImpexNode):
         return self.options(value)
 
     def set_value(self, __value):
-        raise NotImplementedError
+        assert self.setter_name
+        # Check if the value is already an integer and within the range of the enum
+        if isinstance(__value, int) and __value in self.options._value2member_map_:
+            value = __value
+
+        # Check if the value is a member of the enum
+        elif isinstance(__value, self.options):
+            value = __value.value
+
+        # Check if the value is a string corresponding to an enum member
+        elif isinstance(__value, str) and __value in self.options._member_map_:
+            value = self.options[__value].value
+
+        else:
+            raise ValueError(
+                f"Invalid value: {__value}. Expected an integer, an enum member, or a string corresponding to an enum member."
+            )
+        data = self.channel.serializer.serialize([value], self.dtype)
+        self.channel.send(data, self.ep_id)
 
     def export_options(self, namespace):
         """
