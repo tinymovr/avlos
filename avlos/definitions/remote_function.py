@@ -8,6 +8,7 @@ from avlos.datatypes import DataTypeField
 from avlos.mixins.comm_node import CommNode
 from avlos.mixins.named_node import NamedNode
 from avlos.mixins.meta_node import MetaNode
+from avlos.mixins.func_attr_node import FuncAttrNode
 
 
 class RemoteFunction(CommNode, NamedNode, MetaNode):
@@ -22,6 +23,7 @@ class RemoteFunction(CommNode, NamedNode, MetaNode):
         summary,
         caller_name,
         arguments,
+        func_attr=None,
         dtype=None,
         unit=None,
         rst_target=None,
@@ -31,6 +33,7 @@ class RemoteFunction(CommNode, NamedNode, MetaNode):
         CommNode.__init__(self)
         NamedNode.__init__(self, name)
         MetaNode.__init__(self, meta_dict=meta)
+        FuncAttrNode.__init__(self, func_attr)
         self.summary = summary
         self.dtype = dtype
         self.unit = unit

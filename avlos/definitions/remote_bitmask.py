@@ -3,6 +3,7 @@ from avlos.mixins.named_node import NamedNode
 from avlos.mixins.meta_node import MetaNode
 from avlos.mixins.impex_node import ImpexNode
 from avlos.datatypes import DataType
+from avlos.mixins.func_attr_node import FuncAttrNode
 
 
 class RemoteBitmask(CommNode, NamedNode, MetaNode, ImpexNode):
@@ -16,6 +17,7 @@ class RemoteBitmask(CommNode, NamedNode, MetaNode, ImpexNode):
         self,
         name,
         summary,
+        func_attr=None,
         getter_name=None,
         setter_name=None,
         flags=None,
@@ -27,6 +29,7 @@ class RemoteBitmask(CommNode, NamedNode, MetaNode, ImpexNode):
         CommNode.__init__(self)
         NamedNode.__init__(self, name)
         MetaNode.__init__(self, meta_dict=meta)
+        FuncAttrNode.__init__(self, func_attr)
         self.summary = summary
         self.bitmask = flags  # flags is needed to deserialize
         self.getter_name = getter_name

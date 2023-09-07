@@ -107,6 +107,7 @@ class RemoteNodeSchema(Schema):
     flags = BitmaskField()
     options = EnumField()
     unit = UnitField()
+    func_attr = fields.String(default=None)
     getter_name = fields.String()
     setter_name = fields.String()
     caller_name = fields.String()

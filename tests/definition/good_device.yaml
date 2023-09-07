@@ -32,6 +32,7 @@ remote_attributes:
     summary: Move to
     caller_name: move_to
     dtype: void
+    func_attr: TM_RAMFUNC
     arguments: 
       - name: position
         dtype: float
@@ -81,6 +82,7 @@ remote_attributes:
         meta: {dynamic: True}
         getter_name: encoder_get_pos_estimate
         summary: Retrieve the encoder position estimate.
+        func_attr: TM_RAMFUNC
       - name: bandwidth
         dtype: float
         unit: rad/s
@@ -88,4 +90,5 @@ remote_attributes:
         getter_name: encoder_get_bandwidth
         setter_name: encoder_set_bandwidth
         summary: Access the encoder observer bandwidth.
+        func_attr: TM_RAMFUNC
 
