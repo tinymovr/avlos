@@ -22,7 +22,7 @@ def process(instance, config):
 
 
 def process_helpers(instance, config):
-    template = env.get_template("helpers.hpp.jinja")
+    template = env.get_template("tm_helpers.hpp.jinja")
     file_path = config["paths"]["output_helpers"]
     os.makedirs(os.path.dirname(config["paths"]["output_helpers"]), exist_ok=True)
     with open(file_path, "w") as output_file:

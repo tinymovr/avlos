@@ -45,7 +45,7 @@ class TestGeneration(unittest.TestCase):
             importlib.resources.files("tests").joinpath("definition/good_device.yaml")
         )
         helper_path_str = str(
-            importlib.resources.files("tests").joinpath("outputs/helpers.hpp")
+            importlib.resources.files("tests").joinpath("outputs/tm_helpers.hpp")
         )
         header_path_str = str(
             importlib.resources.files("tests").joinpath("outputs/base_device.hpp")
