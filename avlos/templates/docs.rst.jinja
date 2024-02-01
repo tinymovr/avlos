@@ -14,29 +14,32 @@ API REFERENCE
 -------------------------------------------------------------------
 
 ID: {{ attr.ep_id }}
+
 Type: {{ attr.dtype.nickname }}
+
 {% if None != attr.unit %}Units: {{attr.unit}} {%- endif %}
 
 {{ attr.summary }}
 
 {% if attr.bitmask %}Flags: {% for flag in attr.bitmask %}
-- {{ flag.name }}
-{%- endfor %}{%- endif %}
-{%- if attr.options %}Options: {% for flag in attr.options %}
-- {{ flag.name }}
-{%- endfor %}{%- endif %}
 
+- {{ flag.name }}
+{%- endfor %}{%- endif %}
+{%- if attr.options %}Options: {% for option in attr.options %}
+
+- {{ option.name }}
+{%- endfor %}{%- endif %}
     {%- elif attr.caller_name %}
         {%- set comma = joiner(", ") %}
-{{ attr.name }}({%- for arg in attr.arguments %}{{ comma() }}{{ arg.name }} {%- endfor %}) -> {{ attr.dtype.nickname }}
--------------------------------------------------------------------
+{{ attr.name }}({%- for arg in attr.arguments %}{{ comma() }}{{ arg.dtype.nickname }} {{ arg.name }} {%- endfor %}) -> {{ attr.dtype.nickname }}
+--------------------------------------------------------------------------------------------
 
 ID: {{ attr.ep_id }}
+
 {% if attr.dtype %}Return Type: {{ attr.dtype.nickname }} {%- endif %}
+
 {% if attr.unit %}Units: {{ attr.unit }} {%- endif %}
 
 {{ attr.summary }}
-
     {%- endif %}
-
 {% endfor %}
