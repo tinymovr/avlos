@@ -1,15 +1,15 @@
 
 name: tm
 remote_attributes:
+  - name: sn
+    dtype: uint32
+    getter_name: system_get_sn
+    summary: Retrieve the unique device serial number.
   - name: nickname
     dtype: string
     getter_name: system_get_name
     setter_name: system_set_name 
     summary: Retrieve the device name
-  - name: sn
-    dtype: uint32
-    getter_name: system_get_sn
-    summary: Retrieve the unique device serial number.
   - name: errors
     flags: [UNDERVOLTAGE]
     meta: {dynamic: True}
