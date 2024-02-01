@@ -16,6 +16,8 @@ Given a remote embedded device, a client that wants to talk with the device, and
 
 Avlos has been originally developed as a communication layer for [Tinymovr](https://tinymovr.com)
 
+[Documentation](docs/index.rst)
+
 ## :bulb: Illustrative Use Case
 
 Let's make a protocol to control a toaster. First we generate a spec file containing the structure we want the toaster to expose:
