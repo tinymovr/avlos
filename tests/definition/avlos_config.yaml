@@ -5,6 +5,7 @@ generators:
   generator_c:
     enabled: true
     paths:
+      output_enums: ../outputs/enums.h
       output_header: ../outputs/test.h
       output_impl: ../outputs/test.c
     header_includes:
@@ -12,6 +13,7 @@ generators:
     impl_includes:
     - src/dust.h
     - src/test.h
+    - src/tm_enums.h
   generator_rst:
     enabled: true
     paths:

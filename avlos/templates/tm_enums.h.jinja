@@ -1,0 +1,46 @@
+/*
+* This file was automatically generated using Avlos.
+* https://github.com/tinymovr/avlos
+*
+* Any changes to this file will be overwritten when
+* content is regenerated.
+*/
+
+#pragma once
+
+typedef enum
+{
+    AVLOS_RET_NOACTION,
+    AVLOS_RET_READ = 1,
+    AVLOS_RET_WRITE = 2,
+    AVLOS_RET_CALL = 3
+} Avlos_Return;
+
+typedef enum
+{
+    AVLOS_CMD_WRITE,
+    AVLOS_CMD_READ = 1
+} Avlos_Command;
+
+{%- for ep in instance | bitmask_eps %}
+
+typedef enum
+{
+    {%- set comma = joiner(", ") %}
+    {{ ep.full_name | replace(".", "_") | upper }}_NONE = 0,
+    {%- for flag in ep.bitmask %}{{ comma() }}
+    {{ ep.full_name | replace(".", "_") | upper }}_{{ flag.name }} = (1 << {{ loop.index0 }})
+    {%- endfor %}
+} {{ ep.full_name | replace(".", "_") }}_flags;
+{%- endfor %}
+
+{%- for ep in instance | enum_eps %}
+
+typedef enum
+{
+    {%- set comma = joiner(", ") %}
+    {%- for option in ep.options %}{{ comma() }}
+    {{ ep.full_name | replace(".", "_") | upper }}_{{ option.name }} = {{ loop.index0 }}
+    {%- endfor %}
+} {{ ep.full_name | replace(".", "_") }}_options;
+{%- endfor %}

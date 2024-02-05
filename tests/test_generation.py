@@ -16,6 +16,9 @@ class TestGeneration(unittest.TestCase):
         def_path_str = str(
             importlib.resources.files("tests").joinpath("definition/good_device.yaml")
         )
+        enum_path_str = str(
+            importlib.resources.files("tests").joinpath("outputs/tm_enums.h")
+        )
         header_path_str = str(
             importlib.resources.files("tests").joinpath("outputs/test.h")
         )
@@ -27,10 +30,11 @@ class TestGeneration(unittest.TestCase):
             config = {
                 "hash_string": "0x9e8dc7ac",
                 "paths": {
+                    "output_enums": enum_path_str,
                     "output_header": header_path_str,
                     "output_impl": impl_path_str,
                 },
-                "c_includes": {"src/common.h"},
+                "c_includes": {"src/common.h", "src/tm_enums.h"},
             }
             generator_c.process(obj, config)
 

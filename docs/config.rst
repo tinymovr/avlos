@@ -64,12 +64,13 @@ The output config defines the output modules that will be used and their options
         generator_c:
             enabled: true
             paths:
+                output_enums: outputs/tm_enums.h
                 output_header: outputs/header.h
                 output_impl: outputs/header.c
             header_includes:
-            - src/header.h
+            - src/tm_enums.h
             impl_includes:
-            - src/test.h
+            - src/header.h
 
 CLI Usage
 ---------
