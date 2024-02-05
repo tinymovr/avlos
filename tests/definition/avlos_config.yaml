@@ -9,11 +9,10 @@ generators:
       output_header: ../outputs/test.h
       output_impl: ../outputs/test.c
     header_includes:
-    - src/common.h
+    - outputs/tm_enums.h
     impl_includes:
-    - src/dust.h
-    - src/test.h
-    - src/tm_enums.h
+    - outputs/dust.h
+    - outputs/test.h
   generator_rst:
     enabled: true
     paths:
