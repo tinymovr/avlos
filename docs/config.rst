@@ -68,9 +68,13 @@ The output config defines the output modules that will be used and their options
                 output_header: outputs/header.h
                 output_impl: outputs/header.c
             header_includes:
-            - src/tm_enums.h
+            - outputs/tm_enums.h
             impl_includes:
-            - src/header.h
+            - outputs/header.h
+
+There are three main generated files that are configured above: A header containing enums (`output_enums`), a header containing function declarations (`output_header`), and an implementation containing function definitions (`output_impl`).
+
+Of note is that no #include statements for the generated files are generated automatically. This is something that we decided in order to maximize compatibility to edge cases, but may be revised in future Avlos versions.
 
 CLI Usage
 ---------
