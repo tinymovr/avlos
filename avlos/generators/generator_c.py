@@ -17,14 +17,10 @@ def process(instance, config):
     env.filters["as_include"] = as_include
 
     template = env.get_template("tm_enums.h.jinja")
-    try:
-        includes = config["header_includes"]
-    except KeyError:
-        includes = []
     os.makedirs(os.path.dirname(config["paths"]["output_enums"]), exist_ok=True)
     with open(config["paths"]["output_enums"], "w") as output_file:
         print(
-            template.render(instance=instance, includes=includes),
+            template.render(instance=instance),
             file=output_file,
         )
 
