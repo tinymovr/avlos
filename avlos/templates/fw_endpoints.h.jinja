@@ -12,7 +12,7 @@
 #include {{ include | as_include }}
 {%- endfor %}
 
-extern uint32_t avlos_proto_hash;
+staic const uint32_t avlos_proto_hash = {{ instance.hash_uint32 }};
 extern uint8_t (*avlos_endpoints[{{ instance | endpoints | length }}])(uint8_t * buffer, uint8_t * buffer_len, Avlos_Command cmd);
 extern uint32_t _avlos_get_proto_hash(void);
 
