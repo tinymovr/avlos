@@ -38,9 +38,9 @@ typedef enum
 
 typedef enum
 {
-    {%- set comma = joiner(", ") %}
-    {%- for option in ep.options %}{{ comma() }}
-    {{ ep.full_name | replace(".", "_") | upper }}_{{ option.name }} = {{ loop.index0 }}
+    {%- for option in ep.options %}
+    {{ ep.full_name | replace(".", "_") | upper }}_{{ option.name }} = {{ loop.index0 }},
     {%- endfor %}
+    {{ ep.full_name | replace(".", "_") | upper }}__MAX
 } {{ ep.full_name | replace(".", "_") }}_options;
 {%- endfor %}
