@@ -19,6 +19,7 @@ setup(
     packages=find_packages(include=["avlos", "avlos.*"]),
     include_package_data=True,
     python_requires=">=3.9",
-    install_requires=["marshmallow", "pyyaml", "pint", "docopt", "jinja2", "rstcheck"],
+    install_requires=["marshmallow", "pyyaml", "pint", "docopt", "jinja2"],
+    extras_require={"devel": ["rstcheck"]},
     entry_points={"console_scripts": ["avlos=avlos.cli:run_cli"]},
 )
