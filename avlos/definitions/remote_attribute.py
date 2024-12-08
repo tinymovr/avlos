@@ -58,9 +58,14 @@ class RemoteAttribute(CommNode, NamedNode, MetaNode, ImpexNode, FuncAttrNode):
     def set_value_with_string(self, __str_value):
         self.set_value(get_registry()(__str_value))
 
-    def str_dump(self):
-        return "{0} [{1}]: {2:.6g}".format(
-            self.name,
-            self.dtype.nickname,
-            self.get_value(),
-        )
+    def str_dump(self):                                                
+         value = self.get_value()                                       
+         if isinstance(value, (int, float)):                            
+             format_str = "{0} [{1}]: {2:.6g}"                          
+         else:                                                          
+             format_str = "{0} [{1}]: {2}"                              
+         return format_str.format(                                      
+             self.name,                                                 
+             self.dtype.nickname,                                       
+             value                                                      
+         )
