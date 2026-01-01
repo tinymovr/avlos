@@ -39,6 +39,13 @@ class RemoteBitmask(CommNode, NamedNode, MetaNode, ImpexNode):
         self.ep_id = ep_id
 
     def get_value(self):
+        """
+        Retrieve the current bitmask value from the remote endpoint.
+        Sends a request, receives the raw integer value, and converts it to a bitmask object.
+
+        Returns:
+            The bitmask object representing the active flags
+        """
         assert self.getter_name
         self.channel.send([], self.ep_id)
         data = self.channel.recv(self.ep_id)
@@ -46,6 +53,12 @@ class RemoteBitmask(CommNode, NamedNode, MetaNode, ImpexNode):
         return self.bitmask(value)
 
     def set_value(self, __value):
+        """
+        Setting bitmask values is not currently supported.
+
+        Raises:
+            NotImplementedError: Always raised as this operation is not implemented
+        """
         raise NotImplementedError
 
     def export_flags(self, namespace):
@@ -71,6 +84,12 @@ class RemoteBitmask(CommNode, NamedNode, MetaNode, ImpexNode):
         return None
 
     def str_dump(self):
+        """
+        Generate a formatted string representation of the bitmask attribute and its current value.
+
+        Returns:
+            A formatted string showing the attribute name and active flags, or indication of no flags
+        """
         val = self.get_value()
         return "{0}: {1}".format(
             self.name,

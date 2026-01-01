@@ -2,6 +2,7 @@ import yaml
 import importlib.resources
 import urllib.request
 from avlos.deserializer import deserialize
+from avlos.definitions.remote_node import RemoteNodeSchema
 import marshmallow
 import pint
 import unittest
@@ -75,3 +76,29 @@ class TestDeserialization(unittest.TestCase):
         with open(def_path_str) as device_description:
             with self.assertRaises(marshmallow.exceptions.ValidationError):
                 deserialize(yaml.safe_load(device_description))
+
+    def test_schema_field_initialization(self):
+        """
+        Test that RemoteNodeSchema can be instantiated without TypeError.
+        This catches issues with using 'default' instead of 'dump_default' or 'load_default'
+        in marshmallow 3.x field definitions, which causes:
+        TypeError: Field.__init__() got an unexpected keyword argument 'default'
+        """
+        # This should not raise TypeError during schema instantiation
+        schema = RemoteNodeSchema()
+
+        # Test that schema can dump data with default values
+        data = {"name": "test_node", "remote_attributes": []}
+        result = schema.dump(data)
+
+        # Verify the schema is working correctly
+        self.assertIsInstance(result, dict)
+        self.assertEqual(result["name"], "test_node")
+
+        # Test that optional fields with dump_default are included
+        self.assertIn("func_attr", result)
+        self.assertIsNone(result["func_attr"])
+        self.assertIn("export", result)
+        self.assertEqual(result["export"], False)
+        self.assertIn("ep_id", result)
+        self.assertEqual(result["ep_id"], -1)

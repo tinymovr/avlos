@@ -39,6 +39,13 @@ class RemoteEnum(CommNode, NamedNode, MetaNode, ImpexNode):
         self.ep_id = ep_id
 
     def get_value(self):
+        """
+        Retrieve the current enum value from the remote endpoint.
+        Sends a request, receives the raw integer value, and converts it to the corresponding enum member.
+
+        Returns:
+            The enum member corresponding to the remote value
+        """
         assert self.getter_name
         self.channel.send([], self.ep_id)
         data = self.channel.recv(self.ep_id)
@@ -46,6 +53,16 @@ class RemoteEnum(CommNode, NamedNode, MetaNode, ImpexNode):
         return self.options(value)
 
     def set_value(self, __value):
+        """
+        Set a new enum value on the remote endpoint.
+        Accepts values as integers, enum members, or string names, and converts them appropriately.
+
+        Args:
+            __value: The value to set (int, enum member, or string name)
+
+        Raises:
+            ValueError: If the value cannot be converted to a valid enum member
+        """
         assert self.setter_name
         # Check if the value is already an integer and within the range of the enum
         if isinstance(__value, int) and __value in self.options._value2member_map_:
@@ -89,5 +106,11 @@ class RemoteEnum(CommNode, NamedNode, MetaNode, ImpexNode):
         return None
 
     def str_dump(self):
+        """
+        Generate a formatted string representation of the enum attribute and its current value.
+
+        Returns:
+            A formatted string showing the attribute name and current enum member
+        """
         val = self.get_value()
         return "{0}: {1}".format(self.name, str(val))

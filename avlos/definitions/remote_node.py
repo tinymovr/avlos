@@ -29,6 +29,14 @@ class RemoteNode(CommNode, NamedNode, ImpexNode):
     """
 
     def __init__(self, remote_attributes, name, summary=None):
+        """
+        Initialize a remote node with attributes organized as an ordered dictionary.
+
+        Args:
+            remote_attributes: List of remote attributes/functions/nodes to be accessed by name
+            name: The name identifier for this node
+            summary: Optional description of the node's purpose
+        """
         od = OrderedDict()
         for attrib in remote_attributes:
             od[attrib.name] = attrib
@@ -38,6 +46,19 @@ class RemoteNode(CommNode, NamedNode, ImpexNode):
         self.summary = summary
 
     def __getattr__(self, __name):
+        """
+        Enable dynamic attribute access for remote attributes.
+        Attempts to call get_value() if the attribute supports it, otherwise returns the attribute itself.
+
+        Args:
+            __name: Name of the attribute to access
+
+        Returns:
+            The value of the remote attribute, or the attribute object itself
+
+        Raises:
+            AttributeError: If the attribute name doesn't exist in remote_attributes
+        """
         try:
             attr = self.remote_attributes[__name]
             try:
@@ -48,6 +69,15 @@ class RemoteNode(CommNode, NamedNode, ImpexNode):
             raise AttributeError(__name)
 
     def __setattr__(self, __name, __value):
+        """
+        Enable dynamic attribute setting for remote attributes.
+        Delegates to the attribute's set_value() method if it's a remote attribute,
+        otherwise falls back to standard attribute setting.
+
+        Args:
+            __name: Name of the attribute to set
+            __value: Value to set the attribute to
+        """
         try:
             attr = self.remote_attributes[__name]
             return attr.set_value(__value)
@@ -66,6 +96,17 @@ class RemoteNode(CommNode, NamedNode, ImpexNode):
                 pass
 
     def str_dump(self, indent, depth):
+        """
+        Generate a formatted string representation of the node and its children.
+        Recursively traverses child nodes up to the specified depth.
+
+        Args:
+            indent: String used for indentation at the current level
+            depth: Maximum recursion depth for displaying nested nodes
+
+        Returns:
+            Formatted multi-line string representation of the node hierarchy
+        """
         if depth <= 0:
             return "..."
         lines = []
@@ -118,6 +159,9 @@ class RemoteNodeSchema(Schema):
     meta = fields.Dict(dump_default={})
 
     def __init__(self, *args, **kwargs):
+        """
+        Initialize the schema with a counter for assigning unique endpoint IDs.
+        """
         self.counter = get_counter()
         super().__init__(*args, **kwargs)
 
@@ -148,6 +192,14 @@ class RemoteNodeSchema(Schema):
 
     @validates_schema
     def validate_schema(self, data, **kwargs):
+        """
+        Validate that the schema data meets structural requirements.
+        Ensures nodes have either child attributes or endpoint functionality,
+        and that endpoints have appropriate data type definitions.
+
+        Raises:
+            ValidationError: If validation rules are violated
+        """
         if (
             "remote_attributes" not in data
             and "getter_name" not in data

@@ -129,6 +129,17 @@ The `myChannel` class is a subclass of `BaseChannel` that needs to implements `r
 - The Avlos_Command enum is structured so as to be compatible with CAN bus RTR field (i.e. 0 -> write, 1 -> read)
 - Even though Avlos generators generate a protocol hash for both device-side (as a variable) and client-side implementations (as an object attribute), the way the hash is retrieved/checked/enforced is not included. This is due to the fact that each comms channel may implement different means of performing the above.
 
+## :package: Versioning
+
+Avlos uses git tags for version management via [setuptools-scm](https://github.com/pypa/setuptools-scm). Version numbers are automatically derived from git tags.
+
+To release a new version:
+1. Commit your changes
+2. Tag the release: `git tag v0.X.Y`
+3. Push the tag: `git push origin v0.X.Y`
+
+Between releases, development versions are automatically generated (e.g., `0.8.7.dev3+g1234abc`).
+
 ## :key: License
 
 MIT

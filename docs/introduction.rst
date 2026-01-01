@@ -20,3 +20,13 @@ Installation
 
     pip install avlos
 
+Development
+***********
+
+Versioning
+----------
+
+Avlos uses git tags for version management via `setuptools-scm <https://github.com/pypa/setuptools-scm>`_.
+
+To create a new release, tag the commit: ``git tag v0.X.Y``
+
