@@ -8,10 +8,10 @@ Stop writing serialization code twice. Stop debugging protocol mismatches.
 
 **Avlos generates type-safe communication protocols for embedded systems from a single YAML specification.**
 
-✨ **Write once** → Generate C firmware code, Python clients, docs, and CAN databases
-⚡ **Optimized for constrained systems** → Minimal overhead, no dynamic allocation
-🔒 **Type-safe across the boundary** → Catch errors at build time, not runtime
-🎯 **Battle-tested** → Production-proven in [Tinymovr](https://tinymovr.com) motor controllers
+- ✨ **Write once** → Generate C firmware code, Python clients, docs, and CAN databases
+- ⚡ **Optimized for constrained systems** → Minimal overhead, no dynamic allocation
+- 🔒 **Type-safe across the boundary** → Catch errors at build time, not runtime
+- 🎯 **Battle-tested** → Production-proven in [Tinymovr](https://tinymovr.com) motor controllers
 
 [Αυλός (Avlόs)](https://en.wikipedia.org/wiki/Aulos) - _flute_, also _channel_. 
 
@@ -21,7 +21,7 @@ Stop writing serialization code twice. Stop debugging protocol mismatches.
 
 [Documentation](docs/index.rst)
 
-## :star2: Why Avlos?
+## 🌟 Why Avlos?
 
 ### For Embedded Systems
 - **Minimal footprint** for resource-constrained devices (microcontrollers, motor controllers, sensors)
@@ -39,7 +39,7 @@ Stop writing serialization code twice. Stop debugging protocol mismatches.
 ### Production Ready
 Originally developed as the communication layer for [Tinymovr](https://tinymovr.com), a high-performance motor controller running on ARM Cortex-M microcontrollers. Now used in production embedded systems where reliability and efficiency are critical.
 
-## :bulb: Illustrative Use Case
+## 💡 Illustrative Use Case
 
 Let's make a protocol to control a toaster. First we generate a spec file containing the structure we want the toaster to expose:
 
@@ -78,11 +78,11 @@ In addition, Avlos will compute a checksum for the spec and add it as a variable
 
 The output location, as well as many other attributes of the files are flexible and easily configurable.
 
-## :gift: Installation
+## 🎁 Installation
 
     pip install avlos
 
-## :gear: Project Configuration
+## ⚙️ Project Configuration
 
 ### Device Spec
 
@@ -103,7 +103,7 @@ The output config defines the output modules that will be used and their options
             impl_includes:
             - src/test.h
 
-## :zap: Usage
+## ⚡ Usage
 
 Ensure a device spec and an output config exist in the current folder.
 
@@ -115,7 +115,7 @@ This will generate the outputs according to the configuration in the output conf
 
 A complete project example using Avlos is available at [example/](./example). Note that all the output paths defined in the output config are relative to that file. In contrast, includes are parsed as is.
 
-## :gem: Available Generators
+## 💎 Available Generators
 
 - __generator_c__: C Embedded Code
 - __generator_cpp__: C++ Client Code
@@ -134,7 +134,7 @@ In addition, the object resulting from the deserialization of the spec can be us
 
 The `myChannel` class is a subclass of `BaseChannel` that needs to implements `recv`, `send`, `max_ep_id`, `max_packet_size` and `serializer`. The abstract `BaseChannel` class is defined in [channel.py](avlos/channel.py).
 
-## :memo: Various Notes
+## 📝 Various Notes
 
 ### Avlos offers:
 
@@ -150,7 +150,7 @@ The `myChannel` class is a subclass of `BaseChannel` that needs to implements `r
 - The Avlos_Command enum is structured so as to be compatible with CAN bus RTR field (i.e. 0 -> write, 1 -> read)
 - Even though Avlos generators generate a protocol hash for both device-side (as a variable) and client-side implementations (as an object attribute), the way the hash is retrieved/checked/enforced is not included. This is due to the fact that each comms channel may implement different means of performing the above.
 
-## :package: Versioning
+## 📦 Versioning
 
 Avlos uses git tags for version management via [setuptools-scm](https://github.com/pypa/setuptools-scm). Version numbers are automatically derived from git tags.
 
@@ -161,7 +161,7 @@ To release a new version:
 
 Between releases, development versions are automatically generated (e.g., `0.8.7.dev3+g1234abc`).
 
-## :key: License
+## 🔑 License
 
 MIT
 
