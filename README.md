@@ -4,19 +4,40 @@
 
 ![main lint and test](https://github.com/tinymovr/avlos/actions/workflows/ci.yml/badge.svg) ![docs build](https://github.com/tinymovr/avlos/actions/workflows/docs.yml/badge.svg) [![Discord](https://img.shields.io/discord/742400176664084535)](https://discord.gg/CzcCaXbU) [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-[Αυλός (Avlόs)](https://en.wikipedia.org/wiki/Aulos), _flute_, also _channel_.
+Stop writing serialization code twice. Stop debugging protocol mismatches.
 
-Avlos makes it easy to create protocol implementations to communicate with remote embedded devices.
+**Avlos generates type-safe communication protocols for embedded systems from a single YAML specification.**
 
-Given a remote embedded device, a client that wants to talk with the device, and a YAML file that represents the remote device structure that we want exposed to the client (the spec), Avlos will generate a protocol implementation based on the spec. It will also generate documentation and more. 
+✨ **Write once** → Generate C firmware code, Python clients, docs, and CAN databases
+⚡ **Optimized for constrained systems** → Minimal overhead, no dynamic allocation
+🔒 **Type-safe across the boundary** → Catch errors at build time, not runtime
+🎯 **Battle-tested** → Production-proven in [Tinymovr](https://tinymovr.com) motor controllers
+
+[Αυλός (Avlόs)](https://en.wikipedia.org/wiki/Aulos) - _flute_, also _channel_. 
 
 <p align="center">
 <img src="docs/diagram.png" width="800"/>
 </p>
 
-Avlos has been originally developed as a communication layer for [Tinymovr](https://tinymovr.com)
-
 [Documentation](docs/index.rst)
+
+## :star2: Why Avlos?
+
+### For Embedded Systems
+- **Minimal footprint** for resource-constrained devices (microcontrollers, motor controllers, sensors)
+- **No dynamic memory allocation** in generated C code
+- **Efficient binary serialization** optimized for bandwidth-limited channels
+- **Built-in validation** with checksum for spec matching
+
+### For Development Teams
+- **Single source of truth** prevents client/firmware drift
+- **Type-safe communication** catches errors at compile time, not runtime
+- **Automatic documentation** generation for all endpoints
+- **Physical unit handling** built-in (volts, amps, celsius, radians, etc.) via [Pint](https://pint.readthedocs.io/)
+- **Multiple output formats** (C, C++, Python, RST docs, CAN DBC) from one spec
+
+### Production Ready
+Originally developed as the communication layer for [Tinymovr](https://tinymovr.com), a high-performance motor controller running on ARM Cortex-M microcontrollers. Now used in production embedded systems where reliability and efficiency are critical.
 
 ## :bulb: Illustrative Use Case
 
