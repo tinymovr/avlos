@@ -18,8 +18,7 @@
 
 {%- macro getter_char(attr) -%}
     if (AVLOS_CMD_READ == cmd) {
-        *buffer_len = {{ attr.getter_name }}((char *)buffer); 
-        return AVLOS_RET_READ;
+        return _avlos_getter_string(buffer, buffer_len, {{ attr.getter_name }});
     }
 {%- endmacro %}
 
@@ -34,16 +33,23 @@
 
 {%- macro setter_char(attr) -%}
     {% if attr.getter_name %}else {% endif %}if (AVLOS_CMD_WRITE == cmd) {
-        {{attr.dtype.c_name}} v;
-        memcpy(&v, buffer, sizeof(v));
-        {{ attr.setter_name }}(v);
-        return AVLOS_RET_WRITE;
+        return _avlos_setter_string(buffer, {{ attr.setter_name }});
     }
 {%- endmacro %}
 
 {%- for include in includes %}
 #include {{ include | as_include }}
 {%- endfor %}
+
+static inline uint8_t _avlos_getter_string(uint8_t *buffer, uint8_t *buffer_len, uint8_t (*getter)(char*)) {
+    *buffer_len = getter((char *)buffer);
+    return AVLOS_RET_READ;
+}
+
+static inline uint8_t _avlos_setter_string(const uint8_t *buffer, void (*setter)(const char*)) {
+    setter((const char *)buffer);
+    return AVLOS_RET_WRITE;
+}
 
 {% set comma = joiner(", ") %}
 uint8_t (*avlos_endpoints[{{ instance | endpoints | length }}])(uint8_t * buffer, uint8_t * buffer_len, Avlos_Command cmd) = { {%- for attr in instance | endpoints %}{{ comma() }}&avlos_{{attr.full_name | replace(".", "_") }}{%- endfor %} };
