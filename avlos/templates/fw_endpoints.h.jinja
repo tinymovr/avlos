@@ -19,7 +19,7 @@ extern uint32_t _avlos_get_proto_hash(void);
 {%- for attr in instance | endpoints %}
 
 /*
-* avlos_{{attr.full_name | replace(".", "_") }}
+* {{attr.endpoint_function_name}}
 *
 * {{ attr.summary }}
 *
@@ -28,6 +28,6 @@ extern uint32_t _avlos_get_proto_hash(void);
 * @param buffer
 * @param buffer_len
 */
-uint8_t avlos_{{attr.full_name | replace(".", "_") }}(uint8_t * buffer, uint8_t * buffer_len, Avlos_Command cmd);
+uint8_t {{attr.endpoint_function_name}}(uint8_t * buffer, uint8_t * buffer_len, Avlos_Command cmd);
 
 {%- endfor %}

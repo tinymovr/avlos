@@ -69,6 +69,11 @@ class RemoteFunction(CommNode, NamedNode, MetaNode):
             self.dtype.nickname,
         )
 
+    @property
+    def endpoint_function_name(self) -> str:
+        """Get the C function name for this endpoint."""
+        return "avlos_" + self.full_name.replace(".", "_")
+
 
 class RemoteArgument:
     """

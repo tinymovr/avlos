@@ -95,3 +95,18 @@ class RemoteBitmask(CommNode, NamedNode, MetaNode, ImpexNode):
             self.name,
             str(val) if val > 0 else "(no flags)",
         )
+
+    @property
+    def endpoint_function_name(self) -> str:
+        """Get the C function name for this endpoint."""
+        return "avlos_" + self.full_name.replace(".", "_")
+
+    @property
+    def getter_strategy(self) -> str:
+        """Bitmasks always use byval strategy."""
+        return "byval"
+
+    @property
+    def setter_strategy(self) -> str:
+        """Bitmasks always use byval strategy."""
+        return "byval"
