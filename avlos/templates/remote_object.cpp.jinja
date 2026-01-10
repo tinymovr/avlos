@@ -11,7 +11,7 @@
 {
     {{attr.dtype.c_name}} value = 0;
     this->send({{attr.ep_id}}, this->_data, 0, true);
-    if (this->recv({{attr.ep_id}}, this->_data, &(this->_dlc), this->delay_us_value)) 
+    if (this->recv({{attr.ep_id}}, this->_data, &(this->_dlc), this->delay_us_value))
     {
         read_le(&value, this->_data);
     }
@@ -24,7 +24,7 @@ void {{ instance.name | capitalize_first }}_::get_{{attr.name}}(char out_value[]
 {
     this->send({{attr.ep_id}}, this->_data, 0, true);
     this->_dlc = 0;
-    if (this->recv({{attr.ep_id}}, this->_data, &(this->_dlc), this->delay_us_value)) 
+    if (this->recv({{attr.ep_id}}, this->_data, &(this->_dlc), this->delay_us_value))
     {
         memcpy(out_value, this->_data, this->_dlc);
     }
@@ -90,7 +90,7 @@ void {{ instance.name | capitalize_first }}_::set_{{attr.name}}(char value[])
     {%- if attr.dtype.c_name != "void" %}
     {{attr.dtype.c_name}} value = 0;
     this->send(17, this->_data, 0, true);
-    if (this->recv(17, this->_data, &(this->_dlc), this->delay_us_value)) 
+    if (this->recv(17, this->_data, &(this->_dlc), this->delay_us_value))
     {
         read_le(&value, this->_data);
     }
@@ -101,5 +101,3 @@ void {{ instance.name | capitalize_first }}_::set_{{attr.name}}(char value[])
         {%- endif %}
     {%- endfor %}
 {%- endif %}
-
-

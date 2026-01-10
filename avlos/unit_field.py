@@ -1,5 +1,5 @@
-from marshmallow import fields, ValidationError
 import pint
+from marshmallow import ValidationError, fields
 
 _registry = None
 

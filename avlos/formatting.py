@@ -1,10 +1,9 @@
 """
 Code formatting utilities for generated code.
 """
-import subprocess
+
 import shutil
-import sys
-from pathlib import Path
+import subprocess
 
 
 def is_clang_format_available() -> bool:
@@ -28,10 +27,7 @@ def format_c_code(file_path: str, style: str = "LLVM") -> bool:
 
     try:
         result = subprocess.run(
-            ["clang-format", "-i", f"--style={style}", file_path],
-            capture_output=True,
-            timeout=10,
-            check=False
+            ["clang-format", "-i", f"--style={style}", file_path], capture_output=True, timeout=10, check=False
         )
         return result.returncode == 0
     except (subprocess.TimeoutExpired, subprocess.SubprocessError):

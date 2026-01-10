@@ -1,18 +1,18 @@
-import json
-import yaml
 import importlib.resources
-from avlos.deserializer import deserialize
-from avlos.unit_field import get_registry
-from avlos.json_codec import AvlosEncoder
+import json
 import unittest
+
+import yaml
+
+from avlos.deserializer import deserialize
+from avlos.json_codec import AvlosEncoder
+from avlos.unit_field import get_registry
 from tests.dummy_channel import DummyChannel
 
 
 class TestImpex(unittest.TestCase):
     def test_import_export_root_object(self):
-        def_path_str = str(
-            importlib.resources.files("tests").joinpath("definition/good_device.yaml")
-        )
+        def_path_str = str(importlib.resources.files("tests").joinpath("definition/good_device.yaml"))
         with open(def_path_str) as device_description:
             obj = deserialize(yaml.safe_load(device_description))
             obj._channel = DummyChannel()

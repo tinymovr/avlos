@@ -59,7 +59,7 @@ Output Config
 The output config defines the output modules that will be used and their options. Example, showing C code generation for embedded devices:
 
 .. code-block::
-    
+
     generators:
         generator_c:
             enabled: true

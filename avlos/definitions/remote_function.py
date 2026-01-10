@@ -1,14 +1,11 @@
-from marshmallow import (
-    Schema,
-    fields,
-    post_load,
-)
-from avlos.unit_field import UnitField
+from marshmallow import Schema, fields, post_load
+
 from avlos.datatypes import DataTypeField
 from avlos.mixins.comm_node import CommNode
-from avlos.mixins.named_node import NamedNode
-from avlos.mixins.meta_node import MetaNode
 from avlos.mixins.func_attr_node import FuncAttrNode
+from avlos.mixins.meta_node import MetaNode
+from avlos.mixins.named_node import NamedNode
+from avlos.unit_field import UnitField
 
 
 class RemoteFunction(CommNode, NamedNode, MetaNode):
@@ -49,9 +46,7 @@ class RemoteFunction(CommNode, NamedNode, MetaNode):
                 mags.append(arg_val.to(arg_obj.unit).magnitude)
             except AttributeError:
                 mags.append(arg_val)
-        data = self.channel.serializer.serialize(
-            mags, *[arg.dtype for arg in self.arguments]
-        )
+        data = self.channel.serializer.serialize(mags, *[arg.dtype for arg in self.arguments])
         self.channel.send(data, self.ep_id)
         if not self.dtype.is_void:
             data = self.channel.recv(self.ep_id)
@@ -97,9 +92,7 @@ class RemoteArgumentSchema(Schema):
     arguments
     """
 
-    name = fields.String(
-        required=True, error_messages={"required": "Name is required."}
-    )
+    name = fields.String(required=True, error_messages={"required": "Name is required."})
     summary = fields.String()
     dtype = DataTypeField(required=True)
     unit = UnitField()

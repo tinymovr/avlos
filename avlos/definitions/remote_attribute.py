@@ -1,9 +1,9 @@
 from avlos import get_registry
 from avlos.mixins.comm_node import CommNode
-from avlos.mixins.named_node import NamedNode
-from avlos.mixins.meta_node import MetaNode
-from avlos.mixins.impex_node import ImpexNode
 from avlos.mixins.func_attr_node import FuncAttrNode
+from avlos.mixins.impex_node import ImpexNode
+from avlos.mixins.meta_node import MetaNode
+from avlos.mixins.named_node import NamedNode
 
 
 class RemoteAttribute(CommNode, NamedNode, MetaNode, ImpexNode, FuncAttrNode):
@@ -91,11 +91,7 @@ class RemoteAttribute(CommNode, NamedNode, MetaNode, ImpexNode, FuncAttrNode):
             format_str = "{0} [{1}]: {2:.6g}"
         else:
             format_str = "{0} [{1}]: {2}"
-        return format_str.format(
-            self.name,
-            self.dtype.nickname,
-            value
-        )
+        return format_str.format(self.name, self.dtype.nickname, value)
 
     @property
     def getter_strategy(self) -> str:

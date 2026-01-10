@@ -1,5 +1,7 @@
 import os
+
 from jinja2 import Environment, PackageLoader, select_autoescape
+
 from avlos.generators.filters import avlos_endpoints
 
 env = Environment(loader=PackageLoader("avlos"), autoescape=select_autoescape())

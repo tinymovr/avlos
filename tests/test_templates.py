@@ -1,12 +1,15 @@
 """
 Tests for Jinja2 templates and generated code patterns.
 """
-import unittest
-import yaml
+
 import importlib.resources
+import unittest
+
+import yaml
+
+from avlos.datatypes import DataType
 from avlos.deserializer import deserialize
 from avlos.generators import generator_c, generator_cpp
-from avlos.datatypes import DataType
 
 
 class TestTemplateMacros(unittest.TestCase):
@@ -14,28 +17,20 @@ class TestTemplateMacros(unittest.TestCase):
 
     def setUp(self):
         """Set up test fixtures."""
-        def_path_str = str(
-            importlib.resources.files("tests").joinpath("definition/good_device.yaml")
-        )
+        def_path_str = str(importlib.resources.files("tests").joinpath("definition/good_device.yaml"))
 
         with open(def_path_str) as device_desc_stream:
             self.device = deserialize(yaml.safe_load(device_desc_stream))
 
     def test_char_array_getter_uses_helper(self):
         """Test that char[] getter generates code using _avlos_getter_string."""
-        output_impl = str(
-            importlib.resources.files("tests").joinpath("outputs/test_char_getter.c")
-        )
+        output_impl = str(importlib.resources.files("tests").joinpath("outputs/test_char_getter.c"))
 
         config = {
             "hash_string": "0x9e8dc7ac",
             "paths": {
-                "output_enums": str(
-                    importlib.resources.files("tests").joinpath("outputs/test_char_enum.h")
-                ),
-                "output_header": str(
-                    importlib.resources.files("tests").joinpath("outputs/test_char_header.h")
-                ),
+                "output_enums": str(importlib.resources.files("tests").joinpath("outputs/test_char_enum.h")),
+                "output_header": str(importlib.resources.files("tests").joinpath("outputs/test_char_header.h")),
                 "output_impl": output_impl,
             },
         }
@@ -46,33 +41,29 @@ class TestTemplateMacros(unittest.TestCase):
             content = f.read()
 
         # Should contain the string helper function definition
-        self.assertIn("_avlos_getter_string", content,
-                     "Should define _avlos_getter_string helper")
+        self.assertIn("_avlos_getter_string", content, "Should define _avlos_getter_string helper")
 
-        # Should contain helper function signature
-        self.assertIn("uint8_t (*getter)(char*)", content,
-                     "Helper should have correct signature")
+        # Should contain helper function signature (check without spaces since clang-format may add them)
+        self.assertTrue(
+            "uint8_t (*getter)(char*)" in content or "uint8_t (*getter)(char *)" in content,
+            "Helper should have correct signature",
+        )
 
         # Should call the helper in char[] endpoint functions
         # (nickname is a char[] attribute in good_device.yaml)
-        self.assertIn("_avlos_getter_string(buffer, buffer_len, system_get_name)", content,
-                     "Should use helper for char[] getter")
+        self.assertIn(
+            "_avlos_getter_string(buffer, buffer_len, system_get_name)", content, "Should use helper for char[] getter"
+        )
 
     def test_char_array_setter_uses_helper(self):
         """Test that char[] setter generates code using _avlos_setter_string."""
-        output_impl = str(
-            importlib.resources.files("tests").joinpath("outputs/test_char_setter.c")
-        )
+        output_impl = str(importlib.resources.files("tests").joinpath("outputs/test_char_setter.c"))
 
         config = {
             "hash_string": "0x9e8dc7ac",
             "paths": {
-                "output_enums": str(
-                    importlib.resources.files("tests").joinpath("outputs/test_char_enum2.h")
-                ),
-                "output_header": str(
-                    importlib.resources.files("tests").joinpath("outputs/test_char_header2.h")
-                ),
+                "output_enums": str(importlib.resources.files("tests").joinpath("outputs/test_char_enum2.h")),
+                "output_header": str(importlib.resources.files("tests").joinpath("outputs/test_char_header2.h")),
                 "output_impl": output_impl,
             },
         }
@@ -83,32 +74,26 @@ class TestTemplateMacros(unittest.TestCase):
             content = f.read()
 
         # Should contain the string helper function definition
-        self.assertIn("_avlos_setter_string", content,
-                     "Should define _avlos_setter_string helper")
+        self.assertIn("_avlos_setter_string", content, "Should define _avlos_setter_string helper")
 
-        # Should contain helper function signature
-        self.assertIn("void (*setter)(const char*)", content,
-                     "Helper should have correct signature")
+        # Should contain helper function signature (check without spaces since clang-format may add them)
+        self.assertTrue(
+            "void (*setter)(const char*)" in content or "void (*setter)(const char *)" in content,
+            "Helper should have correct signature",
+        )
 
         # Should call the helper in char[] endpoint functions
-        self.assertIn("_avlos_setter_string(buffer, system_set_name)", content,
-                     "Should use helper for char[] setter")
+        self.assertIn("_avlos_setter_string(buffer, system_set_name)", content, "Should use helper for char[] setter")
 
     def test_numeric_getter_byval(self):
         """Test that numeric getters use by-value pattern."""
-        output_impl = str(
-            importlib.resources.files("tests").joinpath("outputs/test_numeric.c")
-        )
+        output_impl = str(importlib.resources.files("tests").joinpath("outputs/test_numeric.c"))
 
         config = {
             "hash_string": "0x9e8dc7ac",
             "paths": {
-                "output_enums": str(
-                    importlib.resources.files("tests").joinpath("outputs/test_numeric_enum.h")
-                ),
-                "output_header": str(
-                    importlib.resources.files("tests").joinpath("outputs/test_numeric_header.h")
-                ),
+                "output_enums": str(importlib.resources.files("tests").joinpath("outputs/test_numeric_enum.h")),
+                "output_header": str(importlib.resources.files("tests").joinpath("outputs/test_numeric_header.h")),
                 "output_impl": output_impl,
             },
         }
@@ -119,31 +104,24 @@ class TestTemplateMacros(unittest.TestCase):
             content = f.read()
 
         # Should contain memcpy pattern for by-value types
-        self.assertIn("memcpy(buffer, &v, sizeof(v))", content,
-                     "Should use memcpy for by-value getters")
+        self.assertIn("memcpy(buffer, &v, sizeof(v))", content, "Should use memcpy for by-value getters")
 
         # Should declare local variable for value
         # (check for patterns like "float v;" or "uint32_t v;")
         self.assertTrue(
             "float v;" in content or "uint32_t v;" in content or "uint8_t v;" in content,
-            "Should declare local variable for value"
+            "Should declare local variable for value",
         )
 
     def test_void_function_no_return_value(self):
         """Test that void return type functions don't generate return value code."""
-        output_impl = str(
-            importlib.resources.files("tests").joinpath("outputs/test_void_func.c")
-        )
+        output_impl = str(importlib.resources.files("tests").joinpath("outputs/test_void_func.c"))
 
         config = {
             "hash_string": "0x9e8dc7ac",
             "paths": {
-                "output_enums": str(
-                    importlib.resources.files("tests").joinpath("outputs/test_void_enum.h")
-                ),
-                "output_header": str(
-                    importlib.resources.files("tests").joinpath("outputs/test_void_header.h")
-                ),
+                "output_enums": str(importlib.resources.files("tests").joinpath("outputs/test_void_enum.h")),
+                "output_header": str(importlib.resources.files("tests").joinpath("outputs/test_void_header.h")),
                 "output_impl": output_impl,
             },
         }
@@ -161,28 +139,20 @@ class TestTemplateMacros(unittest.TestCase):
             reset_func = content[start:end]
 
             # Void functions should NOT have ret_val
-            self.assertNotIn("ret_val", reset_func,
-                           "Void function should not have return value")
+            self.assertNotIn("ret_val", reset_func, "Void function should not have return value")
 
             # Should call function directly without assignment
-            self.assertIn("system_reset()", reset_func,
-                         "Should call void function without assignment")
+            self.assertIn("system_reset()", reset_func, "Should call void function without assignment")
 
     def test_function_with_args_unpacks_buffer(self):
         """Test that functions with arguments unpack from buffer."""
-        output_impl = str(
-            importlib.resources.files("tests").joinpath("outputs/test_func_args.c")
-        )
+        output_impl = str(importlib.resources.files("tests").joinpath("outputs/test_func_args.c"))
 
         config = {
             "hash_string": "0x9e8dc7ac",
             "paths": {
-                "output_enums": str(
-                    importlib.resources.files("tests").joinpath("outputs/test_func_args_enum.h")
-                ),
-                "output_header": str(
-                    importlib.resources.files("tests").joinpath("outputs/test_func_args_header.h")
-                ),
+                "output_enums": str(importlib.resources.files("tests").joinpath("outputs/test_func_args_enum.h")),
+                "output_header": str(importlib.resources.files("tests").joinpath("outputs/test_func_args_header.h")),
                 "output_impl": output_impl,
             },
         }
@@ -193,16 +163,13 @@ class TestTemplateMacros(unittest.TestCase):
             content = f.read()
 
         # Should have offset tracking for multiple arguments
-        self.assertIn("uint8_t _offset = 0", content,
-                     "Should track offset for argument unpacking")
+        self.assertIn("uint8_t _offset = 0", content, "Should track offset for argument unpacking")
 
         # Should unpack arguments with memcpy
-        self.assertIn("memcpy(&", content,
-                     "Should use memcpy to unpack arguments")
+        self.assertIn("memcpy(&", content, "Should use memcpy to unpack arguments")
 
         # Should increment offset
-        self.assertIn("_offset += sizeof(", content,
-                     "Should increment offset for each argument")
+        self.assertIn("_offset += sizeof(", content, "Should increment offset for each argument")
 
     def test_all_data_types_generate(self):
         """Test that all supported data types can be generated."""
@@ -262,19 +229,13 @@ class TestTemplateMacros(unittest.TestCase):
 
         obj = deserialize(yaml.safe_load(yaml_content))
 
-        output_impl = str(
-            importlib.resources.files("tests").joinpath("outputs/test_all_types.c")
-        )
+        output_impl = str(importlib.resources.files("tests").joinpath("outputs/test_all_types.c"))
 
         config = {
             "hash_string": "0xdeadbeef",
             "paths": {
-                "output_enums": str(
-                    importlib.resources.files("tests").joinpath("outputs/test_all_types_enum.h")
-                ),
-                "output_header": str(
-                    importlib.resources.files("tests").joinpath("outputs/test_all_types_header.h")
-                ),
+                "output_enums": str(importlib.resources.files("tests").joinpath("outputs/test_all_types_enum.h")),
+                "output_header": str(importlib.resources.files("tests").joinpath("outputs/test_all_types_header.h")),
                 "output_impl": output_impl,
             },
         }
@@ -287,34 +248,34 @@ class TestTemplateMacros(unittest.TestCase):
 
         # Verify all types are present
         expected_types = [
-            "uint8_t", "int8_t", "uint16_t", "int16_t",
-            "uint32_t", "int32_t", "uint64_t", "int64_t",
-            "float", "double", "bool"
+            "uint8_t",
+            "int8_t",
+            "uint16_t",
+            "int16_t",
+            "uint32_t",
+            "int32_t",
+            "uint64_t",
+            "int64_t",
+            "float",
+            "double",
+            "bool",
         ]
 
         for dtype in expected_types:
-            self.assertIn(dtype, content,
-                         f"Generated code should contain {dtype}")
+            self.assertIn(dtype, content, f"Generated code should contain {dtype}")
 
         # String types use helper functions, so check for that instead of "char[]"
-        self.assertIn("_avlos_getter_string", content,
-                     "Generated code should contain string helper function")
+        self.assertIn("_avlos_getter_string", content, "Generated code should contain string helper function")
 
     def test_func_attr_in_output(self):
         """Test that func_attr (e.g., TM_RAMFUNC) appears in generated code."""
-        output_impl = str(
-            importlib.resources.files("tests").joinpath("outputs/test_func_attr.c")
-        )
+        output_impl = str(importlib.resources.files("tests").joinpath("outputs/test_func_attr.c"))
 
         config = {
             "hash_string": "0x9e8dc7ac",
             "paths": {
-                "output_enums": str(
-                    importlib.resources.files("tests").joinpath("outputs/test_func_attr_enum.h")
-                ),
-                "output_header": str(
-                    importlib.resources.files("tests").joinpath("outputs/test_func_attr_header.h")
-                ),
+                "output_enums": str(importlib.resources.files("tests").joinpath("outputs/test_func_attr_enum.h")),
+                "output_header": str(importlib.resources.files("tests").joinpath("outputs/test_func_attr_header.h")),
                 "output_impl": output_impl,
             },
         }
@@ -326,24 +287,17 @@ class TestTemplateMacros(unittest.TestCase):
 
         # good_device.yaml has TM_RAMFUNC on some functions
         if "TM_RAMFUNC" in content:
-            self.assertIn("TM_RAMFUNC uint8_t avlos_", content,
-                         "func_attr should appear before function declaration")
+            self.assertIn("TM_RAMFUNC uint8_t avlos_", content, "func_attr should appear before function declaration")
 
     def test_endpoint_array_generation(self):
         """Test that endpoint array is correctly generated."""
-        output_impl = str(
-            importlib.resources.files("tests").joinpath("outputs/test_ep_array.c")
-        )
+        output_impl = str(importlib.resources.files("tests").joinpath("outputs/test_ep_array.c"))
 
         config = {
             "hash_string": "0x9e8dc7ac",
             "paths": {
-                "output_enums": str(
-                    importlib.resources.files("tests").joinpath("outputs/test_ep_array_enum.h")
-                ),
-                "output_header": str(
-                    importlib.resources.files("tests").joinpath("outputs/test_ep_array_header.h")
-                ),
+                "output_enums": str(importlib.resources.files("tests").joinpath("outputs/test_ep_array_enum.h")),
+                "output_header": str(importlib.resources.files("tests").joinpath("outputs/test_ep_array_header.h")),
                 "output_impl": output_impl,
             },
         }
@@ -354,12 +308,10 @@ class TestTemplateMacros(unittest.TestCase):
             content = f.read()
 
         # Should have endpoint array declaration
-        self.assertIn("uint8_t (*avlos_endpoints[", content,
-                     "Should declare endpoint array")
+        self.assertIn("uint8_t (*avlos_endpoints[", content, "Should declare endpoint array")
 
         # Should have proto hash function
-        self.assertIn("_avlos_get_proto_hash", content,
-                     "Should have proto hash function")
+        self.assertIn("_avlos_get_proto_hash", content, "Should have proto hash function")
 
 
 class TestIntegration(unittest.TestCase):
@@ -369,26 +321,18 @@ class TestIntegration(unittest.TestCase):
         """Test complete C generation pipeline with all features."""
         import importlib.resources
 
-        def_path_str = str(
-            importlib.resources.files("tests").joinpath("definition/good_device.yaml")
-        )
+        def_path_str = str(importlib.resources.files("tests").joinpath("definition/good_device.yaml"))
 
         with open(def_path_str) as device_desc_stream:
             obj = deserialize(yaml.safe_load(device_desc_stream))
 
-        output_impl = str(
-            importlib.resources.files("tests").joinpath("outputs/test_integration.c")
-        )
+        output_impl = str(importlib.resources.files("tests").joinpath("outputs/test_integration.c"))
 
         config = {
             "hash_string": "0x12345678",
             "paths": {
-                "output_enums": str(
-                    importlib.resources.files("tests").joinpath("outputs/test_integration_enum.h")
-                ),
-                "output_header": str(
-                    importlib.resources.files("tests").joinpath("outputs/test_integration_header.h")
-                ),
+                "output_enums": str(importlib.resources.files("tests").joinpath("outputs/test_integration_enum.h")),
+                "output_header": str(importlib.resources.files("tests").joinpath("outputs/test_integration_header.h")),
                 "output_impl": output_impl,
             },
         }
@@ -398,6 +342,7 @@ class TestIntegration(unittest.TestCase):
 
         # Verify all files exist
         import os
+
         self.assertTrue(os.path.exists(config["paths"]["output_enums"]))
         self.assertTrue(os.path.exists(config["paths"]["output_header"]))
         self.assertTrue(os.path.exists(config["paths"]["output_impl"]))
@@ -414,9 +359,7 @@ class TestIntegration(unittest.TestCase):
         """Test complete C++ generation pipeline."""
         import importlib.resources
 
-        def_path_str = str(
-            importlib.resources.files("tests").joinpath("definition/good_device.yaml")
-        )
+        def_path_str = str(importlib.resources.files("tests").joinpath("definition/good_device.yaml"))
 
         with open(def_path_str) as device_desc_stream:
             obj = deserialize(yaml.safe_load(device_desc_stream))
@@ -424,15 +367,9 @@ class TestIntegration(unittest.TestCase):
         config = {
             "hash_string": "0x12345678",
             "paths": {
-                "output_helpers": str(
-                    importlib.resources.files("tests").joinpath("outputs/test_cpp_helpers.hpp")
-                ),
-                "output_header": str(
-                    importlib.resources.files("tests").joinpath("outputs/test_cpp_device.hpp")
-                ),
-                "output_impl": str(
-                    importlib.resources.files("tests").joinpath("outputs/test_cpp_device.cpp")
-                ),
+                "output_helpers": str(importlib.resources.files("tests").joinpath("outputs/test_cpp_helpers.hpp")),
+                "output_header": str(importlib.resources.files("tests").joinpath("outputs/test_cpp_device.hpp")),
+                "output_impl": str(importlib.resources.files("tests").joinpath("outputs/test_cpp_device.cpp")),
             },
         }
 
@@ -441,10 +378,11 @@ class TestIntegration(unittest.TestCase):
 
         # Verify files exist
         import os
+
         self.assertTrue(os.path.exists(config["paths"]["output_helpers"]))
         self.assertTrue(os.path.exists(config["paths"]["output_header"]))
         self.assertTrue(os.path.exists(config["paths"]["output_impl"]))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

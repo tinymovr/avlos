@@ -1,17 +1,20 @@
 """
 Tests for validation module.
 """
+
 import unittest
+
 import yaml
+
 from avlos.deserializer import deserialize
 from avlos.validation import (
+    C_RESERVED_WORDS,
+    ValidationError,
+    validate_all,
     validate_c_identifier,
     validate_endpoint_ids,
     validate_function_names,
     validate_names,
-    validate_all,
-    ValidationError,
-    C_RESERVED_WORDS,
 )
 
 
@@ -52,8 +55,21 @@ class TestValidation(unittest.TestCase):
 
     def test_c_reserved_words(self):
         """Test that C reserved words are rejected."""
-        reserved_samples = ['int', 'void', 'return', 'if', 'else', 'while', 'for',
-                           'struct', 'union', 'enum', 'static', 'const', '_Bool']
+        reserved_samples = [
+            "int",
+            "void",
+            "return",
+            "if",
+            "else",
+            "while",
+            "for",
+            "struct",
+            "union",
+            "enum",
+            "static",
+            "const",
+            "_Bool",
+        ]
 
         for word in reserved_samples:
             self.assertIn(word, C_RESERVED_WORDS)
@@ -73,9 +89,7 @@ class TestValidation(unittest.TestCase):
         """Test that good_device.yaml passes all validations."""
         import importlib.resources
 
-        def_path_str = str(
-            importlib.resources.files("tests").joinpath("definition/good_device.yaml")
-        )
+        def_path_str = str(importlib.resources.files("tests").joinpath("definition/good_device.yaml"))
 
         with open(def_path_str) as device_desc_stream:
             obj = deserialize(yaml.safe_load(device_desc_stream))
@@ -86,9 +100,7 @@ class TestValidation(unittest.TestCase):
         """Test endpoint ID validation with no conflicts."""
         import importlib.resources
 
-        def_path_str = str(
-            importlib.resources.files("tests").joinpath("definition/good_device.yaml")
-        )
+        def_path_str = str(importlib.resources.files("tests").joinpath("definition/good_device.yaml"))
 
         with open(def_path_str) as device_desc_stream:
             obj = deserialize(yaml.safe_load(device_desc_stream))
@@ -99,9 +111,7 @@ class TestValidation(unittest.TestCase):
         """Test function name validation with no conflicts."""
         import importlib.resources
 
-        def_path_str = str(
-            importlib.resources.files("tests").joinpath("definition/good_device.yaml")
-        )
+        def_path_str = str(importlib.resources.files("tests").joinpath("definition/good_device.yaml"))
 
         with open(def_path_str) as device_desc_stream:
             obj = deserialize(yaml.safe_load(device_desc_stream))
@@ -112,9 +122,7 @@ class TestValidation(unittest.TestCase):
         """Test name validation for valid device tree."""
         import importlib.resources
 
-        def_path_str = str(
-            importlib.resources.files("tests").joinpath("definition/good_device.yaml")
-        )
+        def_path_str = str(importlib.resources.files("tests").joinpath("definition/good_device.yaml"))
 
         with open(def_path_str) as device_desc_stream:
             obj = deserialize(yaml.safe_load(device_desc_stream))
@@ -245,5 +253,5 @@ class TestValidation(unittest.TestCase):
         self.assertTrue(len(errors) >= 4, f"Should collect multiple errors, got {len(errors)}: {errors}")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

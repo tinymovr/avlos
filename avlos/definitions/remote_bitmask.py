@@ -1,9 +1,9 @@
-from avlos.mixins.comm_node import CommNode
-from avlos.mixins.named_node import NamedNode
-from avlos.mixins.meta_node import MetaNode
-from avlos.mixins.impex_node import ImpexNode
 from avlos.datatypes import DataType
+from avlos.mixins.comm_node import CommNode
 from avlos.mixins.func_attr_node import FuncAttrNode
+from avlos.mixins.impex_node import ImpexNode
+from avlos.mixins.meta_node import MetaNode
+from avlos.mixins.named_node import NamedNode
 
 
 class RemoteBitmask(CommNode, NamedNode, MetaNode, ImpexNode):

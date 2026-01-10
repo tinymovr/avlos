@@ -13,5 +13,3 @@ Welcome to Avlos documentation!
    spec_format
    config
    cli
-
-

@@ -1,14 +1,11 @@
 import os
 import sys
+
 from jinja2 import Environment, PackageLoader, select_autoescape
-from avlos.generators.filters import (
-    avlos_endpoints,
-    avlos_enum_eps,
-    avlos_bitmask_eps,
-    as_include,
-)
-from avlos.validation import validate_all, ValidationError
+
 from avlos.formatting import format_c_code, is_clang_format_available
+from avlos.generators.filters import as_include, avlos_bitmask_eps, avlos_endpoints, avlos_enum_eps
+from avlos.validation import ValidationError, validate_all
 
 env = Environment(loader=PackageLoader("avlos"), autoescape=select_autoescape())
 

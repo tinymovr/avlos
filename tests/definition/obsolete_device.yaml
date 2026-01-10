@@ -8,7 +8,6 @@ remote_attributes:
     summary: Retrieve the unique device serial number.
   - name: errors
     flags: [UNDERVOLTAGE]
-    meta: {dynamic: True}
     getter_name: system_get_error
     summary: Retrieve any device errors.
-    meta: {"lalala": "ok"}
+    meta: {dynamic: True, lalala: "ok"}

@@ -1,6 +1,6 @@
 import os
-from typing import List
 from copy import copy
+from typing import List
 
 
 def avlos_endpoints(input) -> List:
@@ -16,14 +16,11 @@ def avlos_endpoints(input) -> List:
     Returns:
         Flat list of all endpoint objects found in the tree
     """
+
     def traverse_endpoint_list(ep_list, ep_out_list: List) -> None:
         """Helper function to recursively traverse endpoint tree."""
         for ep in ep_list:
-            if (
-                hasattr(ep, "getter_name")
-                or hasattr(ep, "setter_name")
-                or hasattr(ep, "caller_name")
-            ):
+            if hasattr(ep, "getter_name") or hasattr(ep, "setter_name") or hasattr(ep, "caller_name"):
                 ep_out_list.append(ep)
             elif hasattr(ep, "remote_attributes"):
                 traverse_endpoint_list(ep.remote_attributes.values(), ep_out_list)

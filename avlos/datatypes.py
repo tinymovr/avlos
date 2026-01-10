@@ -1,5 +1,6 @@
 from enum import Enum
-from marshmallow import fields, ValidationError
+
+from marshmallow import ValidationError, fields
 
 
 class DataType(Enum):

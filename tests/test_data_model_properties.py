@@ -1,14 +1,17 @@
 """
 Tests for data model properties added for code generation.
 """
+
 import unittest
+
 import yaml
-from avlos.deserializer import deserialize
-from avlos.definitions.remote_attribute import RemoteAttribute
-from avlos.definitions.remote_function import RemoteFunction
-from avlos.definitions.remote_enum import RemoteEnum
-from avlos.definitions.remote_bitmask import RemoteBitmask
+
 from avlos.datatypes import DataType
+from avlos.definitions.remote_attribute import RemoteAttribute
+from avlos.definitions.remote_bitmask import RemoteBitmask
+from avlos.definitions.remote_enum import RemoteEnum
+from avlos.definitions.remote_function import RemoteFunction
+from avlos.deserializer import deserialize
 
 
 class TestDataModelProperties(unittest.TestCase):
@@ -41,10 +44,14 @@ class TestDataModelProperties(unittest.TestCase):
     def test_byval_getter_strategy_integers(self):
         """Test that integer types return 'byval' getter strategy."""
         int_types = [
-            DataType.UINT8, DataType.INT8,
-            DataType.UINT16, DataType.INT16,
-            DataType.UINT32, DataType.INT32,
-            DataType.UINT64, DataType.INT64,
+            DataType.UINT8,
+            DataType.INT8,
+            DataType.UINT16,
+            DataType.INT16,
+            DataType.UINT32,
+            DataType.INT32,
+            DataType.UINT64,
+            DataType.INT64,
         ]
 
         for dtype in int_types:
@@ -55,10 +62,8 @@ class TestDataModelProperties(unittest.TestCase):
                 getter_name="get_value",
             )
 
-            self.assertEqual(attr.getter_strategy, "byval",
-                           f"{dtype} should use byval strategy")
-            self.assertEqual(attr.setter_strategy, "byval",
-                           f"{dtype} should use byval strategy")
+            self.assertEqual(attr.getter_strategy, "byval", f"{dtype} should use byval strategy")
+            self.assertEqual(attr.setter_strategy, "byval", f"{dtype} should use byval strategy")
 
     def test_endpoint_function_name_simple(self):
         """Test endpoint function name for simple attribute."""
@@ -79,19 +84,16 @@ class TestDataModelProperties(unittest.TestCase):
         """Test endpoint function name for nested attribute."""
         import importlib.resources
 
-        def_path_str = str(
-            importlib.resources.files("tests").joinpath("definition/good_device.yaml")
-        )
+        def_path_str = str(importlib.resources.files("tests").joinpath("definition/good_device.yaml"))
 
         with open(def_path_str) as device_desc_stream:
             obj = deserialize(yaml.safe_load(device_desc_stream))
 
             # Find a nested attribute (e.g., motor.R)
-            if hasattr(obj, 'motor') and hasattr(obj.motor, 'R'):
+            if hasattr(obj, "motor") and hasattr(obj.motor, "R"):
                 attr = obj.motor.R
                 expected_name = "avlos_motor_R"
-                self.assertEqual(attr.endpoint_function_name, expected_name,
-                               f"motor.R should generate {expected_name}")
+                self.assertEqual(attr.endpoint_function_name, expected_name, f"motor.R should generate {expected_name}")
 
     def test_is_string_type_true(self):
         """Test is_string_type property for char[] type."""
@@ -133,15 +135,13 @@ class TestDataModelProperties(unittest.TestCase):
         """Test endpoint function name for nested RemoteFunction."""
         import importlib.resources
 
-        def_path_str = str(
-            importlib.resources.files("tests").joinpath("definition/good_device.yaml")
-        )
+        def_path_str = str(importlib.resources.files("tests").joinpath("definition/good_device.yaml"))
 
         with open(def_path_str) as device_desc_stream:
             obj = deserialize(yaml.safe_load(device_desc_stream))
 
             # Find nested function (e.g., controller.set_pos_vel_setpoints)
-            if hasattr(obj, 'controller') and hasattr(obj.controller, 'set_pos_vel_setpoints'):
+            if hasattr(obj, "controller") and hasattr(obj.controller, "set_pos_vel_setpoints"):
                 func = obj.controller.set_pos_vel_setpoints
                 expected_name = "avlos_controller_set_pos_vel_setpoints"
                 self.assertEqual(func.endpoint_function_name, expected_name)
@@ -194,14 +194,11 @@ class TestDataModelProperties(unittest.TestCase):
     def test_backward_compatibility_generated_code(self):
         """Test that generated code is functionally equivalent to before refactoring."""
         import importlib.resources
+
         from avlos.generators import generator_c
 
-        def_path_str = str(
-            importlib.resources.files("tests").joinpath("definition/good_device.yaml")
-        )
-        output_impl = str(
-            importlib.resources.files("tests").joinpath("outputs/test_backward_compat.c")
-        )
+        def_path_str = str(importlib.resources.files("tests").joinpath("definition/good_device.yaml"))
+        output_impl = str(importlib.resources.files("tests").joinpath("outputs/test_backward_compat.c"))
 
         with open(def_path_str) as device_desc_stream:
             obj = deserialize(yaml.safe_load(device_desc_stream))
@@ -209,12 +206,8 @@ class TestDataModelProperties(unittest.TestCase):
             config = {
                 "hash_string": "0x9e8dc7ac",
                 "paths": {
-                    "output_enums": str(
-                        importlib.resources.files("tests").joinpath("outputs/test_enum_compat.h")
-                    ),
-                    "output_header": str(
-                        importlib.resources.files("tests").joinpath("outputs/test_header_compat.h")
-                    ),
+                    "output_enums": str(importlib.resources.files("tests").joinpath("outputs/test_enum_compat.h")),
+                    "output_header": str(importlib.resources.files("tests").joinpath("outputs/test_header_compat.h")),
                     "output_impl": output_impl,
                 },
             }
@@ -230,10 +223,8 @@ class TestDataModelProperties(unittest.TestCase):
             self.assertIn("avlos_", generated_code, "Should have avlos_ prefixed functions")
             self.assertIn("AVLOS_CMD_READ", generated_code, "Should handle read commands")
             self.assertIn("AVLOS_CMD_WRITE", generated_code, "Should handle write commands")
-            self.assertIn("_avlos_getter_string", generated_code,
-                         "Should have string getter helper")
-            self.assertIn("_avlos_setter_string", generated_code,
-                         "Should have string setter helper")
+            self.assertIn("_avlos_getter_string", generated_code, "Should have string getter helper")
+            self.assertIn("_avlos_setter_string", generated_code, "Should have string setter helper")
 
             # Verify function declarations use properties
             # (all endpoint functions should be present)
@@ -242,11 +233,10 @@ class TestDataModelProperties(unittest.TestCase):
     def test_all_endpoints_have_function_names(self):
         """Test that all endpoints from good_device.yaml have endpoint_function_name."""
         import importlib.resources
+
         from avlos.generators.filters import avlos_endpoints
 
-        def_path_str = str(
-            importlib.resources.files("tests").joinpath("definition/good_device.yaml")
-        )
+        def_path_str = str(importlib.resources.files("tests").joinpath("definition/good_device.yaml"))
 
         with open(def_path_str) as device_desc_stream:
             obj = deserialize(yaml.safe_load(device_desc_stream))
@@ -254,22 +244,22 @@ class TestDataModelProperties(unittest.TestCase):
             endpoints = avlos_endpoints(obj)
 
             for ep in endpoints:
-                self.assertTrue(hasattr(ep, 'endpoint_function_name'),
-                              f"Endpoint {ep.name} should have endpoint_function_name property")
+                self.assertTrue(
+                    hasattr(ep, "endpoint_function_name"), f"Endpoint {ep.name} should have endpoint_function_name property"
+                )
                 func_name = ep.endpoint_function_name
-                self.assertTrue(func_name.startswith("avlos_"),
-                              f"Endpoint function name should start with avlos_, got: {func_name}")
-                self.assertNotIn(".", func_name,
-                                f"Endpoint function name should not contain dots, got: {func_name}")
+                self.assertTrue(
+                    func_name.startswith("avlos_"), f"Endpoint function name should start with avlos_, got: {func_name}"
+                )
+                self.assertNotIn(".", func_name, f"Endpoint function name should not contain dots, got: {func_name}")
 
     def test_getter_setter_strategy_consistency(self):
         """Test that getter and setter strategies are consistent."""
         import importlib.resources
+
         from avlos.generators.filters import avlos_endpoints
 
-        def_path_str = str(
-            importlib.resources.files("tests").joinpath("definition/good_device.yaml")
-        )
+        def_path_str = str(importlib.resources.files("tests").joinpath("definition/good_device.yaml"))
 
         with open(def_path_str) as device_desc_stream:
             obj = deserialize(yaml.safe_load(device_desc_stream))
@@ -278,14 +268,17 @@ class TestDataModelProperties(unittest.TestCase):
 
             for ep in endpoints:
                 # Skip functions (they don't have getter/setter strategies in the same way)
-                if hasattr(ep, 'caller_name') and not hasattr(ep, 'getter_name'):
+                if hasattr(ep, "caller_name") and not hasattr(ep, "getter_name"):
                     continue
 
-                if hasattr(ep, 'getter_strategy') and hasattr(ep, 'setter_strategy'):
+                if hasattr(ep, "getter_strategy") and hasattr(ep, "setter_strategy"):
                     # Getter and setter strategies should match for attributes
-                    self.assertEqual(ep.getter_strategy, ep.setter_strategy,
-                                   f"Endpoint {ep.name} should have consistent getter/setter strategies")
+                    self.assertEqual(
+                        ep.getter_strategy,
+                        ep.setter_strategy,
+                        f"Endpoint {ep.name} should have consistent getter/setter strategies",
+                    )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

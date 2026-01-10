@@ -13,7 +13,7 @@ Stop writing serialization code twice. Stop debugging protocol mismatches.
 - 🔒 **Type-safe across the boundary** → Catch errors at build time, not runtime
 - 🎯 **Battle-tested** → Production-proven in [Tinymovr](https://tinymovr.com) motor controllers
 
-[Αυλός (Avlόs)](https://en.wikipedia.org/wiki/Aulos) - _flute_, also _channel_. 
+[Αυλός (Avlόs)](https://en.wikipedia.org/wiki/Aulos) - _flute_, also _channel_.
 
 <p align="center">
 <img src="docs/diagram.png" width="800"/>
@@ -74,7 +74,7 @@ Given the above, Avlos can generate the following:
 
 - [CAN DBC file](https://www.csselectronics.com/pages/can-dbc-file-database-intro) (CAN database), for every endpoint, for use with CAN-based comm channels.
 
-In addition, Avlos will compute a checksum for the spec and add it as a variable to the implementation so that it can be retrieved by the client for comparing client and device specs. 
+In addition, Avlos will compute a checksum for the spec and add it as a variable to the implementation so that it can be retrieved by the client for comparing client and device specs.
 
 The output location, as well as many other attributes of the files are flexible and easily configurable.
 
@@ -127,7 +127,7 @@ In addition, the object resulting from the deserialization of the spec can be us
     import yaml
     from avlos import deserialize
     from myProject import myChannel # update this
-    
+
     device_description = ...
     obj = deserialize(yaml.safe_load(device_description))
     obj.set_channel(myChannel())
@@ -164,4 +164,3 @@ Between releases, development versions are automatically generated (e.g., `0.8.7
 ## 🔑 License
 
 MIT
-

@@ -4,7 +4,7 @@
 # list see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
-master_doc = 'index'
+master_doc = "index"
 
 # -- Path setup --------------------------------------------------------------
 
@@ -19,9 +19,9 @@ master_doc = 'index'
 
 # -- Project information -----------------------------------------------------
 
-project = 'Avlos'
-copyright = '2022, Yannis Chatzikonstantinou'
-author = 'Yannis Chatzikonstantinou'
+project = "Avlos"
+copyright = "2022, Yannis Chatzikonstantinou"
+author = "Yannis Chatzikonstantinou"
 
 
 # -- General configuration ---------------------------------------------------
@@ -32,12 +32,12 @@ author = 'Yannis Chatzikonstantinou'
 extensions = []
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
+templates_path = ["_templates"]
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
+exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
 
 # -- Options for HTML output -------------------------------------------------
@@ -45,7 +45,7 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'alabaster'
+html_theme = "alabaster"
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,

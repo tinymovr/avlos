@@ -1,15 +1,12 @@
 import os
 import sys
 from pathlib import Path
+
 from jinja2 import Environment, PackageLoader, select_autoescape
-from avlos.generators.filters import (
-    avlos_enum_eps,
-    avlos_bitmask_eps,
-    file_from_path,
-    capitalize_first,
-)
-from avlos.validation import validate_all, ValidationError
+
 from avlos.formatting import format_c_code, is_clang_format_available
+from avlos.generators.filters import avlos_bitmask_eps, avlos_enum_eps, capitalize_first, file_from_path
+from avlos.validation import ValidationError, validate_all
 
 env = Environment(loader=PackageLoader("avlos"), autoescape=select_autoescape())
 

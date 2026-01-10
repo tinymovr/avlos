@@ -1,5 +1,7 @@
 from functools import cached_property
+
 from marshmallow import fields, post_load
+
 from avlos.definitions import RemoteNode, RemoteNodeSchema
 
 
