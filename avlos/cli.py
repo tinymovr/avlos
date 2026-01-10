@@ -9,12 +9,14 @@ Options:
     --config=<config_path>  Path of the Avlos config file [default: ./avlos_config.yaml]
 """
 
-import yaml
-from typing import Dict
 import logging
-import pkg_resources
 import urllib.request
+from typing import Dict
+
+import pkg_resources
+import yaml
 from docopt import docopt
+
 from avlos.deserializer import deserialize
 from avlos.processor import process_with_config_file
 

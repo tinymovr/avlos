@@ -1,0 +1,10 @@
+---
+BasedOnStyle: LLVM
+IndentWidth: 4
+ColumnLimit: 100
+AllowShortFunctionsOnASingleLine: Empty
+AlignConsecutiveAssignments: false
+PointerAlignment: Left
+SpaceBeforeParens: Never
+BreakBeforeBraces: Linux
+IndentCaseLabels: false

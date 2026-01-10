@@ -1,6 +1,7 @@
-from os.path import join, dirname, basename, realpath
-import yaml
 from importlib import import_module
+from os.path import basename, dirname, join, realpath
+
+import yaml
 
 
 def process_with_config_file(device_instance, avlos_config_path, traverse_path=False):
@@ -37,7 +38,5 @@ def process_with_config_object(device_instance, avlos_config):
     """
     for module_name, module_config in avlos_config["generators"].items():
         if "enabled" in module_config and True == module_config["enabled"]:
-            generator = import_module(
-                ".generators.{}".format(module_name), package="avlos"
-            )
+            generator = import_module(".generators.{}".format(module_name), package="avlos")
             generator.process(device_instance, module_config)

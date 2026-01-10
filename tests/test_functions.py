@@ -1,5 +1,6 @@
-from avlos.generators.filters import as_include, file_from_path, capitalize_first
 import unittest
+
+from avlos.generators.filters import as_include, capitalize_first, file_from_path
 
 
 class TestFunctions(unittest.TestCase):

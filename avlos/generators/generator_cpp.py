@@ -1,17 +1,23 @@
 import os
+import sys
 from pathlib import Path
+
 from jinja2 import Environment, PackageLoader, select_autoescape
-from avlos.generators.filters import (
-    avlos_enum_eps,
-    avlos_bitmask_eps,
-    file_from_path,
-    capitalize_first,
-)
+
+from avlos.formatting import format_c_code, is_clang_format_available
+from avlos.generators.filters import avlos_bitmask_eps, avlos_enum_eps, capitalize_first, file_from_path
+from avlos.validation import ValidationError, validate_all
 
 env = Environment(loader=PackageLoader("avlos"), autoescape=select_autoescape())
 
 
 def process(instance, config):
+    # Validate before generation
+    validation_errors = validate_all(instance)
+    if validation_errors:
+        error_msg = "Validation failed:\n" + "\n".join(f"  - {err}" for err in validation_errors)
+        raise ValidationError(error_msg)
+
     env.filters["enum_eps"] = avlos_enum_eps
     env.filters["bitmask_eps"] = avlos_bitmask_eps
     env.filters["file_from_path"] = file_from_path
@@ -30,6 +36,8 @@ def process_helpers(instance, config):
             template.render(instance=instance),
             file=output_file,
         )
+    # Format the generated file
+    format_c_code(file_path, config.get("format_style", "LLVM"))
 
 
 def process_header(instance, config):
@@ -51,6 +59,9 @@ def process_header(instance, config):
             ),
             file=output_file,
         )
+    # Format the generated file
+    format_c_code(file_path, config.get("format_style", "LLVM"))
+
     for attr in instance.remote_attributes.values():
         if hasattr(attr, "remote_attributes"):
             recurse_header(attr, config)
@@ -69,6 +80,9 @@ def recurse_header(remote_object, config):
             template.render(instance=remote_object, helper_file=helper_file),
             file=output_file,
         )
+    # Format the generated file
+    format_c_code(file_path, config.get("format_style", "LLVM"))
+
     for attr in remote_object.remote_attributes.values():
         if hasattr(attr, "remote_attributes"):
             recurse_header(attr, config)
@@ -92,6 +106,9 @@ def process_impl(instance, config):
             ),
             file=output_file,
         )
+    # Format the generated file
+    format_c_code(file_path, config.get("format_style", "LLVM"))
+
     for attr in instance.remote_attributes.values():
         if hasattr(attr, "remote_attributes"):
             recurse_impl(attr, config)
@@ -106,6 +123,9 @@ def recurse_impl(remote_object, config):
     os.makedirs(os.path.dirname(config["paths"]["output_impl"]), exist_ok=True)
     with open(file_path, "w") as output_file:
         print(template.render(instance=remote_object), file=output_file)
+    # Format the generated file
+    format_c_code(file_path, config.get("format_style", "LLVM"))
+
     for attr in remote_object.remote_attributes.values():
         if hasattr(attr, "remote_attributes"):
             recurse_impl(attr, config)

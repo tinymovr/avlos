@@ -1,9 +1,9 @@
-from avlos.mixins.comm_node import CommNode
-from avlos.mixins.named_node import NamedNode
-from avlos.mixins.meta_node import MetaNode
-from avlos.mixins.impex_node import ImpexNode
 from avlos.datatypes import DataType
+from avlos.mixins.comm_node import CommNode
 from avlos.mixins.func_attr_node import FuncAttrNode
+from avlos.mixins.impex_node import ImpexNode
+from avlos.mixins.meta_node import MetaNode
+from avlos.mixins.named_node import NamedNode
 
 
 class RemoteEnum(CommNode, NamedNode, MetaNode, ImpexNode):
@@ -114,3 +114,18 @@ class RemoteEnum(CommNode, NamedNode, MetaNode, ImpexNode):
         """
         val = self.get_value()
         return "{0}: {1}".format(self.name, str(val))
+
+    @property
+    def endpoint_function_name(self) -> str:
+        """Get the C function name for this endpoint."""
+        return "avlos_" + self.full_name.replace(".", "_")
+
+    @property
+    def getter_strategy(self) -> str:
+        """Enums always use byval strategy."""
+        return "byval"
+
+    @property
+    def setter_strategy(self) -> str:
+        """Enums always use byval strategy."""
+        return "byval"

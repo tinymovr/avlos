@@ -1,7 +1,8 @@
-import json
 import hashlib
-from avlos.definitions import RootNodeSchema
+import json
+
 from avlos.counter import make_counter
+from avlos.definitions import RootNodeSchema
 
 
 def deserialize(device_description):

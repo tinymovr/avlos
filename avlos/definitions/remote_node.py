@@ -1,26 +1,16 @@
 from collections import OrderedDict
-from marshmallow import (
-    Schema,
-    fields,
-    post_load,
-    validates_schema,
-    ValidationError,
-)
-from avlos.unit_field import UnitField
+
+from marshmallow import Schema, ValidationError, fields, post_load, validates_schema
+
 from avlos.bitmask_field import BitmaskField
-from avlos.enum_field import EnumField
 from avlos.counter import get_counter
 from avlos.datatypes import DataTypeField
+from avlos.definitions import RemoteArgumentSchema, RemoteAttribute, RemoteBitmask, RemoteEnum, RemoteFunction
+from avlos.enum_field import EnumField
 from avlos.mixins.comm_node import CommNode
-from avlos.mixins.named_node import NamedNode
 from avlos.mixins.impex_node import ImpexNode
-from avlos.definitions import (
-    RemoteAttribute,
-    RemoteFunction,
-    RemoteArgumentSchema,
-    RemoteBitmask,
-    RemoteEnum,
-)
+from avlos.mixins.named_node import NamedNode
+from avlos.unit_field import UnitField
 
 
 class RemoteNode(CommNode, NamedNode, ImpexNode):
@@ -112,12 +102,7 @@ class RemoteNode(CommNode, NamedNode, ImpexNode):
         lines = []
         for key, val in self.remote_attributes.items():
             if isinstance(val, RemoteNode):
-                val_str = (
-                    indent
-                    + key
-                    + (": " if depth == 1 else ":\n")
-                    + val.str_dump(indent + "  ", depth - 1)
-                )
+                val_str = indent + key + (": " if depth == 1 else ":\n") + val.str_dump(indent + "  ", depth - 1)
             else:
                 val_str = indent + val.str_dump()
             lines.append(val_str)
@@ -139,9 +124,7 @@ class RemoteNodeSchema(Schema):
     RemoteAttribute, RemoteBitmask and RemoteFunction classes
     """
 
-    name = fields.String(
-        required=True, error_messages={"required": "Name is required."}
-    )
+    name = fields.String(required=True, error_messages={"required": "Name is required."})
     summary = fields.String()
     remote_attributes = fields.List(fields.Nested(lambda: RemoteNodeSchema()))
     dtype = DataTypeField()
@@ -206,13 +189,9 @@ class RemoteNodeSchema(Schema):
             and "setter_name" not in data
             and "caller_name" not in data
         ):
-            raise ValidationError(
-                "Either a getter, setter, caller or remote attributes list is required"
-            )
+            raise ValidationError("Either a getter, setter, caller or remote attributes list is required")
         if "getter_name" in data and "setter_name" in data and "caller_name" in data:
-            raise ValidationError(
-                "A getter, setter, and caller cannot coexist in a single endpoint"
-            )
+            raise ValidationError("A getter, setter, and caller cannot coexist in a single endpoint")
         if (
             ("getter_name" in data or "setter_name" in data or "caller_name" in data)
             and "dtype" not in data

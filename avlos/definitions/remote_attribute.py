@@ -1,9 +1,9 @@
 from avlos import get_registry
 from avlos.mixins.comm_node import CommNode
-from avlos.mixins.named_node import NamedNode
-from avlos.mixins.meta_node import MetaNode
-from avlos.mixins.impex_node import ImpexNode
 from avlos.mixins.func_attr_node import FuncAttrNode
+from avlos.mixins.impex_node import ImpexNode
+from avlos.mixins.meta_node import MetaNode
+from avlos.mixins.named_node import NamedNode
 
 
 class RemoteAttribute(CommNode, NamedNode, MetaNode, ImpexNode, FuncAttrNode):
@@ -91,8 +91,43 @@ class RemoteAttribute(CommNode, NamedNode, MetaNode, ImpexNode, FuncAttrNode):
             format_str = "{0} [{1}]: {2:.6g}"
         else:
             format_str = "{0} [{1}]: {2}"
-        return format_str.format(
-            self.name,
-            self.dtype.nickname,
-            value
-        )
+        return format_str.format(self.name, self.dtype.nickname, value)
+
+    @property
+    def getter_strategy(self) -> str:
+        """
+        Determine the strategy for getter implementation.
+
+        Returns:
+            'string' for char[] types, 'byval' for all other types
+        """
+        if self.dtype.c_name == "char[]":
+            return "string"
+        return "byval"
+
+    @property
+    def setter_strategy(self) -> str:
+        """
+        Determine the strategy for setter implementation.
+
+        Returns:
+            'string' for char[] types, 'byval' for all other types
+        """
+        if self.dtype.c_name == "char[]":
+            return "string"
+        return "byval"
+
+    @property
+    def endpoint_function_name(self) -> str:
+        """
+        Get the C function name for this endpoint.
+
+        Returns:
+            Function name in format 'avlos_parent_child_attribute'
+        """
+        return "avlos_" + self.full_name.replace(".", "_")
+
+    @property
+    def is_string_type(self) -> bool:
+        """Check if this attribute uses string/char[] type."""
+        return self.dtype.c_name == "char[]"

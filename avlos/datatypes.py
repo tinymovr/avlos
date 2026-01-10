@@ -1,5 +1,6 @@
 from enum import Enum
-from marshmallow import fields, ValidationError
+
+from marshmallow import ValidationError, fields
 
 
 class DataType(Enum):
@@ -54,6 +55,8 @@ c_type_map = {
     DataType.UINT16: "uint16_t",
     DataType.INT32: "int32_t",
     DataType.UINT32: "uint32_t",
+    DataType.INT64: "int64_t",
+    DataType.UINT64: "uint64_t",
     DataType.FLOAT: "float",
     DataType.DOUBLE: "double",
     DataType.STR: "char[]",
@@ -68,6 +71,8 @@ py_type_map = {
     DataType.UINT16: int,
     DataType.INT32: int,
     DataType.UINT32: int,
+    DataType.INT64: int,
+    DataType.UINT64: int,
     DataType.FLOAT: float,
     DataType.DOUBLE: float,
     DataType.STR: str,
@@ -82,6 +87,8 @@ datatype_sizes = {
     DataType.UINT16: 2,
     DataType.INT32: 4,
     DataType.UINT32: 4,
+    DataType.INT64: 8,
+    DataType.UINT64: 8,
     DataType.FLOAT: 4,
     DataType.DOUBLE: 8,
     DataType.STR: -1,
@@ -97,6 +104,8 @@ datatype_names = {
     "uint16": DataType.UINT16,
     "int32": DataType.INT32,
     "uint32": DataType.UINT32,
+    "int64": DataType.INT64,
+    "uint64": DataType.UINT64,
     "float": DataType.FLOAT,
     "double": DataType.DOUBLE,
     "string": DataType.STR,

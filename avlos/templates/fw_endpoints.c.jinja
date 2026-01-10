@@ -52,7 +52,7 @@ static inline uint8_t _avlos_setter_string(const uint8_t *buffer, void (*setter)
 }
 
 {% set comma = joiner(", ") %}
-uint8_t (*avlos_endpoints[{{ instance | endpoints | length }}])(uint8_t * buffer, uint8_t * buffer_len, Avlos_Command cmd) = { {%- for attr in instance | endpoints %}{{ comma() }}&avlos_{{attr.full_name | replace(".", "_") }}{%- endfor %} };
+uint8_t (*avlos_endpoints[{{ instance | endpoints | length }}])(uint8_t * buffer, uint8_t * buffer_len, Avlos_Command cmd) = { {%- for attr in instance | endpoints %}{{ comma() }}&{{attr.endpoint_function_name}}{%- endfor %} };
 
 uint32_t _avlos_get_proto_hash(void)
 {
@@ -61,11 +61,11 @@ uint32_t _avlos_get_proto_hash(void)
 
 {%- for attr in instance | endpoints %}
 
-{% if attr.func_attr -%}{{attr.func_attr}} {% endif %}uint8_t avlos_{{attr.full_name | replace(".", "_") }}(uint8_t * buffer, uint8_t * buffer_len, Avlos_Command cmd)
+{% if attr.func_attr -%}{{attr.func_attr}} {% endif %}uint8_t {{attr.endpoint_function_name}}(uint8_t * buffer, uint8_t * buffer_len, Avlos_Command cmd)
 {
     {%- if attr.getter_name %}
 
-        {%- if attr.dtype.c_name == "char[]" %}
+        {%- if attr.getter_strategy == "string" %}
 {{ getter_char(attr) }}
         {%- else %}
 {{ getter_byval(attr) }}
@@ -74,7 +74,7 @@ uint32_t _avlos_get_proto_hash(void)
     {%- endif %}
     {%- if attr.setter_name %}
 
-        {%- if attr.dtype.c_name == "char[]" %}
+        {%- if attr.setter_strategy == "string" %}
 {{ setter_char(attr) }}
         {%- else %}
 {{ setter_byval(attr) }}

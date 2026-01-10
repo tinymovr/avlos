@@ -1,6 +1,6 @@
-from avlos.counter import get_counter, make_counter, delete_counter
-
 import unittest
+
+from avlos.counter import delete_counter, get_counter, make_counter
 
 
 class TestCounter(unittest.TestCase):

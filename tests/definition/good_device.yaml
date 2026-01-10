@@ -8,14 +8,13 @@ remote_attributes:
   - name: nickname
     dtype: string
     getter_name: system_get_name
-    setter_name: system_set_name 
+    setter_name: system_set_name
     summary: Retrieve the device name
   - name: errors
     flags: [UNDERVOLTAGE]
-    meta: {dynamic: True}
     getter_name: system_get_error
     summary: Retrieve any device errors.
-    meta: {"lalala": "ok"}
+    meta: {dynamic: True, lalala: "ok"}
   - name: Vbus
     dtype: float
     unit: volt
@@ -33,7 +32,7 @@ remote_attributes:
     caller_name: move_to
     dtype: void
     func_attr: TM_RAMFUNC
-    arguments: 
+    arguments:
       - name: position
         dtype: float
         unit: tick
@@ -91,4 +90,3 @@ remote_attributes:
         setter_name: encoder_set_bandwidth
         summary: Access the encoder observer bandwidth.
         func_attr: TM_RAMFUNC
-

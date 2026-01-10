@@ -1,8 +1,10 @@
-import yaml
 import importlib.resources
+import unittest
+
+import yaml
+
 from avlos.deserializer import deserialize
 from avlos.unit_field import get_registry
-import unittest
 from tests.dummy_channel import DummyChannel
 
 _reg = get_registry()
@@ -10,9 +12,7 @@ _reg = get_registry()
 
 class TestRemoteObjects(unittest.TestCase):
     def test_read_remote_properties(self):
-        def_path_str = str(
-            importlib.resources.files("tests").joinpath("definition/good_device.yaml")
-        )
+        def_path_str = str(importlib.resources.files("tests").joinpath("definition/good_device.yaml"))
         with open(def_path_str) as device_description:
             obj = deserialize(yaml.safe_load(device_description))
             obj._channel = DummyChannel()
@@ -37,9 +37,7 @@ class TestRemoteObjects(unittest.TestCase):
             self.assertEqual(obj.nickname, "other")
 
     def test_remote_enum_read(self):
-        def_path_str = str(
-            importlib.resources.files("tests").joinpath("definition/good_device.yaml")
-        )
+        def_path_str = str(importlib.resources.files("tests").joinpath("definition/good_device.yaml"))
         with open(def_path_str) as device_description:
             obj = deserialize(yaml.safe_load(device_description))
             obj._channel = DummyChannel()
@@ -50,9 +48,7 @@ class TestRemoteObjects(unittest.TestCase):
             self.assertEqual(obj.controller.mode, modes.CLOSED_LOOP)
 
     def test_remote_enum_write(self):
-        def_path_str = str(
-            importlib.resources.files("tests").joinpath("definition/good_device.yaml")
-        )
+        def_path_str = str(importlib.resources.files("tests").joinpath("definition/good_device.yaml"))
         with open(def_path_str) as device_description:
             obj = deserialize(yaml.safe_load(device_description))
             obj._channel = DummyChannel()
@@ -84,9 +80,7 @@ class TestRemoteObjects(unittest.TestCase):
             self.assertEqual(obj._channel.value, 1)
 
     def test_remote_function_call(self):
-        def_path_str = str(
-            importlib.resources.files("tests").joinpath("definition/good_device.yaml")
-        )
+        def_path_str = str(importlib.resources.files("tests").joinpath("definition/good_device.yaml"))
         with open(def_path_str) as device_description:
             obj = deserialize(yaml.safe_load(device_description))
             obj._channel = DummyChannel()
@@ -96,9 +90,7 @@ class TestRemoteObjects(unittest.TestCase):
         self.assertEqual(100 * _reg("tick"), obj.controller.set_pos_vel_setpoints(0, 0))
 
     def test_remote_function_call_w_units(self):
-        def_path_str = str(
-            importlib.resources.files("tests").joinpath("definition/good_device.yaml")
-        )
+        def_path_str = str(importlib.resources.files("tests").joinpath("definition/good_device.yaml"))
         with open(def_path_str) as device_description:
             obj = deserialize(yaml.safe_load(device_description))
             obj._channel = DummyChannel()
@@ -111,9 +103,7 @@ class TestRemoteObjects(unittest.TestCase):
         obj._channel.write_off()
 
     def test_non_existent_remote_attributes_fail(self):
-        def_path_str = str(
-            importlib.resources.files("tests").joinpath("definition/good_device.yaml")
-        )
+        def_path_str = str(importlib.resources.files("tests").joinpath("definition/good_device.yaml"))
         with open(def_path_str) as device_description:
             obj = deserialize(yaml.safe_load(device_description))
             obj._channel = DummyChannel()
@@ -125,13 +115,12 @@ class TestRemoteObjects(unittest.TestCase):
                 print(val)
 
     def test_meta_dictionary(self):
-        def_path_str = str(
-            importlib.resources.files("tests").joinpath("definition/good_device.yaml")
-        )
+        def_path_str = str(importlib.resources.files("tests").joinpath("definition/good_device.yaml"))
         with open(def_path_str) as device_description:
             obj = deserialize(yaml.safe_load(device_description))
-            self.assertEqual(1, len(obj.errors.meta))
+            self.assertEqual(2, len(obj.errors.meta))
             self.assertEqual("ok", obj.errors.meta["lalala"])
+            self.assertEqual(True, obj.errors.meta["dynamic"])
             self.assertEqual(1, len(obj.reset.meta))
             self.assertEqual(True, obj.reset.meta["reload_data"])
             self.assertEqual(0, len(obj.sn.meta))
