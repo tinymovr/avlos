@@ -69,6 +69,12 @@ remote_attributes:
         setter_name: motor_set_L
         meta: {export: True}
         summary: Access the motor Inductance value.
+      - name: gain
+        dtype: float
+        getter_name: motor_get_gain
+        setter_name: motor_set_gain
+        meta: {export: True}
+        summary: A unit-less gain parameter for testing.
       - name: errors
         flags: [R_OUT_OF_RANGE, L_OUT_OF_RANGE, INVALID_POLE_PAIRS]
         getter_name: system_get_error

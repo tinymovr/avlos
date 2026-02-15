@@ -1,9 +1,11 @@
 class ImpexNode:
     def import_values(self, data):
-        # TODO: Assert correct type
         try:
             if "export" in self.meta and self.meta["export"] == True:
-                self.set_value_with_string(data)
+                if isinstance(data, str):
+                    self.set_value_with_string(data)
+                else:
+                    self.set_value(data)
         except AttributeError:
             for name, attr in self.remote_attributes.items():
                 try:
